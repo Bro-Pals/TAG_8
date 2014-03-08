@@ -11,6 +11,7 @@ import bropals.graphics.ImageLoader;
 import bropals.graphics.Renderer;
 import bropals.level.AreaRunner;
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.DisplayMode;
 import java.awt.Frame;
@@ -160,6 +161,9 @@ public class Engine {
     private void finalizeFrame() {
         Debugger.print("Frame Size (" + frame.getWidth() + ", " + frame.getHeight() + "). Canvas Size (" + canvas.getWidth() + ", " + canvas.getHeight() + ")", Debugger.INFO);
         frame.setVisible(true);
+        //Renderer can only be set up when the frame is visible!
+        renderer.setupRenderer();
+        Debugger.print("Ready to start drawing!", Debugger.INFO);
     }
     
     /**
@@ -189,5 +193,17 @@ public class Engine {
      */
     private void runGameFrame() {
         
+        renderGame();
+    }
+    
+    private void renderGame() {
+        renderer.startDrawing();
+        renderer.clear(Color.BLACK, SCREEN_WIDTH, SCREEN_HEIGHT);
+        //Actual game drawing methods
+        renderer.drawArea(runner.getCurrentArea());
+        renderer.drawGui(runner);
+        
+        renderer.finishUpDrawing();
+        renderer.swapBuffers();
     }
 }
