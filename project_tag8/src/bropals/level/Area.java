@@ -23,6 +23,7 @@ public class Area {
     
     private ArrayList<GameObject> objects;
     private final int[] boundryTargetIds;
+    private AreaFactory factory;
 
     public int[] getBoundryTargetIds() {
         return boundryTargetIds;
@@ -66,9 +67,10 @@ public class Area {
         boundryTargetIds[Direction.getDirectionId(Direction.WEST)] = id;
     }
     
-    public Area() {
+    public Area(AreaFactory factory) {
         areaId = -1;
         boundryTargetIds = new int[]{ -1, -1, -1, -1 };
+        this.factory = factory;
         objects = new ArrayList<GameObject>();
         defaults();
     }
@@ -84,6 +86,10 @@ public class Area {
         return objects;
     }  
 
+    public void recycleGameObject(GameObject obj) {
+        factory.recycleGameObject(obj);
+    }
+    
     /**
      * For the Renderer. 
      * @return number of times to iterate background tile image in the x direction
