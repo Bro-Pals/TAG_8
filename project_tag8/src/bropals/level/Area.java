@@ -85,9 +85,24 @@ public class Area {
     public ArrayList<GameObject> getObjects() {
         return objects;
     }  
-
+    
+    /**
+     * Puts an object back into the game object pool to be reused.
+     * @param obj the GameObject being recycled
+     */
     public void recycleGameObject(GameObject obj) {
         factory.recycleGameObject(obj);
+        objects.remove(obj);
+    }
+    
+    /**
+     * Recycles all of the objects in the area.
+     */
+    public void recycleAll() {
+        for (GameObject obj : objects) {
+            factory.recycleGameObject(obj);
+        }
+        objects.clear();
     }
     
     /**

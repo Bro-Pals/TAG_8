@@ -8,6 +8,13 @@ package bropals.level;
 
 import bropals.debug.Debugger;
 import bropals.gameobject.GameObject;
+import bropals.gameobject.block.Avacado;
+import bropals.gameobject.block.AvacadoBin;
+import bropals.gameobject.block.Block;
+import bropals.gameobject.block.HayBale;
+import bropals.gameobject.block.NormalDoor;
+import bropals.gameobject.block.TeleportDoor;
+import bropals.gameobject.block.Wall;
 import bropals.gameobject.pools.AvacadoBinPool;
 import bropals.gameobject.pools.AvacadoPool;
 import bropals.gameobject.pools.BlockPool;
@@ -49,7 +56,7 @@ public class AreaFactory {
      * @param id the id of the area that you want.
      */
     public void setArea(int id) {
-        theArea.getObjects().clear();
+        theArea.recycleAll();
         theArea.defaults();
         switch(id) {
             
@@ -65,6 +72,26 @@ public class AreaFactory {
      * @param recycle the GameObject being recycled
      */
     public void recycleGameObject(GameObject recycle) {
-        
+        if (recycle instanceof Block) {
+            blockPool.recycle((Block)recycle);
+        } else
+        if (recycle instanceof Wall) {
+            wallPool.recycle((Wall)recycle);
+        } else
+        if (recycle instanceof Avacado) {
+            avacadoPool.recycle((Avacado)recycle);
+        } else
+        if (recycle instanceof HayBale) {
+            hayBalePool.recycle((HayBale)recycle);
+        } else
+        if (recycle instanceof NormalDoor) {
+            normalDoorPool.recycle((NormalDoor)recycle);
+        } else
+        if (recycle instanceof TeleportDoor) {
+            teleportDoorPool.recycle((TeleportDoor)recycle);
+        } else
+        if (recycle instanceof AvacadoBin) {
+            avacadoBinPool.recycle((AvacadoBin)recycle);
+        }
     }
 }
