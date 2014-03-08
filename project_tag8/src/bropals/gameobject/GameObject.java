@@ -64,5 +64,6 @@ public abstract class GameObject {
     
     public void setParent(Area p) {
         this.parent = p;
+        parent.getObjects().add(this);
     }
 }

@@ -64,7 +64,11 @@ public class AreaFactory {
         theArea.defaults();
         switch(id) {
             case -2:
-            Block b = requestBlock();
+            /*Block b = requestBlock();
+            b.setParent(theArea);
+            b.setHeight(100);
+            b.setWidth(300);
+            theArea.getObjects().add(b);*/
                 break;
             case -1:
                 break;

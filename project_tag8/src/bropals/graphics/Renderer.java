@@ -8,6 +8,13 @@ package bropals.graphics;
 
 import bropals.gameobject.Creature;
 import bropals.gameobject.GameObject;
+import bropals.gameobject.GrappleHookPoint;
+import bropals.gameobject.Interactable;
+import bropals.gameobject.block.Avacado;
+import bropals.gameobject.block.AvacadoBin;
+import bropals.gameobject.block.Block;
+import bropals.gameobject.block.HayBale;
+import bropals.gameobject.block.NormalDoor;
 import bropals.level.Area;
 import bropals.level.AreaRunner;
 import java.awt.Canvas;
@@ -102,19 +109,44 @@ public class Renderer {
         ArrayList<GameObject> objs = area.getObjects();
         for (GameObject drawing : objs) {
             if (drawing instanceof Creature) {
+                //System.out.println("Drew a creature!");
                 working.setToRotation(((Creature)drawing).getAngleFacing());
                 working.translate(drawing.getX(), drawing.getY());
                 g2d.setTransform(working);
-                g2d.drawImage(drawing.getTexture(), -(int)(((Creature)drawing).getRadius()/2), -(int)(((Creature)drawing).getRadius()/2), null);
-            } else {
+                System.out.println("This creatures is at an angle of " + (((Creature)drawing).getAngleFacing()/Math.PI) + " PI");
+                g2d.drawImage(drawing.getTexture(), -(int)(((Creature)drawing).getRadius()), -(int)(((Creature)drawing).getRadius()), null);
+            } else if (drawing.getTexture() != null) {
                 g2d.setTransform(identity);
                 g2d.drawImage(drawing.getTexture(), (int)drawing.getX(), (int)drawing.getY(), null);
+            } else if (drawing.getTexture() == null && drawing instanceof Block) {
+                g2d.setColor(Color.BLACK);
+                g2d.setTransform(identity);
+                g2d.fillRect((int)drawing.getX(), (int)drawing.getY(), (int)((Block)drawing).getWidth(), (int)((Block)drawing).getHeight());
             }
         }
     }
     
     private void drawActionIcon(Area area) {
-        
+        if (area.getPlayer() != null && area.getPlayer().getSelectedInteractable() != null) {
+            Interactable in = area.getPlayer().getSelectedInteractable();
+            BufferedImage drawnImage = null;
+            if (in instanceof NormalDoor) {
+                drawnImage = ((NormalDoor)in).isOpen() ? 
+                        ImageLoader.getLoader().getImage("ActionIcons", 1) : ImageLoader.getLoader().getImage("ActionIcons", 0);
+            } else if (in instanceof HayBale) {
+                drawnImage = area.getPlayer().isHiding() ? 
+                        ImageLoader.getLoader().getImage("ActionIcons", 3) : ImageLoader.getLoader().getImage("ActioIcons", 2);
+            } else if (in instanceof Avacado) {
+                drawnImage = ImageLoader.getLoader().getImage("ActionIcons", 4);
+            } else if (in instanceof GrappleHookPoint) {
+                drawnImage = ImageLoader.getLoader().getImage("ActionIcons", 5);
+            } else if (in instanceof AvacadoBin) {
+                drawnImage = ImageLoader.getLoader().getImage("ActionIcons", 6);
+            } else {
+                return;
+            }
+            g2d.drawImage(drawnImage, (int)(((GameObject)in).getX()), (int)(((GameObject)in).getY()), null);
+        }
     }
 
     /**

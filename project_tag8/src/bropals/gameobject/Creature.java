@@ -7,6 +7,7 @@ package bropals.gameobject;
 import bropals.gameobject.block.Block;
 import bropals.gameobject.block.NormalDoor;
 import bropals.gameobject.block.Wall;
+import bropals.graphics.ImageLoader;
 import bropals.level.Area;
 import bropals.util.Vector2;
 import java.awt.image.BufferedImage;
@@ -25,6 +26,7 @@ public abstract class Creature extends GameObject {
     private Interactable selectedInteractable;
     
     private boolean grappling;
+    private boolean hiding;
     private float grappleDistanceLeft;
     float grappleSpeed = 15; // random number
     
@@ -43,6 +45,11 @@ public abstract class Creature extends GameObject {
         this.speed = speed;
         this.faceDirection = faceDirection;
         this.grappling = false;
+    }
+    
+    @Override
+    public BufferedImage getTexture() {
+        return ImageLoader.getLoader().getImage("GameIcon");
     }
     
     public void update() {
@@ -131,11 +138,7 @@ public abstract class Creature extends GameObject {
      * @return The direction it's facing in radians.
      */
     public float getAngleFacing() {
-        float angle = (float)Math.atan((double)(faceDirection.getY() / faceDirection.getX())); // opp/adj
-        Vector2 uv = faceDirection.getUnitVector();
-        if (uv.getX() < 0) {
-            angle = (float)(Math.PI - angle); // reflect over y axis
-        }
+        float angle = (float)Math.atan2((double)(faceDirection.getY()), -(double)(faceDirection.getX())); // opp/adj
         return angle;
     }
     
@@ -152,6 +155,10 @@ public abstract class Creature extends GameObject {
         return faceDirection;
     }
 
+    public Interactable getSelectedInteractable() {
+        return selectedInteractable;
+    }
+    
     public void setFaceDirection(Vector2 faceDirection) {
         this.faceDirection = faceDirection;
     }
@@ -162,5 +169,13 @@ public abstract class Creature extends GameObject {
 
     public void setFieldOfView(float fieldOfView) {
         this.fieldOfView = fieldOfView;
+    }
+
+    public boolean isHiding() {
+        return hiding;
+    }
+
+    public void setHiding(boolean hiding) {
+        this.hiding = hiding;
     }
 }

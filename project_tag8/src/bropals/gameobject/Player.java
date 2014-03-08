@@ -6,23 +6,21 @@ package bropals.gameobject;
 
 import bropals.level.Area;
 import bropals.level.AvacadoManager;
+import bropals.util.Direction;
 import java.awt.image.BufferedImage;
 
 /**
  *
  * @author Owner
  */
-public class Player extends GameObject {
+public class Player extends Creature {
     
     private int health;
+    private final int maxHealth = 5;
     
     public Player(Area parent, float x, float y) {
-        super(parent, x, y);
-    }
-    
-    @Override
-    public BufferedImage getTexture() {
-        return null;
+        super(parent, x, y, 25, 10, Direction.NORTH.getUnitVector());
+        health = 5;
     }
     
     public void die() {
@@ -39,4 +37,7 @@ public class Player extends GameObject {
         return health;
     }
     
+    public void resetHealth() {
+        health = maxHealth;
+    }
 }
