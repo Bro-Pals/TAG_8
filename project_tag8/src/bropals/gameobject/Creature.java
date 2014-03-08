@@ -5,6 +5,7 @@
 package bropals.gameobject;
 
 import bropals.gameobject.block.Block;
+import bropals.gameobject.block.Wall;
 import bropals.level.Area;
 import bropals.util.Vector2;
 import java.awt.image.BufferedImage;
@@ -20,6 +21,11 @@ public abstract class Creature extends GameObject {
     private float speed;
     private Vector2 faceDirection;
     private float fieldOfView;
+    private Interactable selectedInteractable;
+    
+    private boolean grappling;
+    private float grappleDistanceLeft;
+    float grappleSpeed = 15; // random number
     
     /**
      * A creature that can move around and collide into things
@@ -35,30 +41,79 @@ public abstract class Creature extends GameObject {
         this.radius = radius;
         this.speed = speed;
         this.faceDirection = faceDirection;
+        this.grappling = false;
     }
     
     public void update() {
+        selectedInteractable = null;
+        
+        float moveSpeed = speed;
+        if (grappling && grappleDistanceLeft > 0) {
+            grappleDistanceLeft = grappleDistanceLeft - grappleSpeed;
+            moveSpeed = grappleSpeed; // set the speed to the grappleSpeed if grappling
+        }
+        
         for (GameObject obj: getParent().getObjects()) {
             if (obj instanceof Block) {
                 Block block = (Block) obj;
+                if (grappling && !(block instanceof Wall)) {
+                    continue; // if it's not a wall the player can go over it while grappling
+                }
                 float leftBound = block.getX();
                 float rightBound = block.getX() + block.getWidth();
                 float topBound = block.getY();
                 float bottomBound = block.getY() + block.getHeight();
                 
-                float velX = (float)(faceDirection.getX() * speed);
-                float velY = (float)(faceDirection.getY() * speed);
+                float velX = (float)(faceDirection.getX() * moveSpeed);
+                float velY = (float)(faceDirection.getY() * moveSpeed);
                 if ((getY() + velY + radius > topBound && getY() + velY - radius < bottomBound && // circle collides on rectangle
                         getX() + velX + radius > leftBound && getX() + velX - radius < rightBound) ||
                         (getX() + velX > leftBound && getX() + velX < rightBound &&  // circle center is inside rectangle
                         getY() + velY > topBound && getY() + velY < bottomBound)) {
                     this.speed = 0; // stop moving if you collide!
+                    // stop grappling if possible
+                    grappling = false;
+                    grappleDistanceLeft = 0;
+                    //if mostly moving horizontally then clip it horizontally
+                    if (faceDirection.getX() > faceDirection.getY() && getX() - block.getCenterX() > 0) {
+                        setX(rightBound + radius);
+                    } else if (faceDirection.getX() > faceDirection.getY() && getX() - block.getCenterX() <= 0) {
+                        setX(leftBound - radius);
+                    }
+                    
+                    //if mostly moving vertically then clip it vertically
+                    if (faceDirection.getX() <= faceDirection.getY() && getY() - block.getCenterY() > 0) {
+                        setY(bottomBound + radius);
+                    } else if (faceDirection.getX() <= faceDirection.getY() && getY() - block.getCenterY() <= 0) {
+                        setY(topBound - radius);
+                    }
                 }
+            }
+            
+            if (obj instanceof Interactable) {
+                float interactDist = (((Interactable)obj).getInteractDistance());
+                float distanceFrom;
+                if (obj instanceof Block) {
+                    Block b = (Block) obj;
+                    distanceFrom = ((b.getCenterX() - getX())*(b.getCenterX() - getX())) + 
+                            ((b.getCenterY() - getY())*(b.getCenterY() - getY()));
+                } else {
+                    distanceFrom = ((obj.getX() - getX())*(obj.getX() - getX())) + ((obj.getY() - getY())*(obj.getY() - getY()));
+                }
+                if ( interactDist * interactDist < (
+                        
             }
         }
         
-        setX(getX() + (float)(faceDirection.getX() * speed));
-        setY(getY() + (float)(faceDirection.getY() * speed));
+        setX(getX() + (float)(faceDirection.getX() * moveSpeed));
+        setY(getY() + (float)(faceDirection.getY() * moveSpeed));
+    }
+    
+    public void grapple(GrappleHookPoint ghp) {
+        Vector2 grappleVector = new Vector2(ghp.getX() - getX(), ghp.getY() - getY());
+        faceDirection = grappleVector.getUnitVector();
+        grappleDistanceLeft = (float)(2 * grappleVector.getMagnitude());
+        grappling = true;
     }
     
     /**

@@ -51,4 +51,11 @@ public class Block extends GameObject {
         return new Rectangle2D.Float(getX(), getY(), getWidth(), getHeight());
     }
     
+    public float getCenterX() {
+        return (getX() + (getWidth()/2));
+    }
+    
+    public float getCenterY() {
+        return (getY() + (getHeight()/2));
+    }
 }

@@ -4,11 +4,8 @@
  */
 package bropals.gameobject;
 
-import bropals.gameobject.block.Avacado;
 import bropals.level.Area;
-import bropals.level.AvacadoManager;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 /**
  *
