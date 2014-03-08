@@ -7,6 +7,14 @@
 package bropals.level;
 
 import bropals.debug.Debugger;
+import bropals.gameobject.GameObject;
+import bropals.gameobject.pools.AvacadoBinPool;
+import bropals.gameobject.pools.AvacadoPool;
+import bropals.gameobject.pools.BlockPool;
+import bropals.gameobject.pools.HayBalePool;
+import bropals.gameobject.pools.NormalDoorPool;
+import bropals.gameobject.pools.TeleportDoorPool;
+import bropals.gameobject.pools.WallPool;
 
 /**
  *
@@ -15,11 +23,25 @@ import bropals.debug.Debugger;
 public class AreaFactory {
     
     private final Area theArea;
+    private final AvacadoBinPool avacadoBinPool;
+    private final AvacadoPool avacadoPool;
+    private final BlockPool blockPool;
+    private final HayBalePool hayBalePool;
+    private final NormalDoorPool normalDoorPool;
+    private final TeleportDoorPool teleportDoorPool;
+    private final WallPool wallPool;
     
     public Area getArea() { return theArea; }
     
     public AreaFactory() {
-        theArea = new Area();
+        theArea = new Area(this);
+        avacadoBinPool = new AvacadoBinPool(theArea);
+        avacadoPool = new AvacadoPool(theArea);
+        blockPool = new BlockPool(theArea);
+        hayBalePool = new HayBalePool(theArea);
+        normalDoorPool = new NormalDoorPool(theArea);
+        teleportDoorPool = new TeleportDoorPool(theArea);
+        wallPool = new WallPool(theArea);
     }
     
     /**
@@ -36,5 +58,13 @@ public class AreaFactory {
             default:
                 Debugger.print("Need constructor for ID: " + id + " in AreaFactory", Debugger.ERROR);
         }
+    }
+    
+    /**
+     * Puts an object back into the game object pool to be reused.
+     * @param recycle the GameObject being recycled
+     */
+    public void recycleGameObject(GameObject recycle) {
+        
     }
 }
