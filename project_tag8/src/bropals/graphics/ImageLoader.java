@@ -6,9 +6,12 @@
 
 package bropals.graphics;
 
+import bropals.Main;
 import static bropals.debug.Debugger.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import javax.imageio.ImageIO;
 
@@ -19,66 +22,43 @@ import javax.imageio.ImageIO;
 public class ImageLoader {
     
     private static final ImageLoader loader = new ImageLoader();
-    private File jarRoot;
-    private final String imageDirectory = "assets/images";
-    private final String[] extensions = { "png", "jpg", "jpeg", "gif" };
+    private final String imageDirectory = "images";
+    private String jarPath;
     
     public static ImageLoader getLoader() {
         return loader;
     }
     
-    private HashMap<String, BufferedImage> images;
+    private HashMap<String, BufferedImage[]> images;
     
     public ImageLoader() {
         images = new HashMap<>();
         try {
-            jarRoot = new File(ImageLoader.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-        } catch(Exception e) {
-            print("Could not get jar file root!", ERROR);
+            jarPath = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getAbsolutePath();
+            print("Jar Root: " + jarPath, INFO);
+        } catch(URISyntaxException e) {
+            print("Can't get jar root!", ERROR);
         }
     }
-    
-    /**
-     * Loads all of the images in the given directory.
-     * @param directoryRelativeToImageDirectory the directory relative to the assets/images. Must point to a folder
-     */
-    public void loadImages(String directoryRelativeToImageDirectory) {
-        File dir = new File(jarRoot.getParentFile().toPath() + "/" + imageDirectory + "/" + directoryRelativeToImageDirectory);
-        File[] files;
-        String[] tokens;
+
+    public void loadSingleImage(String nameOfImage, String pathFromImageDirectory) {
+        File f = new File(jarPath + "\\" + imageDirectory + "\\" + pathFromImageDirectory);
         try {
-            if (dir.exists()) {
-                files = dir.listFiles();
-                //Iterate through files and load images
-                for (int i=0; i<files.length; i++) {
-                    tokens = files[i].getName().split(".");
-                    if (tokens.length>1) { //Has an extension
-                       boolean canLoad = false;
-                       for (int k=0; k<extensions.length; k++) {
-                           if (tokens[1].equals(extensions[k])) {
-                               canLoad = true;
-                           }
-                       }
-                       if (canLoad) {
-                           String nameForMap = tokens[0];
-                           BufferedImage image = (BufferedImage)ImageIO.read(files[i]);
-                           images.put(nameForMap, image);
-                       }
-                    }
-                }
-            }
-            print("Successfully loaded images from directory \"" + directoryRelativeToImageDirectory + "\"", INFO);
-        } catch(Exception e) {
-            print("Could not load images in directory \"" + directoryRelativeToImageDirectory + "\"", ERROR);
+            BufferedImage img = (BufferedImage)ImageIO.read(f);
+            images.put(nameOfImage, new BufferedImage[]{img});
+            print("Loaded image: " + f.getAbsolutePath() + " as name " + nameOfImage, INFO);
+        } catch(IOException e) {
+            print("Can't load image: " + f.getAbsolutePath(), ERROR);
         }
     }
     
     /**
      * Gets a loaded image from ImageLoader.
      * @param name the name of the loading image (no extension).
+     * @param index the index of the image in the internal array
      * @return the image (if it is loaded)
      */
-    public BufferedImage getImage(String name) {
-        return images.get(name);
+    public BufferedImage getImage(String name, int index) {
+        return images.get(name)[index];
     }
 }
