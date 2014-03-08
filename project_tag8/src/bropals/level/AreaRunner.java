@@ -16,19 +16,34 @@ import java.util.ArrayList;
  */
 public class AreaRunner {
     
-    private Area currentArea;
-    private Player player;
-    
-    public Area getCurrentArea() {
-        return currentArea;
+    private final Player player;
+    private final AreaFactory areaFactory;
+
+    public Player getPlayer() {
+        return player;
     }
 
-    public void setCurrentArea(Area currentArea) {
-        this.currentArea = currentArea;
+    public AreaFactory getAreaFactory() {
+        return areaFactory;
+    }
+            
+    public AreaRunner() {
+        areaFactory = new AreaFactory();
+        player = new Player(areaFactory.getArea(), 0, 0);
+        //Initial area
+        setCurrentArea(-1);
+    }
+    
+    public Area getCurrentArea() {
+        return areaFactory.getArea();
+    }
+
+    public void setCurrentArea(int areaId) {
+        areaFactory.setArea(areaId);
     }
     
     public void iterateThroughObjectsInCurrentArea() {
-        ArrayList<GameObject> objects = currentArea.getObjects();
+        ArrayList<GameObject> objects = areaFactory.getArea().getObjects();
         for (int i=0; i<objects.size(); i++) {
             
         }
