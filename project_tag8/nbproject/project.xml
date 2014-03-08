@@ -6,6 +6,7 @@
             <name>project_tag8</name>
             <source-roots>
                 <root id="src.dir"/>
+                <root id="src.assets.dir"/>
             </source-roots>
             <test-roots>
                 <root id="test.src.dir"/>

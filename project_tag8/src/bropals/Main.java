@@ -6,6 +6,8 @@
 
 package bropals;
 
+import bropals.graphics.ImageLoader;
+
 /**
  *
  * @author Jonathon
@@ -13,6 +15,10 @@ package bropals;
 public class Main {
     
     public static void main(String[] args) {
-        
+        loadImagesFromDirectories();
+    }
+    
+    private static void loadImagesFromDirectories() {
+        ImageLoader loader = ImageLoader.getLoader();
     }
 }
