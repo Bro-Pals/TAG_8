@@ -4,9 +4,9 @@
  */
 package bropals.gameobject;
 
+import bropals.level.Area;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 /**
  *
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public abstract class GameObject {
  
     private float x, y;
-    private ArrayList<GameObject> parent;
+    private Area parent;
     
     /**
      * The basic game object
@@ -23,12 +23,11 @@ public abstract class GameObject {
      * @param x The x position of the GameObject
      * @param y The y position of the GameObject
      */
-    public GameObject(ArrayList<GameObject> parent, float x, float y) {
+    public GameObject(Area parent, float x, float y) {
         this.x = x;
         this.y = y;
         this.parent = parent;
-        
-        parent.add(this);
+
     }
     
     public abstract BufferedImage getTexture();
@@ -59,7 +58,11 @@ public abstract class GameObject {
         this.y = y;
     }
 
-    public ArrayList<GameObject> getParent() {
+    public Area getParent() {
         return parent;
+    }
+    
+    public void setParent(Area p) {
+        this.parent = p;
     }
 }

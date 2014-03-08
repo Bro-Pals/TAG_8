@@ -6,6 +6,7 @@
 
 package bropals.gameobject;
 
+import bropals.level.Area;
 import bropals.util.Vector2;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class Waypoint extends GameObject {
     private float xPosition, yPosition;
     private Vector2 faceDirection;
     
-    public Waypoint(ArrayList<GameObject> parent, float x, float y) {
+    public Waypoint(Area parent, float x, float y) {
         super(parent, x, y);
     }
 

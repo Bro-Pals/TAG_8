@@ -9,6 +9,6 @@ package bropals.gameobject;
  * @author Owner
  */
 public interface Interactable {
-    void interact();
+    void interact(GameObject interactee);
     float getInteractDistance();
 }

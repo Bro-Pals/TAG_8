@@ -2,8 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package bropals.gameobject;
+package bropals.gameobject.block;
 
+import bropals.gameobject.GameObject;
+import bropals.gameobject.Interactable;
+import bropals.level.Area;
 import java.util.ArrayList;
 
 /**
@@ -15,7 +18,7 @@ public class TeleportDoor extends Block implements Interactable {
     private int targetAreaID;
     private float xPlayerPos, yPlayerPos;
     
-    public TeleportDoor(ArrayList<GameObject> parent, float x, float y, float width, float height, 
+    public TeleportDoor(Area parent, float x, float y, float width, float height, 
             int targetAreaID, float xPlayerPos, float yPlayerPos) {
         super(parent, x, y, width, height);
         this.targetAreaID = targetAreaID;
@@ -24,7 +27,7 @@ public class TeleportDoor extends Block implements Interactable {
     }
 
     @Override
-    public void interact() {
+    public void interact(GameObject instance) {
         // teleport the player to the given location
     }
 

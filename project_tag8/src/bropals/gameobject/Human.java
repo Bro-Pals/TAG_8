@@ -6,6 +6,7 @@
 
 package bropals.gameobject;
 
+import bropals.level.Area;
 import bropals.util.Vector2;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -14,14 +15,10 @@ import java.util.ArrayList;
  *
  * @author Jonathon
  */
-public class Human extends GameObject {
+public class Human extends Creature {
 
-    private float xPosition, yPosition, width, height;
     private HumanType type;
     private HumanState state;
-    private Vector2 faceDirection;
-    private float speed;
-    private float angleOfSight;
     private Waypoint currentGoalWaypoint;
     private Waypoint[] patrolPath;
     private Waypoint storedWaypoint;
@@ -31,45 +28,13 @@ public class Human extends GameObject {
     private float attachDistance;
     private float turnSpeed;
     
-    public Human(ArrayList<GameObject> parent, float x, float y) {
-        super(parent, x, y);
+    public Human(Area parent, float x, float y, float size, float speed, Vector2 faceDirection) {
+        super(parent, x, y, size, speed, faceDirection);
     }
 
     @Override
     public BufferedImage getTexture() {
         return null;
-    }
-
-    public float getXPosition() {
-        return xPosition;
-    }
-
-    public void setXPosition(float xPosition) {
-        this.xPosition = xPosition;
-    }
-
-    public float getYPosition() {
-        return yPosition;
-    }
-
-    public void setYPosition(float yPosition) {
-        this.yPosition = yPosition;
-    }
-
-    public float getWidth() {
-        return width;
-    }
-
-    public void setWidth(float width) {
-        this.width = width;
-    }
-
-    public float getHeight() {
-        return height;
-    }
-
-    public void setHeight(float height) {
-        this.height = height;
     }
 
     public HumanType getType() {
@@ -86,30 +51,6 @@ public class Human extends GameObject {
 
     public void setState(HumanState state) {
         this.state = state;
-    }
-
-    public Vector2 getFaceDirection() {
-        return faceDirection;
-    }
-
-    public void setFaceDirection(Vector2 faceDirection) {
-        this.faceDirection = faceDirection;
-    }
-
-    public float getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(float speed) {
-        this.speed = speed;
-    }
-
-    public float getAngleOfSight() {
-        return angleOfSight;
-    }
-
-    public void setAngleOfSight(float angleOfSight) {
-        this.angleOfSight = angleOfSight;
     }
 
     public Waypoint getCurrentGoalWaypoint() {

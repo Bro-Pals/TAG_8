@@ -9,6 +9,9 @@ package bropals.util;
  * @author Owner
  */
 public class Vector2 {
+   
+    public static final Vector2 UNIT_X = new Vector2(1, 0), UNIT_Y = new Vector2(0, 1);
+    
     private double x, y;
     
     public Vector2() {

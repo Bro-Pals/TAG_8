@@ -2,8 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package bropals.gameobject;
+package bropals.gameobject.block;
 
+import bropals.gameobject.GameObject;
+import bropals.gameobject.Interactable;
+import bropals.level.Area;
 import java.util.ArrayList;
 
 /**
@@ -12,12 +15,12 @@ import java.util.ArrayList;
  */
 public class HayBale extends Block implements Interactable {
     
-    public HayBale(ArrayList<GameObject> parent, float x, float y, float width, float height) {
+    public HayBale(Area parent, float x, float y, float width, float height) {
         super(parent, x, y, width, height);
     }
 
     @Override
-    public void interact() {
+    public void interact(GameObject instance) {
         // player hides in this hay bale
     }
 

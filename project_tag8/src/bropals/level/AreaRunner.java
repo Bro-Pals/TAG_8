@@ -7,6 +7,7 @@
 package bropals.level;
 
 import bropals.gameobject.GameObject;
+import bropals.gameobject.Player;
 import java.util.ArrayList;
 
 /**
@@ -16,7 +17,8 @@ import java.util.ArrayList;
 public class AreaRunner {
     
     private Area currentArea;
-
+    private Player player;
+    
     public Area getCurrentArea() {
         return currentArea;
     }
