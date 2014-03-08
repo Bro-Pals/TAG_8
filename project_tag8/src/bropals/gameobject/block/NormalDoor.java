@@ -31,7 +31,7 @@ public class NormalDoor extends Block implements Interactable {
         return 100; // random number
     }
 
-    public boolean isCollidable() {
-        return collidable;
+    public boolean isOpen() {
+        return !collidable;
     }
 }

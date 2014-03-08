@@ -36,13 +36,15 @@ public class Human extends Creature {
     }
 
     /**
-     * See if this human can see the passed player object
-     * @param player The player that we're testing the line of sight to
+     * See if this human can see the given point, as in there are no blocks
+     *      blocking its view of it.
+     * @param x The x position of the point
+     * @param y The y position of the point
      * @return True if there is nothing blocking the Human's line of sight to the
-     *         player, otherwise returns false
+     *         point, otherwise returns false
      */
-    public boolean canSee(Player player) {
-        Line2D.Float sightLine = new Line2D.Float(getX(), getY(), player.getX(), player.getY());
+    public boolean canSee(float x, float y) {
+        Line2D.Float sightLine = new Line2D.Float(getX(), getY(), x, y);
         for (GameObject obj : getParent().getObjects()) {
             if (obj instanceof Block) {
                 if (((Block)obj).getRectangle2D().intersectsLine(sightLine)) {

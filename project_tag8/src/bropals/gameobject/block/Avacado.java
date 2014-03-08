@@ -31,7 +31,7 @@ public class Avacado extends Block implements Interactable {
     
     @Override
     public void interact(GameObject instance) {
-        // player pics up te avacado
+        AvacadoManager.get().pickUpAvacado(this);
     }
 
     @Override

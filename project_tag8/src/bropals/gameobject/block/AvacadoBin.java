@@ -7,6 +7,7 @@ package bropals.gameobject.block;
 import bropals.gameobject.GameObject;
 import bropals.gameobject.Interactable;
 import bropals.level.Area;
+import bropals.level.AvacadoManager;
 import java.util.ArrayList;
 
 /**
@@ -21,7 +22,7 @@ public class AvacadoBin extends Block implements Interactable {
 
     @Override
     public void interact(GameObject instance) {
-        // player deposits and saves all his avacados
+        AvacadoManager.get().collectAvacados();
     }
 
     @Override

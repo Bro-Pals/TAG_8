@@ -5,6 +5,7 @@
 package bropals.gameobject;
 
 import bropals.gameobject.block.Block;
+import bropals.gameobject.block.NormalDoor;
 import bropals.gameobject.block.Wall;
 import bropals.level.Area;
 import bropals.util.Vector2;
@@ -60,6 +61,10 @@ public abstract class Creature extends GameObject {
                 Block block = (Block) obj;
                 if (grappling && !(block instanceof Wall)) {
                     continue; // if it's not a wall the player can go over it while grappling
+                } else if (block instanceof NormalDoor) {
+                    if (((NormalDoor)block).isOpen()) {
+                        continue; // open doors aren't collidable
+                    }
                 }
                 float leftBound = block.getX();
                 float rightBound = block.getX() + block.getWidth();
