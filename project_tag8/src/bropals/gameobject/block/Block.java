@@ -6,6 +6,7 @@ package bropals.gameobject.block;
 
 import bropals.gameobject.GameObject;
 import bropals.level.Area;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -44,6 +45,10 @@ public class Block extends GameObject {
 
     public void setHeight(float height) {
         this.height = height;
+    }
+    
+    public Rectangle2D.Float getRectangle2D() {
+        return new Rectangle2D.Float(getX(), getY(), getWidth(), getHeight());
     }
     
 }

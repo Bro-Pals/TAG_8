@@ -6,8 +6,11 @@
 
 package bropals.gameobject;
 
+import bropals.gameobject.block.Block;
 import bropals.level.Area;
 import bropals.util.Vector2;
+import java.awt.Point;
+import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -32,6 +35,24 @@ public class Human extends Creature {
         super(parent, x, y, size, speed, faceDirection);
     }
 
+    /**
+     * See if this human can see the passed player object
+     * @param player The player that we're testing the line of sight to
+     * @return True if there is nothing blocking the Human's line of sight to the
+     *         player, otherwise returns false
+     */
+    public boolean canSee(Player player) {
+        Line2D.Float sightLine = new Line2D.Float(getX(), getY(), player.getX(), player.getY());
+        for (GameObject obj : getParent().getObjects()) {
+            if (obj instanceof Block) {
+                if (((Block)obj).getRectangle2D().intersectsLine(sightLine)) {
+                    return false; // there is something blocking the line of sight!
+                }
+            }
+        }
+        return true;
+    }
+    
     @Override
     public BufferedImage getTexture() {
         return null;

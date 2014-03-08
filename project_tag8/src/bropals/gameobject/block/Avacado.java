@@ -7,6 +7,7 @@ package bropals.gameobject.block;
 import bropals.gameobject.GameObject;
 import bropals.gameobject.Interactable;
 import bropals.level.Area;
+import bropals.level.AvacadoManager;
 
 /**
  *
@@ -15,11 +16,19 @@ import bropals.level.Area;
 public class Avacado extends Block implements Interactable {
 
     // keep track of where it was
+    private int id;
     
     public Avacado(Area parent, float x, float y, float width, float height) {
         super(parent, x, y, width, height);
+        this.id = AvacadoManager.get().getAvacadosCollected().size() + AvacadoManager.get().getAvacadosInWorld().size();
+        // add this avacado to the world
+        AvacadoManager.get().getAvacadosInWorld().add(this);
     }
-
+    
+    public int getId() {
+        return id;
+    }
+    
     @Override
     public void interact(GameObject instance) {
         // player pics up te avacado

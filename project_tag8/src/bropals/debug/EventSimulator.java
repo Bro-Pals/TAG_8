@@ -10,4 +10,9 @@ package bropals.debug;
  */
 public class EventSimulator {
     
+    
+    
+    public EventSimulator() {
+        
+    }
 }
