@@ -94,4 +94,32 @@ public class AreaFactory {
             avacadoBinPool.recycle((AvacadoBin)recycle);
         }
     }
+    
+    public Block requestBlock() {
+        return blockPool.request();
+    }
+    
+    public Wall requestWall() {
+        return wallPool.request();
+    }
+    
+    public HayBale requestHayBale() {
+        return hayBalePool.request();
+    }
+    
+    public Avacado requestAvacado() {
+        return avacadoPool.request();
+    }
+    
+    public AvacadoBin requestAvacadoBin() {
+        return avacadoBinPool.request();
+    }
+    
+    public NormalDoor requestNormalDoor() {
+        return normalDoorPool.request();
+    }
+    
+    public TeleportDoor requestTeleportDoor() {
+        return teleportDoorPool.request();
+    }
 }
