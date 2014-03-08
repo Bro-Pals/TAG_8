@@ -59,7 +59,9 @@ public class AreaFactory {
         theArea.recycleAll();
         theArea.defaults();
         switch(id) {
-            
+            case -2:
+            Block b = requestBlock();
+                break;
             case -1:
                 break;
             default:

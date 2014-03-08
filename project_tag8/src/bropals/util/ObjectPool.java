@@ -26,6 +26,7 @@ public abstract class ObjectPool<O> {
     public O request() {
         if (pool.size()>1) {
             O obj = pool.get(0);
+            pool.remove(obj);
             pool.trimToSize();
             return obj;
         } else {
