@@ -67,6 +67,15 @@ public class ImageLoader {
         return images.get(name)[index];
     }
     
+     /**
+     * Gets a loaded image from ImageLoader. Gets the image at the index 0 of the array
+     * @param name the name of the loading image (no extension).
+     * @return the image (if it is loaded)
+     */
+    public BufferedImage getImage(String name) {
+        return images.get(name)[0];
+    }
+    
     /**
      * Returns an array of BufferedImages from an image being split up into sprites.
      * @param img The image
@@ -74,23 +83,39 @@ public class ImageLoader {
      * @param height The height of each sprite
      * @return The array of sprites
      */
-    public BufferedImage[] getSpriteSheet(BufferedImage img, int width, int height) {
+    public void loadSpriteSheet(String name, String pathFromImageDirectory, int width, int height) {
+        BufferedImage img = null;
+        File f = new File(jarPath + "\\" + imageDirectory + "\\" + pathFromImageDirectory);
+        try {
+            img = (BufferedImage)ImageIO.read(f);
+            print("Loaded image: " + f.getAbsolutePath() + " as name " + name, INFO);
+        } catch(IOException e) {
+            print("Can't load image: " + f.getAbsolutePath(), ERROR);
+        }
+        
+        if (img == null) {
+            print("Couldn't load sprites because the image wasn't found!", ERROR); 
+            return;
+        }
+        
         if (height < 0 || width < 0 || height > img.getHeight() || width > img.getWidth()) {
             print("The size of the sprites are too small or too big!", ERROR);
-            return null;
+            return;
         }
+        
         int rows = img.getHeight() / height;
         int columns = img.getWidth() / width;
-        BufferedImage[] images = new BufferedImage[rows*columns];
+        BufferedImage[] splitImages = new BufferedImage[rows*columns];
+        // split up the images to the right sizes
         for (int r=0; r<rows; r++) {
             for (int c=0; c>columns; c++) {
                 try {
-                    images[(r+c)] = img.getSubimage(width*c, height*r, width, height);
+                    splitImages[(r+c)] = img.getSubimage(width*c, height*r, width, height);
                 } catch(Exception e) {
                     print(e.toString(), ERROR);
                 }
             }
         }
-        return images;
+        images.put(name, splitImages); // add it to the hash map thingy
     }
 }

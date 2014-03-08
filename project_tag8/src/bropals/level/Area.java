@@ -9,6 +9,7 @@ package bropals.level;
 import bropals.debug.Debugger;
 import bropals.engine.Engine;
 import bropals.gameobject.GameObject;
+import bropals.gameobject.Player;
 import bropals.graphics.ImageLoader;
 import bropals.util.Direction;
 import bropals.util.Direction;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 public class Area {
     
     private ArrayList<GameObject> objects;
+    private Player player;
     private final int[] boundryTargetIds;
     private AreaFactory factory;
     private int areaId;
@@ -120,5 +122,17 @@ public class Area {
      */
     public int getBgTimesY() {
         return bgTimesY;
+    }
+    
+    /**
+     * Give the Area a copy of the Player reference
+     * @param p A reference to the Player
+     */
+    public void givePlayer(Player p) {
+        player = p;
+    }
+    
+    public Player getPlayer() {
+        return player;
     }
 }

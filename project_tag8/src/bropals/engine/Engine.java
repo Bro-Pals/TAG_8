@@ -137,9 +137,9 @@ public class Engine {
         frame.setTitle("Robin Cow");
         frame.setIconImage(ImageLoader.getLoader().getImage("GameIcon", 0));
         frame.setResizable(false);
+        ((JFrame)frame).setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         closeRequested = false;
         frame.addWindowListener(new WindowAdapter() {
-
             @Override
             public void windowClosing(WindowEvent e) {
                 exitGame();
@@ -172,6 +172,8 @@ public class Engine {
      * "getMillisecondsPerFrame"
      */
     public void doGameCycle() {
+        runner.iterateThroughObjectsInCurrentArea();
+        
         b = System.currentTimeMillis();
         runGameFrame();
         a = System.currentTimeMillis();
@@ -192,7 +194,7 @@ public class Engine {
      * method handling the actually calling of the parts of the game.
      */
     private void runGameFrame() {
-        
+        runner.setCurrentArea(-2);
         renderGame();
     }
     

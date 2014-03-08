@@ -22,7 +22,7 @@ public class AvacadoPool extends ObjectPool<Avacado> {
 
     @Override
     protected Avacado makeDefaultObject() {
-        return new Avacado(area, 0, 0, 0, 0);
+        return new Avacado(area, 0, 0, 0, 0, 0);
     }
 
     @Override
