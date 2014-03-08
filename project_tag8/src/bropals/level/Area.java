@@ -9,6 +9,7 @@ package bropals.level;
 import bropals.gameobject.GameObject;
 import bropals.util.Direction;
 import bropals.util.Direction;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 /**
@@ -18,8 +19,28 @@ import java.util.ArrayList;
 public class Area {
     
     private ArrayList<GameObject> objects;
-    private int[] boundryTargetIds;
+    private final int[] boundryTargetIds;
+
+    public int[] getBoundryTargetIds() {
+        return boundryTargetIds;
+    }
+
+    public int getAreaId() {
+        return areaId;
+    }
     private int areaId;
+    private BufferedImage backgroundTile;
+    private int bgTimesX, bgTimesY;
+
+    public BufferedImage getBackgroundTile() {
+        return backgroundTile;
+    }
+
+    public void setBackgroundTile(BufferedImage backgroundTile, int canvasX, int canvasY) {
+        this.backgroundTile = backgroundTile;
+        bgTimesX = (int)Math.ceil((float)canvasX/(float)backgroundTile.getWidth());
+        bgTimesY = (int)Math.ceil((float)canvasY/(float)backgroundTile.getHeight());
+    }
     
     public Area(int northId, int southId, int eastId, int westId, int areaId) {
         boundryTargetIds = new int[4];
@@ -38,4 +59,20 @@ public class Area {
     public ArrayList<GameObject> getObjects() {
         return objects;
     }  
+
+    /**
+     * For the Renderer. 
+     * @return number of times to iterate background tile image in the x direction
+     */
+    public int getBgTimesX() {
+        return bgTimesX;
+    }
+    
+    /**
+     * For the Renderer. 
+     * @return number of times to iterate background tile image in the y direction
+     */
+    public int getBgTimesY() {
+        return bgTimesY;
+    }
 }

@@ -29,7 +29,7 @@ public class ImageLoader {
         return loader;
     }
     
-    private HashMap<String, BufferedImage[]> images;
+    private final HashMap<String, BufferedImage[]> images;
     
     public ImageLoader() {
         images = new HashMap<>();

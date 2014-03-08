@@ -11,7 +11,9 @@ import bropals.level.AreaRunner;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
 
 /**
  *
@@ -22,15 +24,17 @@ public class Renderer {
     private Canvas canvas;
     private BufferStrategy bs;
     private Graphics2D g2d;
+    private AffineTransform identity;
     
     public Renderer(Canvas canvas) {
         this.canvas=canvas;
+        identity = new AffineTransform();
+        identity.setToIdentity();
     }
     
     public void setupRenderer() {
         canvas.createBufferStrategy(2);
         bs = canvas.getBufferStrategy();
-        
     }
     
     /**
@@ -61,6 +65,7 @@ public class Renderer {
      * @param screenHeight the canvas height
      */
     public void clear(Color clearColor, int screenWidth, int screenHeight) {
+        g2d.setTransform(identity);
         this.g2d.setColor(clearColor);
         this.g2d.fillRect(0, 0, screenWidth, screenHeight);
     }
@@ -76,7 +81,16 @@ public class Renderer {
     }
     
     private void drawAreaBackground(Area area) {
-        
+        g2d.setTransform(identity);
+        //Draw the background tile in area
+        BufferedImage bg = area.getBackgroundTile();
+        int xTimes = area.getBgTimesX();
+        int yTimes = area.getBgTimesY();
+        for (int x=0; x<xTimes; x++) {
+            for (int y=0; y<yTimes; y++) {
+                this.g2d.drawImage(bg, (x*bg.getWidth()), (y*bg.getHeight()), null);
+            }
+        }
     }
     
     private void drawGameObjectSprites(Area area) {
