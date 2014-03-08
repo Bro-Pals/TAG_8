@@ -69,7 +69,7 @@ public class Area {
     public Area() {
         areaId = -1;
         boundryTargetIds = new int[]{ -1, -1, -1, -1 };
-        
+        objects = new ArrayList<GameObject>();
         defaults();
     }
     
