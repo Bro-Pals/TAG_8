@@ -66,4 +66,31 @@ public class ImageLoader {
     public BufferedImage getImage(String name, int index) {
         return images.get(name)[index];
     }
+    
+    /**
+     * Returns an array of BufferedImages from an image being split up into sprites.
+     * @param img The image
+     * @param width The width of each sprite
+     * @param height The height of each sprite
+     * @return The array of sprites
+     */
+    public BufferedImage[] getSpriteSheet(BufferedImage img, int width, int height) {
+        if (height < 0 || width < 0 || height > img.getHeight() || width > img.getWidth()) {
+            print("The size of the sprites are too small or too big!", ERROR);
+            return null;
+        }
+        int rows = img.getHeight() / height;
+        int columns = img.getWidth() / width;
+        BufferedImage[] images = new BufferedImage[rows*columns];
+        for (int r=0; r<rows; r++) {
+            for (int c=0; c>columns; c++) {
+                try {
+                    images[(r+c)] = img.getSubimage(width*c, height*r, width, height);
+                } catch(Exception e) {
+                    print(e.toString(), ERROR);
+                }
+            }
+        }
+        return images;
+    }
 }
