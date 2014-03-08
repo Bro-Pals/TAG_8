@@ -11,5 +11,19 @@ package bropals.util;
  * @author Jonathon
  */
 public enum Direction {
-    NORTH, SOUTH, EAST, WEST
+    NORTH, SOUTH, EAST, WEST;
+    
+    public static int getDirectionId(Direction d) {
+        switch(d) {
+            case NORTH:
+                return 0;
+            case SOUTH:
+                return 1;
+            case EAST:
+                return 2;
+            case WEST:
+                return 3;
+        }
+        return -1;
+    }
 }
