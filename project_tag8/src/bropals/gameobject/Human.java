@@ -7,6 +7,7 @@
 package bropals.gameobject;
 
 import bropals.gameobject.block.Block;
+import bropals.graphics.ImageLoader;
 import bropals.level.Area;
 import bropals.util.Vector2;
 import java.awt.Point;
@@ -57,7 +58,7 @@ public class Human extends Creature {
     
     @Override
     public BufferedImage getTexture() {
-        return null;
+        return ImageLoader.getLoader().getImage("testCreature", 0);
     }
 
     public HumanType getType() {

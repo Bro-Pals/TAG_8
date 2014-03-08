@@ -8,6 +8,7 @@ package bropals.level;
 
 import bropals.debug.Debugger;
 import bropals.gameobject.GameObject;
+import bropals.gameobject.Human;
 import bropals.gameobject.block.Avacado;
 import bropals.gameobject.block.AvacadoBin;
 import bropals.gameobject.block.Block;
@@ -19,6 +20,7 @@ import bropals.gameobject.pools.AvacadoBinPool;
 import bropals.gameobject.pools.AvacadoPool;
 import bropals.gameobject.pools.BlockPool;
 import bropals.gameobject.pools.HayBalePool;
+import bropals.gameobject.pools.HumanPool;
 import bropals.gameobject.pools.NormalDoorPool;
 import bropals.gameobject.pools.TeleportDoorPool;
 import bropals.gameobject.pools.WallPool;
@@ -37,6 +39,7 @@ public class AreaFactory {
     private final NormalDoorPool normalDoorPool;
     private final TeleportDoorPool teleportDoorPool;
     private final WallPool wallPool;
+    private final HumanPool humanPool;
     
     public Area getArea() { return theArea; }
     
@@ -49,6 +52,7 @@ public class AreaFactory {
         normalDoorPool = new NormalDoorPool(theArea);
         teleportDoorPool = new TeleportDoorPool(theArea);
         wallPool = new WallPool(theArea);
+        humanPool = new HumanPool(theArea);
     }
     
     /**
@@ -94,7 +98,14 @@ public class AreaFactory {
         } else
         if (recycle instanceof AvacadoBin) {
             avacadoBinPool.recycle((AvacadoBin)recycle);
+        } else
+        if (recycle instanceof Human) {
+            humanPool.recycle((Human)recycle);
         }
+    }
+    
+    public Human requestHuman() {
+        return humanPool.request();
     }
     
     public Block requestBlock() {

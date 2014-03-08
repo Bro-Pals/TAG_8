@@ -32,6 +32,7 @@ public class Main {
         ImageLoader loader = ImageLoader.getLoader();
         loadFrameIconImage(loader);
         loadAreaBackgrounds(loader);
+        loadSprites(loader);
     }
     
     private void loadAreaBackgrounds(ImageLoader loader) {
@@ -40,6 +41,10 @@ public class Main {
     
     private void loadFrameIconImage(ImageLoader loader) {
         loader.loadSingleImage("GameIcon", "GameIcon.png");
+    }
+    
+    private void loadSprites(ImageLoader loader) {
+        loader.loadSingleImage("testCreature", "sprites/testCreature.png");
     }
     
     private void makeEngine(int fps) {
