@@ -6,6 +6,7 @@
 
 package bropals.level;
 
+import bropals.datafiles.CowAreaFileManager;
 import bropals.debug.Debugger;
 import bropals.gameobject.GameObject;
 import bropals.gameobject.Human;
@@ -40,6 +41,7 @@ public class AreaFactory {
     private final TeleportDoorPool teleportDoorPool;
     private final WallPool wallPool;
     private final HumanPool humanPool;
+    private CowAreaFileManager cowAreaFileManager;
     
     public Area getArea() { return theArea; }
     
@@ -53,6 +55,8 @@ public class AreaFactory {
         teleportDoorPool = new TeleportDoorPool(theArea);
         wallPool = new WallPool(theArea);
         humanPool = new HumanPool(theArea);
+        
+        cowAreaFileManager = new CowAreaFileManager();
     }
     
     /**
@@ -63,9 +67,6 @@ public class AreaFactory {
         theArea.recycleAll();
         theArea.defaults();
         switch(id) {
-            case -2:
-            Block b = requestBlock();
-                break;
             case -1:
                 break;
             default:
