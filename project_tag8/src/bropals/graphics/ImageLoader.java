@@ -41,6 +41,11 @@ public class ImageLoader {
         }
     }
 
+    /**
+     * Loads a single image.
+     * @param nameOfImage the name that the image will be stored as in the images HashMap.
+     * @param pathFromImageDirectory the path of the image file relative to "images" in the assets directory.
+     */
     public void loadSingleImage(String nameOfImage, String pathFromImageDirectory) {
         File f = new File(jarPath + "\\" + imageDirectory + "\\" + pathFromImageDirectory);
         try {
@@ -53,7 +58,7 @@ public class ImageLoader {
     }
     
     /**
-     * Gets a loaded image from ImageLoader.
+     * Gets a loaded image from ImageLoader. If the image was loaded by "loadSingleImage" then the index should be 0.
      * @param name the name of the loading image (no extension).
      * @param index the index of the image in the internal array
      * @return the image (if it is loaded)

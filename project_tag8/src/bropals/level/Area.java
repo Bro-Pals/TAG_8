@@ -6,7 +6,10 @@
 
 package bropals.level;
 
+import bropals.debug.Debugger;
+import bropals.engine.Engine;
 import bropals.gameobject.GameObject;
+import bropals.graphics.ImageLoader;
 import bropals.util.Direction;
 import bropals.util.Direction;
 import java.awt.image.BufferedImage;
@@ -42,18 +45,39 @@ public class Area {
         bgTimesY = (int)Math.ceil((float)canvasY/(float)backgroundTile.getHeight());
     }
     
-    public Area(int northId, int southId, int eastId, int westId, int areaId) {
-        boundryTargetIds = new int[4];
-        boundryTargetIds[Direction.getDirectionId(Direction.NORTH)] = northId;
-        boundryTargetIds[Direction.getDirectionId(Direction.SOUTH)] = southId;
-        boundryTargetIds[Direction.getDirectionId(Direction.EAST)] = westId;
-        boundryTargetIds[Direction.getDirectionId(Direction.WEST)] = eastId;
-        this.areaId = areaId;
+    public int getNorthTargetId() { return boundryTargetIds[Direction.getDirectionId(Direction.NORTH)]; }
+    public int getSouthTargetId() { return boundryTargetIds[Direction.getDirectionId(Direction.SOUTH)]; }
+    public int getEastTargetId() { return boundryTargetIds[Direction.getDirectionId(Direction.EAST)]; }
+    public int getWestTargetId() { return boundryTargetIds[Direction.getDirectionId(Direction.WEST)]; }
+
+    public void setNorthTargetId(int id) {
+        boundryTargetIds[Direction.getDirectionId(Direction.NORTH)] = id;
     }
     
-    public Area(int[] boundryTargetIds, int areaId) {
-        this.boundryTargetIds = boundryTargetIds;
-        this.areaId = areaId;
+    public void setSouthTargetId(int id) {
+        boundryTargetIds[Direction.getDirectionId(Direction.SOUTH)] = id;
+    }
+    
+    public void setEastTargetId(int id) {
+        boundryTargetIds[Direction.getDirectionId(Direction.EAST)] = id;
+    }
+    
+    public void setWestTargetId(int id) {
+        boundryTargetIds[Direction.getDirectionId(Direction.WEST)] = id;
+    }
+    
+    public Area() {
+        areaId = -1;
+        boundryTargetIds = new int[]{ -1, -1, -1, -1 };
+        
+        defaults();
+    }
+    
+    /**
+     * Sets everything to a default value so the area is ready to be changed around with in AreaFactory.
+     */
+    public void defaults() {
+        setBackgroundTile(ImageLoader.getLoader().getImage("placeholder_background", 0), Engine.SCREEN_WIDTH, Engine.SCREEN_HEIGHT);
     }
     
     public ArrayList<GameObject> getObjects() {

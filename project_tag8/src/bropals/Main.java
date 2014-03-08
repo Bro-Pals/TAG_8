@@ -31,6 +31,11 @@ public class Main {
     private void loadImagesFromDirectories() {
         ImageLoader loader = ImageLoader.getLoader();
         loadFrameIconImage(loader);
+        loadAreaBackgrounds(loader);
+    }
+    
+    private void loadAreaBackgrounds(ImageLoader loader) {
+        loader.loadSingleImage("placeholder_background", "backgrounds/placeholder.png");
     }
     
     private void loadFrameIconImage(ImageLoader loader) {
