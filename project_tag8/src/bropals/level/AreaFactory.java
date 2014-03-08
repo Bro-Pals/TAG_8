@@ -32,7 +32,7 @@ public class AreaFactory {
         switch(id) {
             
             case -1:
-                
+                break;
             default:
                 Debugger.print("Need constructor for ID: " + id + " in AreaFactory", Debugger.ERROR);
         }
