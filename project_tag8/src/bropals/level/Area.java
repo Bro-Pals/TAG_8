@@ -135,4 +135,20 @@ public class Area {
     public Player getPlayer() {
         return player;
     }
+    
+    /**
+     * For use by the level designer. Adds an object to the area.
+     * @param object the object to add.
+     */
+    public void addObject(GameObject object) {
+        objects.add(object);
+    }
+    
+    /**
+     * For use by the level designer. Removes an object from the area.
+     * @param object the object to remove.
+     */
+    public void removeObject(GameObject object) {
+        objects.remove(object);
+    }
 }
