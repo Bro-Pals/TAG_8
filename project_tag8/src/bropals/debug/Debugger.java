@@ -20,8 +20,10 @@ public class Debugger {
             switch(type) {
                 case ERROR:
                     System.out.println("ERROR: " + message);
+                    break;
                 case INFO:
                     System.out.println("INFO: " + message);
+                    break;
                 default:
             }
         }
