@@ -6,6 +6,8 @@
 
 package bropals.graphics;
 
+import bropals.gameobject.Creature;
+import bropals.gameobject.GameObject;
 import bropals.level.Area;
 import bropals.level.AreaRunner;
 import java.awt.Canvas;
@@ -14,6 +16,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 /**
  *
@@ -24,12 +27,14 @@ public class Renderer {
     private Canvas canvas;
     private BufferStrategy bs;
     private Graphics2D g2d;
-    private AffineTransform identity;
+    private AffineTransform identity, working;
     
     public Renderer(Canvas canvas) {
         this.canvas=canvas;
         identity = new AffineTransform();
         identity.setToIdentity();
+        working = new AffineTransform();
+        working.setToIdentity();
     }
     
     public void setupRenderer() {
@@ -94,7 +99,18 @@ public class Renderer {
     }
     
     private void drawGameObjectSprites(Area area) {
-        
+        ArrayList<GameObject> objs = area.getObjects();
+        for (GameObject drawing : objs) {
+            if (drawing instanceof Creature) {
+                working.setToRotation(((Creature)drawing).getAngleFacing());
+                working.translate(drawing.getX(), drawing.getY());
+                g2d.setTransform(working);
+                g2d.drawImage(drawing.getTexture(), -(int)(((Creature)drawing).getRadius()/2), -(int)(((Creature)drawing).getRadius()/2), null);
+            } else {
+                g2d.setTransform(identity);
+                g2d.drawImage(drawing.getTexture(), (int)drawing.getX(), (int)drawing.getY(), null);
+            }
+        }
     }
     
     private void drawActionIcon(Area area) {
