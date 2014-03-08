@@ -24,6 +24,9 @@ public class Area {
     private ArrayList<GameObject> objects;
     private final int[] boundryTargetIds;
     private AreaFactory factory;
+    private int areaId;
+    private BufferedImage backgroundTile;
+    private int bgTimesX, bgTimesY;
 
     public int[] getBoundryTargetIds() {
         return boundryTargetIds;
@@ -32,9 +35,7 @@ public class Area {
     public int getAreaId() {
         return areaId;
     }
-    private int areaId;
-    private BufferedImage backgroundTile;
-    private int bgTimesX, bgTimesY;
+    
 
     public BufferedImage getBackgroundTile() {
         return backgroundTile;
