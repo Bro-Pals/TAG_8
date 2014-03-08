@@ -14,6 +14,8 @@ import bropals.level.Area;
  */
 public class Avacado extends Block implements Interactable {
 
+    // keep track of where it was
+    
     public Avacado(Area parent, float x, float y, float width, float height) {
         super(parent, x, y, width, height);
     }
@@ -26,5 +28,9 @@ public class Avacado extends Block implements Interactable {
     @Override
     public float getInteractDistance() {
         return 100; // some random number
+    }
+    
+    public void returnToSpawn() {
+        // return to where it's spawn location is
     }
 }

@@ -33,4 +33,12 @@ public class AreaRunner {
             
         }
     }
+    
+    public void reactToMouseInput(boolean pressed, int button, int screenX, int screenY) {
+        
+    }
+    
+    public void reactToKeyInput(boolean pressed, int button) {
+        
+    }
 }
