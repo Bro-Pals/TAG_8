@@ -53,6 +53,8 @@ public abstract class Creature extends GameObject {
             moveSpeed = grappleSpeed; // set the speed to the grappleSpeed if grappling
         }
         
+        float minInteractDistance = 10000*10000; // some random large number
+        
         for (GameObject obj: getParent().getObjects()) {
             if (obj instanceof Block) {
                 Block block = (Block) obj;
@@ -100,8 +102,11 @@ public abstract class Creature extends GameObject {
                 } else {
                     distanceFrom = ((obj.getX() - getX())*(obj.getX() - getX())) + ((obj.getY() - getY())*(obj.getY() - getY()));
                 }
-                if ( interactDist * interactDist < (
-                        
+                // if the player is close enoough to the object and it's the smallest interact distance
+                if (interactDist * interactDist < distanceFrom && minInteractDistance > distanceFrom) {
+                    selectedInteractable = (Interactable) obj; // make it the selected interactable
+                    minInteractDistance = distanceFrom;
+                }
             }
         }
         
