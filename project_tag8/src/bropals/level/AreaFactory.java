@@ -108,4 +108,8 @@ public class AreaFactory {
     public void makeNewAreaOverOldArea() {
         theArea.defaults();
     }
+
+    public CowAreaFileManager getFileManager() {
+        return cowAreaFileManager;
+    }
 }

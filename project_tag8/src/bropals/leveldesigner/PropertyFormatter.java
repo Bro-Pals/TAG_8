@@ -687,7 +687,7 @@ public class PropertyFormatter {
         
         protected final Human human;
         protected final JPanel leftSide, rightSide;
-        protected final JTextField waypointXPosition, waypointYPosition;
+        protected final JTextField waypointXPosition, waypointYPosition, waypointWait;
         protected final JButton createWaypoint, deleteWaypoint, moveUp, moveDown;
         protected final WayPointListModel wayPointDataModel;
         protected final JList waypointList;
@@ -707,7 +707,10 @@ public class PropertyFormatter {
             rightSide.add(new JLabel("Selected Y Position"));
             waypointYPosition = new JTextField();
             rightSide.add(waypointYPosition);
-
+            rightSide.add(new JLabel("Waitpoint Wait Time"));
+            waypointWait = new JTextField();
+            rightSide.add(waypointWait);
+            
             //Buttons
             createWaypoint = new JButton("Create Waypoint");
             deleteWaypoint = new JButton("Delete Waypoint");
@@ -738,6 +741,7 @@ public class PropertyFormatter {
                 public void actionPerformed(ActionEvent e) {
                     wayPointDataModel.shiftUp(waypointList.getSelectedIndex(), waypointList);
                     waypointList.repaint();
+                    caldm.tellRepaint();
                 }
             });
             
@@ -746,8 +750,14 @@ public class PropertyFormatter {
                 public void actionPerformed(ActionEvent e) {
                     wayPointDataModel.shiftDown(waypointList.getSelectedIndex(), waypointList);
                     waypointList.repaint();
+                    caldm.tellRepaint();
                 }
             });
+            
+            //Text field listeners
+            waypointXPosition.addActionListener(new WaypointXPositionListener());
+            waypointYPosition.addActionListener(new WaypointYPositionListener());
+            waypointWait.addActionListener(new WaypointWaitListener());
             
             //Scrolly bar
             JScrollPane scrolly = new JScrollPane(waypointList);
@@ -761,9 +771,71 @@ public class PropertyFormatter {
             this.add(leftSide, BorderLayout.CENTER);
             this.add(rightSide, BorderLayout.EAST);
             this.add(new JLabel("Waypoints"), BorderLayout.NORTH);
-
-            //Put waypoint data into list to start editing it
-            
+        }
+                   
+        private void putWaypointDataIntoHuman() {
+            Waypoint[] newPatrolPath = (Waypoint[])wayPointDataModel.data.toArray(new Waypoint[wayPointDataModel.getSize()]);
+            human.setPatrolPath(newPatrolPath);
+        }
+        
+        class WaypointWaitListener implements ActionListener {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //Update waypoint and rendering for everything
+                Waypoint selectedWaypoint = caldm.getSelectedWaypoint();
+                if (selectedWaypoint!=null) {
+                    try {
+                        selectedWaypoint.setDelay( Integer.parseInt( waypointWait.getText() ) );
+                    } catch(NumberFormatException nfe) {
+                        selectedWaypoint.setX(0);
+                        waypointWait.setText("0");
+                        waypointWait.repaint();
+                    }
+                    putWaypointDataIntoHuman();
+                    waypointList.repaint();
+                    caldm.tellRepaint();
+                }
+            }
+        }
+        
+        class WaypointXPositionListener implements ActionListener {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //Update waypoint and rendering for everything
+                Waypoint selectedWaypoint = caldm.getSelectedWaypoint();
+                if (selectedWaypoint!=null) {
+                    try {
+                        selectedWaypoint.setX( Float.parseFloat( waypointXPosition.getText() ) );
+                    } catch(NumberFormatException nfe) {
+                        selectedWaypoint.setX(0);
+                        waypointXPosition.setText("0");
+                        waypointXPosition.repaint();
+                    }
+                    putWaypointDataIntoHuman();
+                    waypointList.repaint();
+                    caldm.tellRepaint();
+                }
+            }
+        }
+        
+        class WaypointYPositionListener implements ActionListener {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //Update waypoint and rendering for everything
+                Waypoint selectedWaypoint = caldm.getSelectedWaypoint();
+                if (selectedWaypoint!=null) {
+                    try {
+                        selectedWaypoint.setY( Float.parseFloat( waypointYPosition.getText() ) );
+                    } catch(NumberFormatException nfe) {
+                        selectedWaypoint.setY(0);
+                        waypointYPosition.setText("0");
+                        waypointYPosition.repaint();
+                    }
+                    putWaypointDataIntoHuman();
+                    waypointList.repaint();
+                    caldm.tellRepaint();
+                }
+            }
         }
         
         class CreateWaypointButtonListener implements ActionListener {
@@ -777,6 +849,8 @@ public class PropertyFormatter {
                     m.add(m.getSize(), new Waypoint(0, 0));
                 }
                 m.trimToSize();
+                putWaypointDataIntoHuman();
+                caldm.tellRepaint();
             }
         }
         
@@ -788,7 +862,9 @@ public class PropertyFormatter {
                     ((WayPointListModel)waypointList.getModel()).remove(waypointList.getSelectedIndex());
                     caldm.getArea().removeObject(p);
                 }
+                putWaypointDataIntoHuman();
                 ((WayPointListModel)waypointList.getModel()).trimToSize();
+                caldm.tellRepaint();
             }
         }
         
@@ -798,6 +874,16 @@ public class PropertyFormatter {
             public void valueChanged(ListSelectionEvent e) {
                 //Waypoint selection logic here
                 caldm.setSelectedWaypoint((Waypoint)((JList)e.getSource()).getSelectedValue());
+                Waypoint p = (Waypoint)waypointList.getSelectedValue();
+                //Update renderered values in text fields
+                waypointXPosition.setText("" + p.getX() + "");
+                waypointYPosition.setText("" + p.getY() + "");
+                waypointWait.setText("" + p.getDelay() + "");
+                waypointXPosition.repaint();
+                waypointYPosition.repaint();
+                waypointWait.repaint();
+                putWaypointDataIntoHuman();
+                caldm.tellRepaint();
             }
             
         } 
@@ -817,39 +903,49 @@ public class PropertyFormatter {
             
             public void shiftUp(int shiftingIndex, JList toRepaint) {
                 if (shiftingIndex>0) {
-                    Waypoint[] wpArray = (Waypoint[])data.toArray(new Waypoint[data.size()]);
-                    Waypoint shifting = wpArray[shiftingIndex];
-                    Waypoint replacing = wpArray[shiftingIndex-1];
-                    //Swap places
-                    wpArray[shiftingIndex-1] = shifting;
-                    wpArray[shiftingIndex] = replacing;
-                    //Back to ArrayList form
-                    data = new ArrayList<Waypoint>(wpArray.length);
-                    for (int i=0; i<wpArray.length; i++) {
-                        data.add(wpArray[i]);
+                    try {
+                        Waypoint[] wpArray = (Waypoint[])data.toArray(new Waypoint[data.size()]);
+                        Waypoint shifting = wpArray[shiftingIndex];
+                        Waypoint replacing = wpArray[shiftingIndex-1];
+                        //Swap places
+                        wpArray[shiftingIndex-1] = shifting;
+                        wpArray[shiftingIndex] = replacing;
+                        //Back to ArrayList form
+                        data = new ArrayList<Waypoint>(wpArray.length);
+                        for (int i=0; i<wpArray.length; i++) {
+                            data.add(wpArray[i]);
+                        }
+                        notifyDataListenersOfContentsChanged(shiftingIndex);
+                        toRepaint.setSelectedIndex(shiftingIndex-1);
+                    } catch(Exception e) {
+                        
                     }
-                    toRepaint.setSelectedIndex(shiftingIndex-1);
                 }
             }
             
             public void shiftDown(int shiftingIndex, JList toRepaint) {
                 if (shiftingIndex<(getSize()-1)) {
-                    Waypoint[] wpArray = (Waypoint[])data.toArray(new Waypoint[data.size()]);
-                    Waypoint shifting = wpArray[shiftingIndex];
-                    Waypoint replacing = wpArray[shiftingIndex+1];
-                    //Swap places
-                    wpArray[shiftingIndex+1] = shifting;
-                    wpArray[shiftingIndex] = replacing;
-                    //Back to ArrayList form
-                    data = new ArrayList<Waypoint>(wpArray.length);
-                    for (int i=0; i<wpArray.length; i++) {
-                        data.add(wpArray[i]);
+                    try {
+                        Waypoint[] wpArray = (Waypoint[])data.toArray(new Waypoint[data.size()]);
+                        Waypoint shifting = wpArray[shiftingIndex];
+                        Waypoint replacing = wpArray[shiftingIndex+1];
+                        //Swap places
+                        wpArray[shiftingIndex+1] = shifting;
+                        wpArray[shiftingIndex] = replacing;
+                        //Back to ArrayList form
+                        data = new ArrayList<Waypoint>(wpArray.length);
+                        for (int i=0; i<wpArray.length; i++) {
+                            data.add(wpArray[i]);
+                        }
+                        notifyDataListenersOfContentsChanged(shiftingIndex);
+                        toRepaint.setSelectedIndex(shiftingIndex+1);
+                    } catch(Exception e) {
+                        
                     }
-                    toRepaint.setSelectedIndex(shiftingIndex+1);
                 }
             }
             
-            private void notifyDataListenersOfContentsChanged(int element) {
+            public void notifyDataListenersOfContentsChanged(int element) {
                 for (int j=0; j<dataListeners.size(); j++) {
                     dataListeners.get(j).contentsChanged(new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, element, element));
                 }
@@ -862,7 +958,11 @@ public class PropertyFormatter {
 
             @Override
             public Waypoint getElementAt(int index) {
-                return data.get(index);
+                try {
+                    return data.get(index);
+                } catch(IndexOutOfBoundsException ioodbe) {
+                    return null;
+                }
             }
 
             @Override
