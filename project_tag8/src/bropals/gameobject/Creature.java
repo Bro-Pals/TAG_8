@@ -43,8 +43,8 @@ public abstract class Creature extends GameObject {
      * @param speed How fast this creature moves
      * @param faceDirection A 2D vector representing where the creature faces
      */
-    public Creature(Area parent, float x, float y, float width, float height, float speed, Vector2 faceDirection) {
-        super(parent, x, y);
+    public Creature(float x, float y, float width, float height, float speed, Vector2 faceDirection) {
+        super(x, y);
         this.width = width;
         this.height = height;
         this.speed = speed;

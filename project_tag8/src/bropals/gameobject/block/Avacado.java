@@ -19,8 +19,8 @@ public class Avacado extends Block implements Interactable {
     private int id;
     private int roomId;
     
-    public Avacado(Area parent, float x, float y, float width, float height, int roomId) {
-        super(parent, x, y, width, height);
+    public Avacado(float x, float y, float width, float height, int roomId) {
+        super(x, y, width, height);
         this.id = AvacadoManager.get().getAvacadosCollected().size() + AvacadoManager.get().getAvacadosInWorld().size();
         this.roomId = roomId;
         // add this avacado to the world

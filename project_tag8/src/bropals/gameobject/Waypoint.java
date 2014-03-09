@@ -20,8 +20,8 @@ public class Waypoint extends GameObject {
     private float xPosition, yPosition;
     private Vector2 faceDirection;
     
-    public Waypoint(Area parent, float x, float y) {
-        super(parent, x, y);
+    public Waypoint( float x, float y) {
+        super(x, y);
     }
 
     @Override

@@ -70,8 +70,10 @@ public class LevelDesignerCanvas extends Canvas {
                         g.setColor(Color.BLACK);
                         g.setFont(littleFont);
                         g.drawString("Need Texture", (int)(objects.get(j).getX()), (int)(objects.get(j).getY()));
+                        Debugger.print("Drew TEXTURELESS object", Debugger.INFO);
                     } else {
                         g.drawImage(texture, (int)objects.get(j).getX(), (int)objects.get(j).getY(), null);
+                        Debugger.print("Drew textured object", Debugger.INFO);
                     }
                     //Addition debug rendering here
                 } else {

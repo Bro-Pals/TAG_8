@@ -20,17 +20,12 @@ public abstract class GameObject {
     
     /**
      * The basic game object
-     * @param parent The ArrayList this object will go into
      * @param x The x position of the GameObject
      * @param y The y position of the GameObject
      */
-    public GameObject(Area parent, float x, float y) {
+    public GameObject(float x, float y) {
         this.x = x;
         this.y = y;
-        this.parent = parent;
-        if (parent!=null) {
-            parent.addObject(this);
-        }
     }
     
     public abstract BufferedImage getTexture();

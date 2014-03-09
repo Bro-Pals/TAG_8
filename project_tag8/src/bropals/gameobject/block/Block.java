@@ -18,8 +18,8 @@ public class Block extends GameObject {
     
     private float width, height;
     
-    public Block(Area parent, float x, float y, float width, float height) {
-        super(parent, x, y);
+    public Block(float x, float y, float width, float height) {
+        super(x, y);
         this.width = width;
         this.height = height;
     }

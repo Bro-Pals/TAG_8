@@ -13,8 +13,8 @@ import java.awt.image.BufferedImage;
  */
 public class GrappleHookPoint extends GameObject implements MouseInteractable {
 
-    public GrappleHookPoint(Area parent, float x, float y) {
-        super(parent, x, y);
+    public GrappleHookPoint(float x, float y) {
+        super(x, y);
     }
     
     @Override

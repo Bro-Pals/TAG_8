@@ -16,8 +16,8 @@ import java.util.ArrayList;
  */
 public class AvacadoBin extends Block implements Interactable {
     
-    public AvacadoBin(Area parent, float x, float y, float width, float height) {
-        super(parent, x, y, width, height);
+    public AvacadoBin(float x, float y, float width, float height) {
+        super( x, y, width, height);
     }
 
     @Override

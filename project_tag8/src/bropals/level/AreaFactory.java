@@ -42,8 +42,8 @@ public class AreaFactory {
         switch(id) {
             case -2:
             Debugger.print("I am running setArea!", Debugger.INFO);
-            Block b = new Block(theArea, 150, 200, 100, 300);
-            Block b2 = new Block(theArea, 250, 200, 130, 200);
+            Block b = new Block(150, 200, 100, 300);
+            Block b2 = new Block(250, 200, 130, 200);
             
             Debugger.print("Made an area with " + theArea.getObjects().size() + " objects!", Debugger.INFO);
                 break;
