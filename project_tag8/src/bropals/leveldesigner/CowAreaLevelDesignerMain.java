@@ -485,6 +485,7 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
                         //Save the area!
                         String name = fc.getSelectedFile().getName();
                         theFactory.getFileManager().loadArea(theFactory, fc.getSelectedFile());
+                        editingArea = theFactory.getArea();
                         mainFrame.setTitle(mainTitle + "(" + name + ")");
                         mainFrame.repaint();
                     }
