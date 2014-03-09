@@ -18,11 +18,18 @@ import java.util.ArrayList;
 public class Waypoint extends GameObject {
 
     private Vector2 faceDirection;
+    private int delay;
     
-    public Waypoint( float x, float y) {
+    public Waypoint(float x, float y) {
         super(x, y);
+        this.delay = 5; // default
     }
 
+    public Waypoint(float x, float y, int delay) {
+        super(x, y);
+        this.delay = delay;
+    }
+    
     @Override
     public BufferedImage getTexture() {
         return null;
@@ -34,6 +41,14 @@ public class Waypoint extends GameObject {
 
     public void setFaceDirection(Vector2 faceDirection) {
         this.faceDirection = faceDirection;
+    }
+
+    public int getDelay() {
+        return delay;
+    }
+
+    public void setDelay(int delay) {
+        this.delay = delay;
     }
     
     @Override
