@@ -11,5 +11,17 @@ package bropals.gameobject;
  * @author Jonathon
  */
 public enum HumanType {
-    ROCK_THROWER, PITCHFORK
+    ROCK_THROWER, PITCHFORK;
+    
+    @Override
+    public String toString() {
+        switch(this) {
+            case ROCK_THROWER:
+                return "ROCKTHROWER";
+            case PITCHFORK:
+                return "PITCHFORK";
+            default:
+            return "";
+        }
+    }
 }

@@ -244,7 +244,7 @@ public class Human extends Creature {
         this.sightRange = sightRange;
     }
 
-    public float getAttachDistance() {
+    public float getAttackDistance() {
         return attackDistance;
     }
 

@@ -11,5 +11,17 @@ package bropals.gameobject;
  * @author Jonathon
  */
 public enum HumanState {
-    PATROLLING, ALERT
+    PATROLLING, ALERT;
+    
+    @Override
+    public String toString() {
+        switch(this) {
+            case PATROLLING:
+                return "PATROLLNG";
+            case ALERT:
+                return "ALERT";
+            default:
+            return "";
+        }
+    }
 }

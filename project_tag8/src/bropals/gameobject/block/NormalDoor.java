@@ -21,6 +21,8 @@ public class NormalDoor extends Block implements Interactable {
     private boolean collidable;
     private Object GameObject;
     
+    public void setOpened(boolean b) { this.collidable = b; }
+    
     public NormalDoor(float x, float y, float width, float height) {
         super( x, y, width, height);
         interactDistance = 150;

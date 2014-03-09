@@ -40,6 +40,9 @@ import java.util.ArrayList;
 public class CowAreaFileManager {
     
     private final String BLOCK="BLOCK", WALL="WALL", HUMAN="HUMAN", NORMALDOOR="NORMALDOOR", TELEPORTDOOR="TELEPORTDOOR", AVACADO="AVACADO", AVACADOBIN="AVACADOBIN", GRAPPLEHOOKPOINT="GRAPPLEHOOKPOINT", HAYBALE="HAYBALE";
+    private final String TRUE="TRUE", FALSE="FALSE";
+    private final String WAYPOINTENDER = "ENDWAYPOINTS";
+    private final String SEPARATOR = " ";
     
     private final String dataDirectory = "data";
     private String jarPath;
@@ -82,7 +85,9 @@ public class CowAreaFileManager {
             
             for (int i=0; i<objects.size(); i++) {
                 writer.write(makeDataLineFor(objects.get(i)));
-                writer.newLine();
+                if (i<(objects.size()-1)) {
+                    writer.newLine();
+                }
             }
             
             writer.flush();
@@ -187,12 +192,20 @@ public class CowAreaFileManager {
 
         @Override
         public String makeDataLine(Block object) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            return BLOCK + SEPARATOR + object.getX() + SEPARATOR + object.getY() + SEPARATOR + object.getWidth() + SEPARATOR + object.getHeight() + SEPARATOR + object.getTextureString() + SEPARATOR + object.getTextureIndex();
         }
 
         @Override
         public Block readDataLine(String line) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            String[] block = line.split(SEPARATOR);
+            Block object = new Block(0, 0, 0, 0);
+            object.setX( Float.parseFloat(block[1]) );
+            object.setY( Float.parseFloat(block[2]) );
+            object.setWidth( Float.parseFloat(block[3]) );
+            object.setHeight( Float.parseFloat(block[4]) );
+            object.setTextureString(block[5]);
+            object.setTextureIndex(Integer.parseInt(block[6]));
+            return object;
         }
         
     }
@@ -201,7 +214,7 @@ public class CowAreaFileManager {
 
         @Override
         public String makeDataLine(GrappleHookPoint object) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            return AVACADOBIN + SEPARATOR + object.getX() + SEPARATOR + object.getY() + SEPARATOR + object.getTextureString() + SEPARATOR + object.getTextureIndex();
         }
 
         @Override
@@ -215,12 +228,22 @@ public class CowAreaFileManager {
 
         @Override
         public String makeDataLine(Avacado object) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            return AVACADO + SEPARATOR + object.getX() + SEPARATOR + object.getY() + SEPARATOR + object.getWidth() + SEPARATOR + object.getHeight() + SEPARATOR + object.getRoomId() + SEPARATOR + object.getInteractDistance() + SEPARATOR + object.getTextureString() + SEPARATOR + object.getTextureIndex();
         }
 
         @Override
         public Avacado readDataLine(String line) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            String[] block = line.split(SEPARATOR);
+            Avacado object = new Avacado(0, 0, 0, 0, 0);
+            object.setX( Float.parseFloat(block[1]) );
+            object.setY( Float.parseFloat(block[2]) );
+            object.setWidth( Float.parseFloat(block[3]) );
+            object.setHeight( Float.parseFloat(block[4]) );
+            object.setRoomId( Integer.parseInt(block[5]) );
+            object.setInteractDistance( Float.parseFloat(block[6]));
+            object.setTextureString(block[7]);
+            object.setTextureIndex(Integer.parseInt(block[8]));
+            return object;
         }
         
     }
@@ -228,12 +251,21 @@ public class CowAreaFileManager {
 
         @Override
         public String makeDataLine(AvacadoBin object) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            return AVACADOBIN + SEPARATOR + object.getX() + SEPARATOR + object.getY() + SEPARATOR + object.getWidth() + SEPARATOR + object.getHeight() + SEPARATOR + object.getInteractDistance() + SEPARATOR + object.getTextureString() + SEPARATOR + object.getTextureIndex();
         }
 
         @Override
         public AvacadoBin readDataLine(String line) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            String[] block = line.split(SEPARATOR);
+            AvacadoBin object = new AvacadoBin(0, 0, 0, 0);
+            object.setX( Float.parseFloat(block[1]) );
+            object.setY( Float.parseFloat(block[2]) );
+            object.setWidth( Float.parseFloat(block[3]) );
+            object.setHeight( Float.parseFloat(block[4]) );
+            object.setInteractDistance( Float.parseFloat(block[5]) );
+            object.setTextureString(block[6]);
+            object.setTextureIndex(Integer.parseInt(block[7]));
+            return object;        
         }
         
     }
@@ -242,12 +274,22 @@ public class CowAreaFileManager {
 
         @Override
         public String makeDataLine(NormalDoor object) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            return NORMALDOOR + SEPARATOR + object.getX() + SEPARATOR + object.getY() + SEPARATOR + object.getWidth() + SEPARATOR + object.getHeight() + SEPARATOR + object.getInteractDistance() + SEPARATOR + toBoolString(object.isOpen()) + SEPARATOR + object.getTextureString() + SEPARATOR + object.getTextureIndex();
         }
 
         @Override
         public NormalDoor readDataLine(String line) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            String[] block = line.split(SEPARATOR);
+            NormalDoor object = new NormalDoor(0, 0, 0, 0);
+            object.setX( Float.parseFloat(block[1]) );
+            object.setY( Float.parseFloat(block[2]) );
+            object.setWidth( Float.parseFloat(block[3]) );
+            object.setHeight( Float.parseFloat(block[4]) );
+            object.setInteractDistance( Float.parseFloat(block[5]) );
+            object.setOpened( toBoolFromString(block[6]) );
+            object.setTextureString(block[7]);
+            object.setTextureIndex(Integer.parseInt(block[8]));
+            return object;         
         }
         
     }
@@ -256,12 +298,24 @@ public class CowAreaFileManager {
 
         @Override
         public String makeDataLine(TeleportDoor object) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            return TELEPORTDOOR + SEPARATOR + object.getX() + SEPARATOR + object.getY() + SEPARATOR + object.getWidth() + SEPARATOR + object.getHeight() + SEPARATOR + object.getInteractDistance() + SEPARATOR + object.getTargetAreaID() + SEPARATOR + object.getXPlayerPos() + SEPARATOR + object.getYPlayerPos() + SEPARATOR + object.getTextureString() + SEPARATOR + object.getTextureIndex();
         }
 
         @Override
         public TeleportDoor readDataLine(String line) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            String[] block = line.split(SEPARATOR);
+            TeleportDoor object = new TeleportDoor(0, 0, 0, 0, 0, 0, 0);
+            object.setX( Float.parseFloat(block[1]) );
+            object.setY( Float.parseFloat(block[2]) );
+            object.setWidth( Float.parseFloat(block[3]) );
+            object.setHeight( Float.parseFloat(block[4]) );
+            object.setInteractDistance( Float.parseFloat(block[5]) );
+            object.setTargetAreaID( Integer.parseInt(block[6]) );
+            object.setXPlayerPos( Float.parseFloat(block[7]) );
+            object.setYPlayerPos( Float.parseFloat(block[8]) );
+            object.setTextureString(block[9]);
+            object.setTextureIndex(Integer.parseInt(block[10]));
+            return object;         
         }
         
     }
@@ -280,21 +334,41 @@ public class CowAreaFileManager {
             this.writer = writer;
         }
         
+        private WaypointMachine waypointMachine;
+        
+        public HumanMachine() {
+            waypointMachine = new WaypointMachine();
+        }
+        
         @Override
         public String makeDataLine(Human object) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            String firstLine = 
+            HUMAN + SEPARATOR + object.getX() + SEPARATOR + object.getY() + SEPARATOR + object.getWidth() + SEPARATOR + object.getWidth() + SEPARATOR + object.getType() + SEPARATOR + object.getState().toString() + SEPARATOR + object.getFaceDirection().getX() + SEPARATOR + object.getFaceDirection().getY() + SEPARATOR + object.getSpeed() + SEPARATOR + object.getFieldOfView() + SEPARATOR + object.getAlertTimer() + SEPARATOR + object.getSightRange() + SEPARATOR + object.getAttackDistance() + SEPARATOR + object.getTextureString() + SEPARATOR + object.getTextureIndex();
+            firstLine = firstLine + "\n" + constructWayPointStrings(object);
+            return firstLine;
         }
 
         @Override
         public Human readDataLine(String line) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
+
+        private String constructWayPointStrings(Human forHuman) {
+            String str = "";
+            Waypoint[] waypoints = forHuman.getPatrolPath();
+            for (int i=0; i<waypoints.length; i++) {
+                str = str + waypointMachine.makeDataLine(waypoints[i]) + "\n";
+            }
+            //Ending line
+            str = str + WAYPOINTENDER; //"Way point ender"
+            return str;
+        }
         
         class WaypointMachine extends GameObjectIOMachine<Waypoint> {
 
             @Override
             public String makeDataLine(Waypoint object) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                return object.getX() + SEPARATOR + object.getY() + SEPARATOR + object.getDelay();
             }
 
             @Override
@@ -309,7 +383,7 @@ public class CowAreaFileManager {
 
         @Override
         public String makeDataLine(HayBale object) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            return HAYBALE + SEPARATOR + object.getX() + SEPARATOR + object.getY() + SEPARATOR + object.getWidth() + SEPARATOR + object.getHeight() + SEPARATOR + object.getTextureString() + SEPARATOR + object.getTextureIndex();
         }
 
         @Override
@@ -323,15 +397,33 @@ public class CowAreaFileManager {
 
         @Override
         public String makeDataLine(Wall object) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            return WALL + SEPARATOR + object.getX() + SEPARATOR + object.getY() + SEPARATOR + object.getWidth() + SEPARATOR + object.getHeight() + SEPARATOR + object.getTextureString() + SEPARATOR + object.getTextureIndex();
         }
 
         @Override
         public Wall readDataLine(String line) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
-        
-        
+
+    }
+    
+    private String toBoolString(boolean b) {
+        if (true) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+    
+    private boolean toBoolFromString(String str) {
+        if (str.equals(TRUE)) {
+            return true;
+        } else if (str.equals(FALSE)) {
+            return false;
+        } else {
+            Debugger.print("Boolean Error in reading .cowarea file!", ERROR);
+            return false;
+        }
     }
 }
     

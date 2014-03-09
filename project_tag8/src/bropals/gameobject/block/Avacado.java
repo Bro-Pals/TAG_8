@@ -86,4 +86,12 @@ public class Avacado extends Block implements Interactable {
     public boolean isCollected() {
         return collected;
     }
+
+    public int getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(int roomId) {
+        this.roomId = roomId;
+    }
 }
