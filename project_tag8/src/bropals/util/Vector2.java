@@ -73,4 +73,12 @@ public class Vector2 {
         this.y = y;
     }
     
+    public static float dot(Vector2 a, Vector2 b) {
+        return (float)((a.getX() * b.getX()) + (a.getY() * b.getY()));
+    }
+    
+    @Override
+    public String toString() {
+        return "("+x+", "+y+")";
+    }
 }

@@ -77,7 +77,7 @@ public class Renderer {
      * @param screenHeight the canvas height
      */
     public void clear(Color clearColor, int screenWidth, int screenHeight) {
-        g2d.setTransform(identity);
+        //g2d.setTransform(identity);
         this.g2d.setColor(clearColor);
         this.g2d.fillRect(0, 0, screenWidth, screenHeight);
     }
@@ -93,7 +93,7 @@ public class Renderer {
     }
     
     private void drawAreaBackground(Area area) {
-        g2d.setTransform(identity);
+        //g2d.setTransform(identity);
         //Draw the background tile in area
         BufferedImage bg = area.getBackgroundTile();
         int xTimes = area.getBgTimesX();
@@ -110,17 +110,18 @@ public class Renderer {
         for (GameObject drawing : objs) {
             if (drawing instanceof Creature) {
                 //System.out.println("Drew a creature!");
-                working.setToRotation(((Creature)drawing).getAngleFacing());
-                working.translate(drawing.getX(), drawing.getY());
-                g2d.setTransform(working);
-                System.out.println("This creatures is at an angle of " + (((Creature)drawing).getAngleFacing()/Math.PI) + " PI");
-                g2d.drawImage(drawing.getTexture(), -(int)(((Creature)drawing).getRadius()), -(int)(((Creature)drawing).getRadius()), null);
+                //working.setToRotation(((Creature)drawing).getAngleFacing());
+               // working.translate(drawing.getX(), drawing.getY());
+               // g2d.setTransform(working);
+                //System.out.println("This creatures is at an angle of " + (((Creature)drawing).getAngleFacing()/Math.PI) + " PI");
+                g2d.drawImage(drawing.getTexture(), (int)(drawing.getX() - ((Creature)drawing).getRadius()), 
+                        (int)(drawing.getY() - ((Creature)drawing).getRadius()), null);
             } else if (drawing.getTexture() != null) {
-                g2d.setTransform(identity);
+                //g2d.setTransform(identity);
                 g2d.drawImage(drawing.getTexture(), (int)drawing.getX(), (int)drawing.getY(), null);
             } else if (drawing.getTexture() == null && drawing instanceof Block) {
                 g2d.setColor(Color.BLACK);
-                g2d.setTransform(identity);
+                //g2d.setTransform(identity);
                 g2d.fillRect((int)drawing.getX(), (int)drawing.getY(), (int)((Block)drawing).getWidth(), (int)((Block)drawing).getHeight());
             }
         }
@@ -130,6 +131,7 @@ public class Renderer {
         if (area.getPlayer() != null && area.getPlayer().getSelectedInteractable() != null) {
             Interactable in = area.getPlayer().getSelectedInteractable();
             BufferedImage drawnImage = null;
+            System.out.println("We are somehow drawing an interactable");
             if (in instanceof NormalDoor) {
                 drawnImage = ((NormalDoor)in).isOpen() ? 
                         ImageLoader.getLoader().getImage("ActionIcons", 1) : ImageLoader.getLoader().getImage("ActionIcons", 0);

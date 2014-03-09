@@ -22,6 +22,8 @@ import java.util.ArrayList;
  */
 public class Area {
     
+    private static int areaCount = 0;
+    
     private ArrayList<GameObject> objects;
     private Player player;
     private final int[] boundryTargetIds;
@@ -71,6 +73,8 @@ public class Area {
     }
     
     public Area(AreaFactory factory) {
+        areaCount++;
+        Debugger.print("There are "+areaCount+" area object(s)", Debugger.INFO);
         areaId = -1;
         boundryTargetIds = new int[]{ -1, -1, -1, -1 };
         this.factory = factory;

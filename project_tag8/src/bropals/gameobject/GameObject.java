@@ -16,6 +16,7 @@ public abstract class GameObject {
  
     private float x, y;
     private Area parent;
+    private String texture;
     
     /**
      * The basic game object
@@ -27,7 +28,8 @@ public abstract class GameObject {
         this.x = x;
         this.y = y;
         this.parent = parent;
-
+        
+        parent.getObjects().add(this);
     }
     
     public abstract BufferedImage getTexture();
@@ -63,7 +65,18 @@ public abstract class GameObject {
     }
     
     public void setParent(Area p) {
+        parent.getObjects().remove(this);
         this.parent = p;
         parent.getObjects().add(this);
     }
+
+    public String getTextureString() {
+        return texture;
+    }
+
+    public void setTextureString(String texture) {
+        this.texture = texture;
+    }
+    
+    
 }

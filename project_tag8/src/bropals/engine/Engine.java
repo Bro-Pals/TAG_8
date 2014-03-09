@@ -194,7 +194,6 @@ public class Engine {
      * method handling the actually calling of the parts of the game.
      */
     private void runGameFrame() {
-        runner.setCurrentArea(-2);
         renderGame();
     }
     

@@ -68,11 +68,21 @@ public class AreaFactory {
         theArea.defaults();
         switch(id) {
             case -2:
-            /*Block b = requestBlock();
-            b.setParent(theArea);
+            Debugger.print("I am running setArea!", Debugger.INFO);
+            Block b = requestNormalDoor();
+            b.setX(150);
+            b.setY(200);
             b.setHeight(100);
             b.setWidth(300);
-            theArea.getObjects().add(b);*/
+            
+            /*Block d = requestBlock();
+            d.setParent(theArea);
+            d.setX(10);
+            d.setY(300);
+            d.setWidth(140);
+            d.setHeight(130);*/
+            
+            Debugger.print("Made an area with " + theArea.getObjects().size() + " objects!", Debugger.INFO);
                 break;
             case -1:
                 break;

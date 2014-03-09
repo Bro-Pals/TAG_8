@@ -35,9 +35,9 @@ public class AreaRunner {
             
     public AreaRunner() {
         areaFactory = new AreaFactory();
-        player = new Player(areaFactory.getArea(), 490, -100);
+        player = new Player(areaFactory.getArea(), 40, 100);
         //Initial area
-        setCurrentArea(-1);
+        setCurrentArea(-2);
     }
     
     public Area getCurrentArea() {
@@ -54,10 +54,11 @@ public class AreaRunner {
         if (player != null) {
             Vector2 playerFaceDir = player.getFaceDirection();
             if (movement[Direction.NORTH.getDirectionId()]) {
-                playerFaceDir.setY(1);
-            } else if (movement[Direction.SOUTH.getDirectionId()]) {
                 playerFaceDir.setY(-1);
-            } else {
+            } else if (movement[Direction.SOUTH.getDirectionId()]) {
+                playerFaceDir.setY(1);
+            } else if (!movement[Direction.NORTH.getDirectionId()] && !movement[Direction.SOUTH.getDirectionId()] &&
+                    (movement[Direction.WEST.getDirectionId()] || movement[Direction.EAST.getDirectionId()])) {
                 playerFaceDir.setY(0);
             }
             
@@ -65,11 +66,18 @@ public class AreaRunner {
                 playerFaceDir.setX(1);
             } else if (movement[Direction.WEST.getDirectionId()]) {
                 playerFaceDir.setX(-1);
-            } else {
-                playerFaceDir.setX(0);   
+            } else if (!movement[Direction.EAST.getDirectionId()] && !movement[Direction.WEST.getDirectionId()] &&
+                    (movement[Direction.NORTH.getDirectionId()] || movement[Direction.SOUTH.getDirectionId()])) {
+                playerFaceDir.setX(0);
             }
             
             player.setFaceDirection(playerFaceDir.getUnitVector());
+            
+            if (!movement[0] && !movement[1] && !movement[2] && !movement[3]) {
+                player.setSpeed(0);
+            } else {
+                player.setSpeed(player.getMoveSpeed());
+            }
         }
         ArrayList<GameObject> objects = areaFactory.getArea().getObjects();
         for (int i=0; i<objects.size(); i++) {
@@ -93,11 +101,11 @@ public class AreaRunner {
             case KeyEvent.VK_S:
                 movement[Direction.SOUTH.getDirectionId()] = pressed;
                 break;
-            case KeyEvent.VK_LEFT:
+            case KeyEvent.VK_RIGHT:
             case KeyEvent.VK_D:
                 movement[Direction.EAST.getDirectionId()] = pressed;
                 break;
-            case KeyEvent.VK_RIGHT:
+            case KeyEvent.VK_LEFT:
             case KeyEvent.VK_A:
                 movement[Direction.WEST.getDirectionId()] = pressed;
                 break;
