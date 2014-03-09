@@ -27,12 +27,15 @@ public class Human extends Creature {
     private HumanState state;
     private Waypoint currentGoalWaypoint;
     private Waypoint[] patrolPath;
+    private int waypointWait;
     private int waypointOn;
     
     private Player playerRef;
     private ArrayList<Waypoint> backTrackWaypoints;
     private int recordTime;
     private int RECORD_RATE = 4;
+    
+    float nearEnough = 20;
     
     private int alertTimer;
     private int ALERT_TIME = 15;
@@ -57,6 +60,7 @@ public class Human extends Creature {
         backTrackWaypoints = new ArrayList<>();
         backTrackWaypoints.add(new Waypoint(getX(), getY())); // waypoint to return to
         recordTime = RECORD_RATE; // recrod a new point every 4 frames
+        setStandingStill(false);
     }
     
     /**
@@ -72,7 +76,7 @@ public class Human extends Creature {
         for (GameObject obj : getParent().getObjects()) {
             if (obj instanceof Block) {
                 // skip checking if there is an open door
-                if (obj instanceof NormalDoor && !((NormalDoor)obj).isOpen()) continue;
+                if (obj instanceof NormalDoor && ((NormalDoor)obj).isOpen()) continue;
                 
                 if (((Block)obj).getRectangle2D().intersectsLine(sightLine)) {
                     return false; // there is something blocking the line of sight!
@@ -84,8 +88,10 @@ public class Human extends Creature {
     
     public void backtrack() {
         if (backTrackWaypoints.size() > 0) {
-            if (canSee(backTrackWaypoints.get(0).getX(), backTrackWaypoints.get(0).getY())) {
-                moveTowardsPoint(backTrackWaypoints.get(0));
+            if (backTrackWaypoints.size() > 1 && !canSee(backTrackWaypoints.get(0).getX(), backTrackWaypoints.get(0).getY())) {
+                moveTowardsPoint(backTrackWaypoints.get(backTrackWaypoints.size()-1));
+            } else {
+                moveTowardsPoint(backTrackWaypoints.get(0));   
             }
         }
     }
@@ -96,36 +102,50 @@ public class Human extends Creature {
             // if the player is not to be seen or dead
             if (playerRef.getHealth() <= 0 || !canSeePlayer()) {
                 if (alertTimer < 0) {
+                    setStandingStill(false);
                     backtrack();
                     if (backTrackWaypoints.isEmpty()) {
                         alerted = false;
                     }
                 } else {
+                    setStandingStill(true);
                     alertTimer--;
                 }
             } else if (playerRef.getHealth() > 0 && canSeePlayer()) {
                 if (type == HumanType.PITCHFORK) {
+                    setStandingStill(false);
                     if (recordTime < 0) {
                         recordTime = RECORD_RATE;
-                        backTrackWaypoints.add(new Waypoint(getX(), getY()));
+                        float xDiff = backTrackWaypoints.get(backTrackWaypoints.size()-1).getX() - getCenterX();
+                        float yDiff = backTrackWaypoints.get(backTrackWaypoints.size()-1).getY() - getCenterY();
+                        // only adds to it if it is not too close to the last point
+                        if (nearEnough*nearEnough > (xDiff*xDiff)+(yDiff*yDiff)) {
+                            backTrackWaypoints.add(new Waypoint(getX(), getY()));
+                        }
                     }
                     recordTime--;
                     alertTimer = ALERT_TIME;
                     this.moveTowardsPoint(playerRef.getCenterX(), playerRef.getCenterY());
                 } else if (type == HumanType.ROCK_THROWER) {
+                    setStandingStill(true);
                     facePoint(playerRef.getCenterX(), playerRef.getCenterY());
                 }
             }
         } else if (!alerted && patrolPath.length > 0) {
+            setStandingStill(false);
             //Debugger.print("I have a path :D", Debugger.INFO);
             if (currentGoalWaypoint == null) currentGoalWaypoint = patrolPath[waypointOn];
-            float nearEnough = 20;
-            float xDiff = getX() - currentGoalWaypoint.getX();
-            float yDiff = getY() - currentGoalWaypoint.getY();
+            float xDiff = getCenterX() - currentGoalWaypoint.getX();
+            float yDiff = getCenterY() - currentGoalWaypoint.getY();
             //Debugger.print("Distance from goal: " + Math.sqrt(((xDiff*xDiff) + (yDiff*yDiff))), Debugger.INFO);
             if (((xDiff*xDiff) + (yDiff*yDiff)) < nearEnough*nearEnough) {
-                waypointOn++;
-                if (waypointOn >= patrolPath.length) waypointOn = 0;
+                if (waypointWait > currentGoalWaypoint.getDelay()) {
+                    waypointOn++;
+                    waypointWait = 0; // reset wait timer
+                    if (waypointOn >= patrolPath.length) waypointOn = 0;
+                } else {
+                    waypointWait++;
+                }
             }
             //Debugger.print("Currently on point "+waypointOn, Debugger.INFO);
             currentGoalWaypoint = patrolPath[waypointOn];
@@ -141,11 +161,13 @@ public class Human extends Creature {
     
     public boolean canSeePlayer() {
         if (playerRef != null) {
+            if (playerRef.isHiding()) return false;
+            
             float playerXDiff = playerRef.getCenterX() - getCenterX();
             float playerYDiff = playerRef.getCenterY() - getCenterY();
             Vector2 playerPositionVector = (new Vector2(playerXDiff, playerYDiff)).getUnitVector();
             Debugger.print("There is a player", Debugger.INFO);
-            Debugger.print("Angle: " + Vector2.dot(playerPositionVector, getFaceDirection()), Debugger.INFO);
+            Debugger.print("Angle between human facing direction and player position: " + Vector2.dot(playerPositionVector, getFaceDirection()), Debugger.INFO);
             if (Vector2.dot(playerPositionVector, getFaceDirection()) > Math.cos(fieldOfView/2)) {
                 Debugger.print("Player in the FOV", Debugger.INFO);
                 // in their field of view!

@@ -58,7 +58,7 @@ public class AreaFactory {
             h.setParent(theArea);
             if (theArea.getPlayer() == null) Debugger.print("PLAYER IS NULL!", Debugger.ERROR);
             h.givePlayerRef(theArea.getPlayer());
-            h.setType(HumanType.ROCK_THROWER);
+            h.setType(HumanType.PITCHFORK);
             
             HayBale hb = new HayBale(500, 300, 50, 50);
             hb.setParent(theArea);

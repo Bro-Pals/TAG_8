@@ -30,6 +30,7 @@ public abstract class Creature extends GameObject {
     private float fieldOfView;
     private Interactable selectedInteractable;
     
+    private boolean standingStill;
     private boolean grappling;
     private boolean hiding;
     private float grappleDistanceLeft;
@@ -56,6 +57,7 @@ public abstract class Creature extends GameObject {
         this.grappling = false;
         this.moveVector = new Vector2();
         this.hookUsing = null;
+        this.standingStill = false;
     }
     
     @Override
@@ -82,7 +84,7 @@ public abstract class Creature extends GameObject {
             grappleDistanceLeft = 0;
         }
         
-        if (!hiding) { // you don't move when you're hiding
+        if (!hiding && !standingStill) { // you don't move when you're hiding
             setX((float)(getX() + (moveVector.getX() * speed)));
             setY((float)(getY() + (moveVector.getY() * speed)));
         }
@@ -190,6 +192,7 @@ public abstract class Creature extends GameObject {
     
     public void moveTowardsPoint(float x, float y) {
         Vector2 mVect = new Vector2(x - getX(), y - getY());
+        if (mVect.getX() == 0) mVect.setX(0.00001);
         faceDirection = mVect.getUnitVector();
         moveVector = faceDirection.clone();
     }
@@ -301,5 +304,9 @@ public abstract class Creature extends GameObject {
     
     public boolean isGrappling() {
         return grappling;
+    }
+    
+    public void setStandingStill(boolean s ) {
+        standingStill = s;
     }
 }

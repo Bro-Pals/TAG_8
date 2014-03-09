@@ -6,6 +6,7 @@
 
 package bropals.graphics;
 
+import bropals.debug.Debugger;
 import bropals.gameobject.Creature;
 import bropals.gameobject.GameObject;
 import bropals.gameobject.GrappleHookPoint;
@@ -122,7 +123,13 @@ public class Renderer {
                 AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
 
                 // Drawing the rotated image at the required drawing locations
-                g2d.drawImage(op.filter(((Creature)drawing).getTexture(), null), (int)((Creature)drawing).getX(), (int)((Creature)drawing).getY(), null);
+                try {
+                    g2d.drawImage(op.filter(((Creature)drawing).getTexture(), null), (int)((Creature)drawing).getX(), (int)((Creature)drawing).getY(), null);
+                } catch(Exception e) {
+                    Debugger.print(e.toString(), Debugger.ERROR);
+                    e.printStackTrace();
+                    g2d.drawImage(((Creature)drawing).getTexture(), (int)((Creature)drawing).getX(), (int)((Creature)drawing).getY(), null);
+                }
                 //System.out.println("This creatures is at an angle of " + (((Creature)drawing).getAngleFacing()) + " radians");
                 if (drawing instanceof Player && ((Player)drawing).getHookUsing() != null && ((Player)drawing).isGrappling()) {
                     Player p = (Player)drawing;
