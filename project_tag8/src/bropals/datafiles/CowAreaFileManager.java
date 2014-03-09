@@ -78,6 +78,14 @@ public class CowAreaFileManager {
         hayBaleMachine = new HayBaleMachine();
     }
     
+    private String makeFirstLine(Area area) {
+        return area.getAreaId() + SEPARATOR + area.getNorthTargetId() + SEPARATOR + area.getSouthTargetId() + SEPARATOR + area.getEastTargetId() + SEPARATOR + area.getWestTargetId();
+    }
+    
+    private void readAndSetFirstLine(Area area, String firstLine) {
+        
+    }
+    
     public void export(Area area, File asFile) {
         //Export all objects in area to a text file
         try {
@@ -85,7 +93,8 @@ public class CowAreaFileManager {
             BufferedWriter writer = new BufferedWriter(new FileWriter(asFile));
             ArrayList<GameObject> objects = area.getObjects();
             humanMachine.giveWriter(writer); //Needs writer reference
-            
+            writer.write(makeFirstLine(area));
+            writer.newLine();
             for (int i=0; i<objects.size(); i++) {
                 writer.write(makeDataLineFor(objects.get(i)));
                 if (i<(objects.size()-1)) {
@@ -110,6 +119,9 @@ public class CowAreaFileManager {
             humanMachine.giveReader(reader); //Needs reader for special case
             
             String line = "";
+            line = reader.readLine();
+            readAndSetFirstLine(area, line);
+            
             line = reader.readLine();
             while(line!=null) {
                 area.addObject(

@@ -101,7 +101,8 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
     //Buttons and action doers
     private JMenuItem save, open, create, gridEnabled, gridSpacing;
     private JButton createBlock, createWall, createAvacado, createAvacadoBin, createHayBale, createHuman, createGrapplePoint, createNormalDoor, createTeleportDoor, deleteSelected;
-            
+    private JTextField northId, southId, eastId, westId, areaIdInput;        
+    
     //Data based things
     private Area editingArea;
     private GameObject selectedGameObject;
@@ -165,6 +166,7 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
         globalScrollyPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         tabbedPane.add("Object Properties", objectScrollyPane);
         tabbedPane.add("Global Properties", globalScrollyPane);
+        
     }
     
     private void formatBottomPart() {
@@ -484,6 +486,82 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
                 }
             }
         });
+        
+        //Global property stuffs now
+        northId = new JTextField();
+        southId = new JTextField();
+        eastId = new JTextField();
+        westId = new JTextField();
+        areaIdInput = new JTextField();
+        
+        northId.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (editingArea!=null) {
+                    try {
+                        editingArea.setNorthTargetId( Integer.parseInt(northId.getText()) );
+                    } catch(NumberFormatException efasd) {
+                        northId.setText("0");
+                        editingArea.setNorthTargetId(0);
+                        northId.repaint();
+                    }
+                }
+            }
+        });
+        southId.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (editingArea!=null) {
+                    try {
+                        editingArea.setSouthTargetId( Integer.parseInt(southId.getText()) );
+                    } catch(NumberFormatException efasd) {
+                        southId.setText("0");
+                        editingArea.setSouthTargetId(0);
+                        southId.repaint();
+                    }
+                }
+            }
+        });
+        eastId.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (editingArea!=null) {
+                    try {
+                        editingArea.setEastTargetId( Integer.parseInt(eastId.getText()) );
+                    } catch(NumberFormatException efasd) {
+                        eastId.setText("0");
+                        editingArea.setEastTargetId(0);
+                        eastId.repaint();
+                    }
+                }
+            }
+        });
+        westId.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (editingArea!=null) {
+                    try {
+                        editingArea.setWestTargetId( Integer.parseInt(westId.getText()) );
+                    } catch(NumberFormatException efasd) {
+                        westId.setText("0");
+                        editingArea.setWestTargetId(0);
+                        westId.repaint();
+                    }
+                }
+            }
+        });
+        areaIdInput.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (editingArea!=null) {
+                    try {
+                        
+                    } catch(NumberFormatException efasd) {
+                        
+                    }
+                }
+            }
+        });
     }
     
     private void makeCreateDialog(GameObject forObject, String title) {
@@ -687,6 +765,9 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
                 ((JTextField)e.getSource()).setText("0");
             }
         }
+        
+        //Global property buttons/fields now
+        
     }
     
     class GridSpacingCancelButtonListener implements ActionListener {
