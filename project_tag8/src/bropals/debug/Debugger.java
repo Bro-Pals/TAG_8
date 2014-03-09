@@ -6,6 +6,8 @@
 
 package bropals.debug;
 
+import bropals.gameobject.GameObject;
+
 /**
  *
  * @author Jonathon

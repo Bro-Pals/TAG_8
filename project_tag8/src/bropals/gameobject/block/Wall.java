@@ -14,4 +14,16 @@ public class Wall extends Block {
     public Wall(float x, float y, float width, float height) {
         super(x, y, width, height);
     }
+    
+    @Override
+    public String toString() {
+        String str = "Wall:\n" + 
+        "   X: " + getX() + "\n"+
+        "   Y: " + getY() + "\n"+
+        "   Texture String: " + getTextureString()+ "\n"+
+        "   Width: " + getWidth()+ "\n"+
+        "   Height: " + getHeight()+ "\n"+
+        "";
+        return str;
+    }
 }

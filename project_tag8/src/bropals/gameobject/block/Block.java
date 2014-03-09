@@ -58,4 +58,16 @@ public class Block extends GameObject {
     public float getCenterY() {
         return (getY() + (getHeight()/2));
     }
+    
+    @Override
+    public String toString() {
+        String str = "Block:\n" + 
+        "   X: " + getX() + "\n"+
+        "   Y: " + getY() + "\n"+
+        "   Texture String: " + getTextureString()+ "\n"+
+        "   Width: " + getWidth()+ "\n"+
+        "   Height: " + getHeight()+ "\n"+
+        "";
+        return str;
+    }
 }

@@ -44,4 +44,16 @@ public class Avacado extends Block implements Interactable {
     public void returnToSpawn() {
         // return to where it's spawn location is
     }
+    
+    @Override
+    public String toString() {
+        String str = "Avacado:\n" + 
+        "   X: " + getX() + "\n"+
+        "   Y: " + getY() + "\n"+
+        "   Texture String: " + getTextureString()+ "\n"+
+        "   Width: " + getWidth()+ "\n"+
+        "   Height: " + getHeight()+ "\n"+
+        "";
+        return str;
+    }
 }

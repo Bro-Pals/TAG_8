@@ -86,6 +86,7 @@ public class Area {
      * Sets everything to a default value so the area is ready to be changed around with in AreaFactory.
      */
     public void defaults() {
+        objects.clear();
         setBackgroundTile(ImageLoader.getLoader().getImage("placeholder_background", 0), Engine.SCREEN_WIDTH, Engine.SCREEN_HEIGHT);
     }
     

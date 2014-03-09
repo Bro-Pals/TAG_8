@@ -34,4 +34,17 @@ public class NormalDoor extends Block implements Interactable {
     public boolean isOpen() {
         return !collidable;
     }
+    
+    @Override
+    public String toString() {
+        String str = "Block:\n" + 
+        "   X: " + getX() + "\n"+
+        "   Y: " + getY() + "\n"+
+        "   Texture String: " + getTextureString()+ "\n"+
+        "   Width: " + getWidth()+ "\n"+
+        "   Height: " + getHeight()+ "\n"+
+        "   Open: " + isOpen()+ "\n"+
+        "";
+        return str;
+    }
 }

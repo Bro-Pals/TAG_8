@@ -53,4 +53,8 @@ public class AreaFactory {
                 Debugger.print("Need constructor for ID: " + id + " in AreaFactory", Debugger.ERROR);
         }
     }
+
+    public void makeNewAreaOverOldArea() {
+        theArea.defaults();
+    }
 }
