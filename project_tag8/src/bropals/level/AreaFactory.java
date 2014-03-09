@@ -50,10 +50,16 @@ public class AreaFactory {
             Block b2 = new NormalDoor(260, 200, 130, 200);
             b2.setParent(theArea);
             
-            Human h = new Human(300, 50, 30, 30, Direction.getUnitVector(Direction.EAST));
+            Human h = new Human(300, 50, 30, 10, Direction.getUnitVector(Direction.EAST));
             h.setPatrolPath(new Waypoint[]{
                 new Waypoint(300, 50), new Waypoint(150, 150)});
             h.setParent(theArea);
+            
+            HayBale hb = new HayBale(500, 300, 50, 50);
+            hb.setParent(theArea);
+            
+            Avacado a = new Avacado(450, 450, 30, 30, -2);
+            a.setParent(theArea);
             
             Debugger.print("Made an area with " + theArea.getObjects().size() + " objects!", Debugger.INFO);
                 break;

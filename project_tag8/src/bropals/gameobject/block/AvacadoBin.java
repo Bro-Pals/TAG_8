@@ -1,3 +1,4 @@
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -16,8 +17,11 @@ import java.util.ArrayList;
  */
 public class AvacadoBin extends Block implements Interactable {
     
+    private float interactDistance;
+    
     public AvacadoBin(float x, float y, float width, float height) {
         super( x, y, width, height);
+        interactDistance = 100;
     }
 
     @Override
@@ -27,7 +31,7 @@ public class AvacadoBin extends Block implements Interactable {
 
     @Override
     public float getInteractDistance() {
-        return 100; // some random number
+        return interactDistance; // some random number
     }
     
     @Override
@@ -40,5 +44,10 @@ public class AvacadoBin extends Block implements Interactable {
         "   Height: " + getHeight()+ "\n"+
         "";
         return str;
+    }
+
+    @Override
+    public void setInteractDistance(float distance) {
+        interactDistance = distance;
     }
 }

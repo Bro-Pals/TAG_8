@@ -47,6 +47,7 @@ public class Main {
         loader.loadSingleImage("testCreature", "sprites/testCreature.png");
         loader.loadSingleImage("Avacado", "sprites/avacado.png");
         loader.loadSpriteSheet("ActionIcons", "actionIcons.png", 80, 80);
+        loader.loadSpriteSheet("Blocks", "blocks.png", 50, 50);
     }
     
     private void makeEngine(int fps) {

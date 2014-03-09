@@ -75,6 +75,7 @@ public class AvacadoManager {
             if (avacadosInWorld.get(i) == thisOne) {
                 avacadosInWorld.remove(i);
                 avacadoPouch.add(thisOne);
+                thisOne.setParent(null);
                 break; // added the avacado so you can break
             }
         }

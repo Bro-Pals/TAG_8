@@ -16,6 +16,7 @@ import java.util.ArrayList;
 public class TeleportDoor extends Block implements Interactable {
         
     private int targetAreaID;
+    private float interactDistance;
     private float xPlayerPos, yPlayerPos;
     
     public TeleportDoor(float x, float y, float width, float height, 
@@ -24,6 +25,7 @@ public class TeleportDoor extends Block implements Interactable {
         this.targetAreaID = targetAreaID;
         this.xPlayerPos = xPlayerPos;
         this.yPlayerPos = yPlayerPos;
+        interactDistance = 120;
     }
 
     @Override
@@ -33,7 +35,7 @@ public class TeleportDoor extends Block implements Interactable {
 
     @Override
     public float getInteractDistance() {
-        return 100; // random number
+        return interactDistance; // random number
     }
 
     // getters and setters
@@ -60,5 +62,10 @@ public class TeleportDoor extends Block implements Interactable {
         "   Height: " + getHeight()+ "\n"+
         "";
         return str;
+    }
+
+    @Override
+    public void setInteractDistance(float distance) {
+        interactDistance = distance;
     }
 }

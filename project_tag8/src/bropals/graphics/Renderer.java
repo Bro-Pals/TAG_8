@@ -17,6 +17,7 @@ import bropals.gameobject.block.HayBale;
 import bropals.gameobject.block.NormalDoor;
 import bropals.level.Area;
 import bropals.level.AreaRunner;
+import bropals.level.AvacadoManager;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -109,6 +110,7 @@ public class Renderer {
         ArrayList<GameObject> objs = area.getObjects();
         for (GameObject drawing : objs) {
             if (drawing instanceof Creature) {
+                if (((Creature)drawing).isHiding()) return; // don't draw a hiding creature!
                 //System.out.println("Drew a creature!");
                 //working.setToRotation(((Creature)drawing).getAngleFacing());
                // working.translate(drawing.getX(), drawing.getY());
@@ -131,7 +133,7 @@ public class Renderer {
         if (area.getPlayer() != null && area.getPlayer().getSelectedInteractable() != null) {
             Interactable in = area.getPlayer().getSelectedInteractable();
             BufferedImage drawnImage = null;
-            System.out.println("We are somehow drawing an interactable");
+            //System.out.println("We are somehow drawing an interactable");
             if (in instanceof NormalDoor) {
                 if (((NormalDoor)in).isOpen()) {
                     drawnImage = ImageLoader.getLoader().getImage("ActionIcons", 1);
@@ -142,7 +144,7 @@ public class Renderer {
                 if (area.getPlayer().isHiding()) {
                     drawnImage = ImageLoader.getLoader().getImage("ActionIcons", 3);
                 } else {
-                    drawnImage = ImageLoader.getLoader().getImage("ActioIcons", 2);
+                    drawnImage = ImageLoader.getLoader().getImage("ActionIcons", 2);
                 }
             } else if (in instanceof Avacado) {
                 drawnImage = ImageLoader.getLoader().getImage("ActionIcons", 4);
@@ -152,7 +154,7 @@ public class Renderer {
                 drawnImage = ImageLoader.getLoader().getImage("ActionIcons", 6);
             }
             if (drawnImage != null) {
-              g2d.drawImage(drawnImage, (int)(((GameObject)in).getX()), (int)(((GameObject)in).getY()), null);  
+              g2d.drawImage(drawnImage, (int)(((GameObject)in).getX()), (int)(((GameObject)in).getY())-80, null);  
             }
         }
     }
@@ -162,6 +164,7 @@ public class Renderer {
      * @param runner the AreaRunner object
      */
     public void drawGui(AreaRunner runner) {
-        
+        g2d.setColor(Color.WHITE);
+        g2d.drawString("Avacados: "+AvacadoManager.get().getAvacadosCollectedCount(), 400, 50);
     }
 }

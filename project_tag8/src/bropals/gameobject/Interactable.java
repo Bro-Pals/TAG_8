@@ -11,4 +11,5 @@ package bropals.gameobject;
 public interface Interactable {
     void interact(GameObject interactee);
     float getInteractDistance();
+    void setInteractDistance(float distance);
 }

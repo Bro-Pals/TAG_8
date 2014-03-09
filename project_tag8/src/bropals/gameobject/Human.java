@@ -69,12 +69,12 @@ public class Human extends Creature {
             float nearEnough = 20;
             float xDiff = getX() - currentGoalWaypoint.getX();
             float yDiff = getY() - currentGoalWaypoint.getY();
-            Debugger.print("Distance from goal: " + Math.sqrt(((xDiff*xDiff) + (yDiff*yDiff))), Debugger.INFO);
+            //Debugger.print("Distance from goal: " + Math.sqrt(((xDiff*xDiff) + (yDiff*yDiff))), Debugger.INFO);
             if (((xDiff*xDiff) + (yDiff*yDiff)) < nearEnough*nearEnough) {
                 waypointOn++;
                 if (waypointOn >= patrolPath.length) waypointOn = 0;
             }
-            Debugger.print("Currently on point "+waypointOn, Debugger.INFO);
+            //Debugger.print("Currently on point "+waypointOn, Debugger.INFO);
             currentGoalWaypoint = patrolPath[waypointOn];
             moveTowardsPoint(currentGoalWaypoint);
         }

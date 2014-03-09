@@ -6,8 +6,10 @@ package bropals.gameobject.block;
 
 import bropals.gameobject.GameObject;
 import bropals.gameobject.Interactable;
+import bropals.graphics.ImageLoader;
 import bropals.level.Area;
 import bropals.level.AvacadoManager;
+import java.awt.image.BufferedImage;
 
 /**
  *
@@ -18,13 +20,20 @@ public class Avacado extends Block implements Interactable {
     // keep track of where it was
     private int id;
     private int roomId;
+    private float interactDistance;
     
     public Avacado(float x, float y, float width, float height, int roomId) {
         super(x, y, width, height);
         this.id = AvacadoManager.get().getAvacadosCollected().size() + AvacadoManager.get().getAvacadosInWorld().size();
         this.roomId = roomId;
+        interactDistance = 80;
         // add this avacado to the world
         AvacadoManager.get().getAvacadosInWorld().add(this);
+    }
+    
+    @Override
+    public BufferedImage getTexture() {
+        return ImageLoader.getLoader().getImage("Blocks", 5);
     }
     
     public int getId() {
@@ -38,7 +47,7 @@ public class Avacado extends Block implements Interactable {
 
     @Override
     public float getInteractDistance() {
-        return 100; // some random number
+        return interactDistance; // some random number
     }
     
     public void returnToSpawn() {
@@ -56,4 +65,10 @@ public class Avacado extends Block implements Interactable {
         "";
         return str;
     }
+
+    @Override
+    public void setInteractDistance(float distance) {
+        interactDistance = distance;
+    }
+   
 }
