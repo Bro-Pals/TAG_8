@@ -43,7 +43,9 @@ public class AreaFactory {
             case -2:
             Debugger.print("I am running setArea!", Debugger.INFO);
             Block b = new Block(150, 200, 100, 300);
-            Block b2 = new Block(250, 200, 130, 200);
+            b.setParent(theArea);
+            Block b2 = new NormalDoor(260, 200, 130, 200);
+            b2.setParent(theArea);
             
             Debugger.print("Made an area with " + theArea.getObjects().size() + " objects!", Debugger.INFO);
                 break;

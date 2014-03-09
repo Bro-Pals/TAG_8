@@ -63,11 +63,17 @@ public abstract class Creature extends GameObject {
         if (getParent() == null) // don't update if there is no parent
             return;
         
+        
+        selectedInteractable = null;
+        
         float minInteractableDist = 10000*10000;
         boolean collideX = false, collideY = false;
         for (int i=0; i<getParent().getObjects().size(); i++) {
             boolean canTest = true;
             if (grappling && !(getParent().getObjects().get(i) instanceof Wall)) {
+                canTest = false;
+            } else if(getParent().getObjects().get(i) instanceof NormalDoor &&
+                    ((NormalDoor)getParent().getObjects().get(i)).isOpen()) {
                 canTest = false;
             }
             if (canTest && getParent().getObjects().get(i) != this && getParent().getObjects().get(i) instanceof Block && 
@@ -154,8 +160,8 @@ public abstract class Creature extends GameObject {
             }
         }
 
-        if (!collideX) setX((float)(getX() + (moveVector.getX() * moveSpeed)));
-        if (!collideY) setY((float)(getY() + (moveVector.getY() * moveSpeed)));
+        if (!collideX) setX((float)(getX() + (moveVector.getX() * moveSpeed))); else moveVector.setX(0);
+        if (!collideY) setY((float)(getY() + (moveVector.getY() * moveSpeed))); else moveVector.setY(0);
     }
     
     public boolean intersects(float x, float y, Block other) {
@@ -257,6 +263,10 @@ public abstract class Creature extends GameObject {
 
     public void setMoveVector(Vector2 v) {
         this.moveVector = v;
+    }
+    
+    public Vector2 getMoveVector() {
+        return moveVector;
     }
     
     public float getCenterX() {
