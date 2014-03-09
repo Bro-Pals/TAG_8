@@ -91,7 +91,7 @@ public class Human extends Creature {
     }
     
     public void backtrack() {
-        System.out.println("Backtrackign");
+        //System.out.println("Backtrackign");
         if (backTrackWaypoints.size() > 0) {
             int moveToNum = 0;
             if (backTrackWaypoints.size() > 1 && !canSee(backTrackWaypoints.get(0).getX(), backTrackWaypoints.get(0).getY())) {
@@ -103,7 +103,7 @@ public class Human extends Creature {
                 float xDiff = backTrackWaypoints.get(moveToNum).getX() - getCenterX();
                 float yDiff = backTrackWaypoints.get(moveToNum).getY() - getCenterY();
                 if (canSee(patrolPath[waypointOn].getX(), patrolPath[waypointOn].getY())) {
-                    System.out.println("Done backgracking!");
+                    //System.out.println("Done backtracking!");
                     currentGoalWaypoint = patrolPath[waypointOn];
                     backTrackWaypoints.clear();
                 } else if (nearEnough*nearEnough > (xDiff*xDiff)+(yDiff*yDiff)) {
@@ -220,7 +220,7 @@ public class Human extends Creature {
     
     @Override
     public BufferedImage getTexture() {
-        return ImageLoader.getLoader().getImage("testCreature", 0);
+        return (type == HumanType.PITCHFORK) ? ImageLoader.getLoader().getImage("Human", 0) :ImageLoader.getLoader().getImage("Human", 1);
     }
 
     public HumanType getType() {

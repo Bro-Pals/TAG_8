@@ -31,6 +31,7 @@ public class Avacado extends Block implements Interactable {
         this.id = avacadosMade;
         this.roomId = roomId;
         interactDistance = 80;
+        AvacadoManager.get().addAvacadoToWorld(this);
         // add this avacado to the world
         collected = false;
     }
@@ -69,14 +70,6 @@ public class Avacado extends Block implements Interactable {
     @Override
     public void setInteractDistance(float distance) {
         interactDistance = distance;
-    }
-
-    @Override
-    public void setParent(Area parent) {
-        if (parent != null) {
-            AvacadoManager.get().addAvacadoToWorld(this);
-        }
-        super.setParent(parent);
     }
     
     public void setCollected(boolean c) {

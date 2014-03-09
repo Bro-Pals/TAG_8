@@ -51,6 +51,7 @@ public class Main {
         loader.loadSpriteSheet("RobinCow", "sprites/robinCow.png", 34, 50);
         loader.loadSingleImage("HeartImage", "sprites/heartImage.png");
         loader.loadSingleImage("WinScreen", "WinScreen.png");
+        loader.loadSpriteSheet("Human", "sprites/humans.png", 40, 40);
     }
     
     private void makeEngine(int fps) {

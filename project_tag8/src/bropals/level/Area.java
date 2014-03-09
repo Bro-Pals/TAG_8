@@ -177,4 +177,8 @@ public class Area {
     public void removeObject(GameObject object) {
         objects.remove(object);
     }
+    
+    public void setRoomID(int id) {
+        this.areaId = id;
+    }
 }

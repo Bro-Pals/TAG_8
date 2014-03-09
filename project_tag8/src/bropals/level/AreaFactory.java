@@ -45,6 +45,11 @@ public class AreaFactory {
      */
     public void setArea(int id) {
         theArea.defaults();
+        Avacado avacado2 = new Avacado(500, 350, 40, 40, 1);
+        
+        Avacado avacado = new Avacado(550, 350, 40, 40, -2);
+        
+        theArea.setRoomID(id);
         switch(id) {
             case 1:
                 Block barn1 = new Block(100, 100, 20, 300);
@@ -61,9 +66,6 @@ public class AreaFactory {
                 AvacadoBin bin = new AvacadoBin(450, 200, 50, 50);
                 bin.setParent(theArea);
                 
-                Avacado avacado = new Avacado(500, 350, 40, 40, 1);
-                avacado.setParent(theArea);
-                
                 NormalDoor door = new NormalDoor(220, 403, 100, 15);
                 door.setParent(theArea);
                 break;
@@ -73,6 +75,7 @@ public class AreaFactory {
             b.setParent(theArea);
             NormalDoor b2 = new NormalDoor(260, 200, 80, 80);
             b2.setParent(theArea);
+                
             
             Human h = new Human(300, 50, 30, 8, Direction.getUnitVector(Direction.EAST));
             h.setPatrolPath(new Waypoint[]{
@@ -102,6 +105,7 @@ public class AreaFactory {
             default:
                 Debugger.print("Need constructor for ID: " + id + " in AreaFactory", Debugger.ERROR);
         }
+        AvacadoManager.get().appearAvacadosForRoom(theArea.getAreaId(), theArea);
         theArea.updateBoundries();
     }
 

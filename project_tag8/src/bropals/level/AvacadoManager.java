@@ -43,9 +43,15 @@ public class AvacadoManager {
         return avacadosCollected.size();
     }
     
-    public void appearAvacadosForRoom(int idNum) {
-        for (Avacado a:avacadosInWorld) {
-            
+    public void appearAvacadosForRoom(int idNum, Area toArea) {
+        for (int i=0; i<avacadosInWorld.size(); i++) {
+            if (avacadosInWorld.get(i).getRoomId() == idNum) {
+                Debugger.print("This room got an avacado in it!", Debugger.INFO);
+                avacadosInWorld.get(i).setParent(toArea);
+            } else {
+                Debugger.print(avacadosInWorld.get(i).getRoomId() + " != " + idNum, Debugger.INFO);
+                avacadosInWorld.get(i).setParent(null);
+            }
         }
     }
     
