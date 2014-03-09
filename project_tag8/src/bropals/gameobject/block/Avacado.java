@@ -17,7 +17,7 @@ import java.awt.image.BufferedImage;
  */
 public class Avacado extends Block implements Interactable {
     
-    private static int avacadosMade = 0;
+    public static int avacadosMade = 0;
     
     // keep track of where it was
     private int id;

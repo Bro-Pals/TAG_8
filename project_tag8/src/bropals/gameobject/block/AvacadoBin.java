@@ -7,8 +7,10 @@ package bropals.gameobject.block;
 
 import bropals.gameobject.GameObject;
 import bropals.gameobject.Interactable;
+import bropals.graphics.ImageLoader;
 import bropals.level.Area;
 import bropals.level.AvacadoManager;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 /**
@@ -21,7 +23,7 @@ public class AvacadoBin extends Block implements Interactable {
     
     public AvacadoBin(float x, float y, float width, float height) {
         super( x, y, width, height);
-        interactDistance = 100;
+        interactDistance = 80;
     }
 
     @Override
@@ -29,6 +31,11 @@ public class AvacadoBin extends Block implements Interactable {
         AvacadoManager.get().depositAvacadoPouch();
     }
 
+    @Override
+    public BufferedImage getTexture() {
+        return ImageLoader.getLoader().getImage("Blocks", 7);
+    }
+    
     @Override
     public float getInteractDistance() {
         return interactDistance; // some random number

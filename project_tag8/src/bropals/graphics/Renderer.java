@@ -7,6 +7,7 @@
 package bropals.graphics;
 
 import bropals.debug.Debugger;
+import bropals.engine.Engine;
 import bropals.gameobject.Creature;
 import bropals.gameobject.GameObject;
 import bropals.gameobject.GrappleHookPoint;
@@ -23,6 +24,7 @@ import bropals.level.AvacadoManager;
 import java.awt.BasicStroke;
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -185,6 +187,19 @@ public class Renderer {
      */
     public void drawGui(AreaRunner runner) {
         g2d.setColor(Color.WHITE);
-        g2d.drawString("Avacados In Pouch: "+AvacadoManager.get().getAvacadosInPouchNum(), 400, 50);
+        g2d.setFont(new Font("Impact", Font.PLAIN, 20));
+        g2d.drawString("Avacados Collected / In Pouch / Remaining : "+AvacadoManager.get().getAvacadosCollectedNum() + 
+                " / "+AvacadoManager.get().getAvacadosInPouchNum()+" / "+AvacadoManager.get().getAvacadosInWorldNum(), 300, 40);
+        for (int h=0; h<runner.getPlayer().getHealth(); h++) {
+            int rowWidth = (80 * runner.getPlayer().getHealth());
+            int leftOfRow = (Engine.SCREEN_WIDTH/2) - (rowWidth/2);
+            g2d.drawImage(ImageLoader.getLoader().getImage("HeartImage"), leftOfRow + (80 * h), Engine.SCREEN_HEIGHT - 60, null);
+        }
+        
+        if (AvacadoManager.get().getAvacadosInPouchNum() == 0 && AvacadoManager.get().getAvacadosInWorldNum() == 0 &&
+                AvacadoManager.get().getAvacadosCollectedNum() == Avacado.avacadosMade) {
+            System.out.println("YOU WIN!");
+            g2d.drawImage(ImageLoader.getLoader().getImage("WinScreen"), 0, 0, null);
+        }
     }
 }

@@ -8,7 +8,9 @@ import bropals.gameobject.Creature;
 import bropals.gameobject.GameObject;
 import bropals.gameobject.Interactable;
 import bropals.gameobject.Player;
+import bropals.graphics.ImageLoader;
 import bropals.level.Area;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 /**
@@ -20,6 +22,8 @@ public class NormalDoor extends Block implements Interactable {
     private float interactDistance;
     private boolean collidable;
     private Object GameObject;
+    
+    private BufferedImage openImage;
     
     public NormalDoor(float x, float y, float width, float height) {
         super( x, y, width, height);
@@ -36,6 +40,17 @@ public class NormalDoor extends Block implements Interactable {
         }
     }
 
+    @Override
+    public BufferedImage getTexture() {
+        return (collidable) ? getDrawImage() : openImage;
+    }
+    
+    @Override
+    public void updateDrawImage() {
+        openImage = ImageLoader.getLoader().getRepeatingTexture(ImageLoader.getLoader().getImage("Blocks", 2), (int)getWidth(), (int)getHeight());
+        setDrawImage(ImageLoader.getLoader().getRepeatingTexture(ImageLoader.getLoader().getImage("Blocks", 1), (int)getWidth(), (int)getHeight()));
+    }
+    
     @Override
     public float getInteractDistance() {
         return interactDistance; // random number

@@ -14,7 +14,7 @@ import java.util.ConcurrentModificationException;
  * @author Owner
  */
 public class AvacadoManager {
-    
+
     private static final AvacadoManager avacadoManager = new AvacadoManager();
     
     private ArrayList<Avacado> avacadosInWorld; // avacados to be collected
@@ -43,6 +43,12 @@ public class AvacadoManager {
         return avacadosCollected.size();
     }
     
+    public void appearAvacadosForRoom(int idNum) {
+        for (Avacado a:avacadosInWorld) {
+            
+        }
+    }
+    
     /**
      * Moves all the avacados back from the pouch into the world.
      */
@@ -60,6 +66,7 @@ public class AvacadoManager {
      * Empties all the avacaods from the pouch pile to the collected pile
      */
     public void depositAvacadoPouch() {
+        Debugger.print("Deposited avacados pouch!", Debugger.INFO);
         if (avacadoPouch.isEmpty()) return;
         
         for (Avacado ava : avacadoPouch) {
@@ -78,10 +85,11 @@ public class AvacadoManager {
                 Debugger.print("We have picked up an avacado", Debugger.INFO);
                 try {
                     avacadosInWorld.remove(i);
+                    Thread.sleep(10);
                     avacadoPouch.add(a);
                     a.setParent(null); // remove from world
                     a.setCollected(true);
-                } catch(ConcurrentModificationException e) {
+                } catch(Exception e) {
                     Debugger.print(e.toString(), Debugger.ERROR);
                 }
             }

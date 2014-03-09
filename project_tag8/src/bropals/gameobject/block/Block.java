@@ -18,16 +18,22 @@ import java.util.ArrayList;
 public class Block extends GameObject {
     
     private float width, height;
+    private BufferedImage drawImage;
     
     public Block(float x, float y, float width, float height) {
         super(x, y);
         this.width = width;
         this.height = height;
+        updateDrawImage();
     }
     
     @Override
     public BufferedImage getTexture() {
-        return ImageLoader.getLoader().getImage(getTextureString()); // no image right now :(
+        return drawImage;
+    }
+    
+    public void updateDrawImage() {
+        drawImage = ImageLoader.getLoader().getRepeatingTexture(ImageLoader.getLoader().getImage("Blocks", 0), (int)width, (int)height);
     }
     
     // getters and settesr
@@ -38,6 +44,7 @@ public class Block extends GameObject {
 
     public void setWidth(float width) {
         this.width = width;
+        updateDrawImage();
     }
 
     public float getHeight() {
@@ -46,6 +53,7 @@ public class Block extends GameObject {
 
     public void setHeight(float height) {
         this.height = height;
+        updateDrawImage();
     }
     
     public Rectangle2D.Float getRectangle2D() {
@@ -59,6 +67,14 @@ public class Block extends GameObject {
     public float getCenterY() {
         return (getY() + (getHeight()/2));
     }
+    
+    public void setDrawImage(BufferedImage img) {
+        this.drawImage = img;
+    }
+    
+    public BufferedImage getDrawImage() {
+        return drawImage;
+    }   
     
     @Override
     public String toString() {

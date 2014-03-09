@@ -49,6 +49,8 @@ public class Main {
         loader.loadSpriteSheet("ActionIcons", "actionIcons.png", 80, 80);
         loader.loadSpriteSheet("Blocks", "blocks.png", 50, 50);
         loader.loadSpriteSheet("RobinCow", "sprites/robinCow.png", 34, 50);
+        loader.loadSingleImage("HeartImage", "sprites/heartImage.png");
+        loader.loadSingleImage("WinScreen", "WinScreen.png");
     }
     
     private void makeEngine(int fps) {
