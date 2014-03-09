@@ -14,6 +14,8 @@ import static bropals.debug.Debugger.print;
 import bropals.gameobject.GameObject;
 import bropals.gameobject.GrappleHookPoint;
 import bropals.gameobject.Human;
+import bropals.gameobject.HumanState;
+import bropals.gameobject.HumanType;
 import bropals.gameobject.Waypoint;
 import bropals.gameobject.block.Avacado;
 import bropals.gameobject.block.AvacadoBin;
@@ -24,6 +26,7 @@ import bropals.gameobject.block.TeleportDoor;
 import bropals.gameobject.block.Wall;
 import bropals.level.Area;
 import bropals.level.AreaFactory;
+import bropals.util.Vector2;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -350,14 +353,52 @@ public class CowAreaFileManager {
         @Override
         public String makeDataLine(Human object) {
             String firstLine = 
-            HUMAN + SEPARATOR + object.getX() + SEPARATOR + object.getY() + SEPARATOR + object.getWidth() + SEPARATOR + object.getWidth() + SEPARATOR + object.getType() + SEPARATOR + object.getState().toString() + SEPARATOR + object.getFaceDirection().getX() + SEPARATOR + object.getFaceDirection().getY() + SEPARATOR + object.getSpeed() + SEPARATOR + object.getFieldOfView() + SEPARATOR + object.getAlertTimer() + SEPARATOR + object.getSightRange() + SEPARATOR + object.getAttackDistance() + SEPARATOR + object.getTextureString() + SEPARATOR + object.getTextureIndex();
+            HUMAN + SEPARATOR + object.getX() + SEPARATOR + object.getY() + SEPARATOR + object.getWidth() + SEPARATOR + object.getHeight() + SEPARATOR + object.getType().toString() + SEPARATOR + object.getState().toString() + SEPARATOR + object.getFaceDirection().getX() + SEPARATOR + object.getFaceDirection().getY() + SEPARATOR + object.getSpeed() + SEPARATOR + object.getFieldOfView() + SEPARATOR + object.getAlertTimer() + SEPARATOR + object.getSightRange() + SEPARATOR + object.getAttackDistance() + SEPARATOR + object.getTextureString() + SEPARATOR + object.getTextureIndex();
             firstLine = firstLine + "\n" + constructWayPointStrings(object);
             return firstLine;
         }
 
         @Override
         public Human readDataLine(String line) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            String[] block = line.split(SEPARATOR);
+            Human human = new Human(0, 0, 0, 0, Vector2.UNIT_X);
+            
+            human.setX( Float.parseFloat(block[1]) );
+            human.setY( Float.parseFloat(block[2]) );
+            human.setWidth( Float.parseFloat(block[3]) );
+            human.setHeight( Float.parseFloat(block[4]) );
+            human.setType( HumanType.fromString(block[5]) );
+            human.setState( HumanState.fromString(block[6]) );
+            
+            Vector2 faceDir = new Vector2(
+                    Float.parseFloat(block[7]),
+                    Float.parseFloat(block[8])
+            );
+            human.setFaceDirection(faceDir);
+            
+            human.setSpeed( Float.parseFloat(block[9]) );
+            human.setFieldOfView( Float.parseFloat(block[10] ));
+            human.setAlertTimer( Integer.parseInt(block[11]) );
+            human.setSightRange( Float.parseFloat( block[12] ));
+            human.setAttackDistance( Float.parseFloat( block[13] ));
+            human.setTextureString( block[14] );
+            human.setTextureIndex( Integer.parseInt( block[15] ));
+            
+            //Now we have to start reading the way point lines following all that
+            try {
+                String currentLine = reader.readLine();
+                ArrayList<Waypoint> patrolPath = new ArrayList<>();
+                while(!currentLine.equals(WAYPOINTENDER)) {
+                    //Keep reading lines and appending more waypoints
+                    patrolPath.add(waypointMachine.readDataLine(currentLine));
+                    currentLine = reader.readLine();
+                }
+                //When the end of the line is reached, put the path into the human
+                Waypoint[] path = (Waypoint[])patrolPath.toArray(new Waypoint[patrolPath.size()]);
+            } catch(Exception e) {
+                Debugger.print("Error while reading a Waypoint list!", ERROR);
+            }
+            return human;
         }
 
         private String constructWayPointStrings(Human forHuman) {
@@ -380,9 +421,13 @@ public class CowAreaFileManager {
 
             @Override
             public Waypoint readDataLine(String line) {
-                return null;
+                String[] block = line.split(SEPARATOR);
+                Waypoint object = new Waypoint(0, 0, 0);
+                object.setX( Float.parseFloat(block[0]) );
+                object.setY( Float.parseFloat(block[1]) );
+                object.setDelay( Integer.parseInt(block[2]) );
+                return object;
             }
-            
         }
     }
     
