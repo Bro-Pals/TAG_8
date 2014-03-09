@@ -17,7 +17,6 @@ import java.util.ArrayList;
  */
 public class Waypoint extends GameObject {
 
-    private float xPosition, yPosition;
     private Vector2 faceDirection;
     
     public Waypoint( float x, float y) {
@@ -27,22 +26,6 @@ public class Waypoint extends GameObject {
     @Override
     public BufferedImage getTexture() {
         return null;
-    }
-
-    public float getXPosition() {
-        return xPosition;
-    }
-
-    public void setXPosition(float xPosition) {
-        this.xPosition = xPosition;
-    }
-
-    public float getYPosition() {
-        return yPosition;
-    }
-
-    public void setYPosition(float yPosition) {
-        this.yPosition = yPosition;
     }
 
     public Vector2 getFaceDirection() {

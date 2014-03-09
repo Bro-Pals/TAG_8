@@ -10,6 +10,7 @@ import bropals.datafiles.CowAreaFileManager;
 import bropals.debug.Debugger;
 import bropals.gameobject.GameObject;
 import bropals.gameobject.Human;
+import bropals.gameobject.Waypoint;
 import bropals.gameobject.block.Avacado;
 import bropals.gameobject.block.AvacadoBin;
 import bropals.gameobject.block.Block;
@@ -17,6 +18,8 @@ import bropals.gameobject.block.HayBale;
 import bropals.gameobject.block.NormalDoor;
 import bropals.gameobject.block.TeleportDoor;
 import bropals.gameobject.block.Wall;
+import bropals.util.Direction;
+import bropals.util.Direction;
 
 /**
  *
@@ -46,6 +49,11 @@ public class AreaFactory {
             b.setParent(theArea);
             Block b2 = new NormalDoor(260, 200, 130, 200);
             b2.setParent(theArea);
+            
+            Human h = new Human(300, 50, 30, 30, Direction.getUnitVector(Direction.EAST));
+            h.setPatrolPath(new Waypoint[]{
+                new Waypoint(300, 50), new Waypoint(150, 150)});
+            h.setParent(theArea);
             
             Debugger.print("Made an area with " + theArea.getObjects().size() + " objects!", Debugger.INFO);
                 break;

@@ -63,7 +63,6 @@ public abstract class Creature extends GameObject {
         if (getParent() == null) // don't update if there is no parent
             return;
         
-        
         selectedInteractable = null;
         
         float minInteractableDist = 10000*10000;
@@ -159,7 +158,8 @@ public abstract class Creature extends GameObject {
                 }
             }
         }
-
+        if (hiding) return; // don't bother moving if you are hiding
+        
         if (!collideX) setX((float)(getX() + (moveVector.getX() * moveSpeed))); else moveVector.setX(0);
         if (!collideY) setY((float)(getY() + (moveVector.getY() * moveSpeed))); else moveVector.setY(0);
     }
@@ -185,6 +185,16 @@ public abstract class Creature extends GameObject {
         }
         return new Rectangle2D.Double(getX() + moveVector.getX(), getY(), getWidth() + Math.abs(moveVector.getX()), getHeight())
                 .intersects(other.getX(), other.getY(), other.getWidth(), other.getHeight());
+    }
+    
+    public void moveTowardsPoint(Waypoint point) {
+        moveTowardsPoint(point.getX(), point.getY());
+    }
+    
+    public void moveTowardsPoint(float x, float y) {
+        Vector2 mVect = new Vector2(x - getX(), y - getY());
+        faceDirection = mVect.getUnitVector();
+        moveVector = faceDirection.clone();
     }
     
     public void grapple(GrappleHookPoint ghp) {

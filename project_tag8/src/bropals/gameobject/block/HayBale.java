@@ -6,6 +6,7 @@ package bropals.gameobject.block;
 
 import bropals.gameobject.GameObject;
 import bropals.gameobject.Interactable;
+import bropals.gameobject.Player;
 import bropals.level.Area;
 import java.util.ArrayList;
 
@@ -21,7 +22,9 @@ public class HayBale extends Block implements Interactable {
 
     @Override
     public void interact(GameObject instance) {
-        // player hides in this hay bale
+        if (instance instanceof Player) {
+            ((Player)instance).setHiding(!((Player)instance).isHiding());
+        }
     }
 
     @Override

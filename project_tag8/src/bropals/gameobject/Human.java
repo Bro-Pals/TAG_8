@@ -6,6 +6,7 @@
 
 package bropals.gameobject;
 
+import bropals.debug.Debugger;
 import bropals.gameobject.block.Block;
 import bropals.graphics.ImageLoader;
 import bropals.level.Area;
@@ -26,6 +27,8 @@ public class Human extends Creature {
     private Waypoint currentGoalWaypoint;
     private Waypoint[] patrolPath;
     private Waypoint storedWaypoint;
+    private int waypointOn;
+    
     private ArrayList<Waypoint> backTrackWaypoints;
     private int alertTimer;
     private float sightRange;
@@ -34,6 +37,8 @@ public class Human extends Creature {
     
     public Human(float x, float y, float size, float speed, Vector2 faceDirection) {
         super(x, y, size, size, speed, faceDirection);
+        waypointOn = 0;
+        setSpeed(10);
     }
 
     /**
@@ -54,6 +59,26 @@ public class Human extends Creature {
             }
         }
         return true;
+    }
+    
+    @Override
+    public void update() {
+        if (patrolPath.length > 0) {
+            //Debugger.print("I have a path :D", Debugger.INFO);
+            if (currentGoalWaypoint == null) currentGoalWaypoint = patrolPath[waypointOn];
+            float nearEnough = 20;
+            float xDiff = getX() - currentGoalWaypoint.getX();
+            float yDiff = getY() - currentGoalWaypoint.getY();
+            Debugger.print("Distance from goal: " + Math.sqrt(((xDiff*xDiff) + (yDiff*yDiff))), Debugger.INFO);
+            if (((xDiff*xDiff) + (yDiff*yDiff)) < nearEnough*nearEnough) {
+                waypointOn++;
+                if (waypointOn >= patrolPath.length) waypointOn = 0;
+            }
+            Debugger.print("Currently on point "+waypointOn, Debugger.INFO);
+            currentGoalWaypoint = patrolPath[waypointOn];
+            moveTowardsPoint(currentGoalWaypoint);
+        }
+        super.update();
     }
     
     @Override
