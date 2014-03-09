@@ -59,6 +59,7 @@ public class CowAreaFileManager {
     private AvacadoBinMachine avacadoBinMachine;
     private GrappleHookPointMachine grappleHookPointMachine;
     private HayBaleMachine hayBaleMachine;
+    private boolean ignoringAvacados;
     
     public CowAreaFileManager() {
         try {
@@ -67,6 +68,7 @@ public class CowAreaFileManager {
         } catch(URISyntaxException e) {
             print("Can't get jar root!", ERROR);
         }
+        ignoringAvacados = false;
         blockMachine = new BlockMachine();
         wallMachine = new WallMachine();
         humanMachine = new HumanMachine();
@@ -76,6 +78,35 @@ public class CowAreaFileManager {
         avacadoBinMachine = new AvacadoBinMachine();
         grappleHookPointMachine = new GrappleHookPointMachine();
         hayBaleMachine = new HayBaleMachine();
+    }
+    
+    public void loadAllTheAvacados() {
+        // Go through each file and all the lines in each file and see if there is an avacado
+        // If there is an avacado, then load it, otherwise ignore it
+        File[] allFiles = new File(jarPath + "\\" + dataDirectory).listFiles();
+        BufferedReader reader;
+        int avacadoCount = 0;
+        for (int f=0; f<allFiles.length; f++) {
+            Debugger.print("Checking " + allFiles.length + " files for Avacados", Debugger.INFO);
+            //In each file
+            try {
+                reader = new BufferedReader(new FileReader(allFiles[f]));
+                String line = reader.readLine();
+                String[] tokens = line.split(SEPARATOR);
+                while(line!=null) {
+                    if (tokens[0].equals(AVACADO)) {
+                        readDataLine(line);
+                        avacadoCount++;
+                    }//Don't load if it isn't an avacado
+                    line = reader.readLine();
+                }
+                reader.close();
+                Debugger.print("Found a total of " + avacadoCount + " avacadoes from " + allFiles.length + " files", Debugger.INFO);
+            } catch(Exception e) {
+                Debugger.print("Could not load file for avacado checking " + allFiles[f].getName(), Debugger.ERROR);
+            }
+        }
+        ignoringAvacados = true;
     }
     
     private String makeFirstLine(Area area) {
@@ -151,7 +182,7 @@ public class CowAreaFileManager {
             return grappleHookPointMachine.makeDataLine((GrappleHookPoint)forObject);
         } else
         if (forObject instanceof Avacado) {
-            return avacadoMachine.makeDataLine((Avacado)forObject);
+           return avacadoMachine.makeDataLine((Avacado)forObject);
         } else
         if (forObject instanceof AvacadoBin) {
             return avacadoBinMachine.makeDataLine((AvacadoBin)forObject);
@@ -183,7 +214,9 @@ public class CowAreaFileManager {
             return blockMachine.readDataLine(line);
         } else
         if (tokenized[0].equals(AVACADO)) {
-            return avacadoMachine.readDataLine(line);
+            if (!ignoringAvacados) {
+                return avacadoMachine.readDataLine(line);
+            }
         } else
         if (tokenized[0].equals(AVACADOBIN)) {
             return avacadoBinMachine.readDataLine(line);

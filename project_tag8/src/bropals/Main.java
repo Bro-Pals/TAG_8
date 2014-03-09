@@ -59,7 +59,10 @@ public class Main {
     }
     
     private void run() {
+        //Load all the avacadoes before running the game
+        engine.getRunner().getAreaFactory().getFileManager().loadAllTheAvacados();
         
+        Debugger.print("Starting the game!", Debugger.INFO);
         while(!engine.isCloseRequested()) {
             engine.doGameCycle();
             //Debugger.print("Frame!", Debugger.INFO);
