@@ -105,12 +105,12 @@ public class ImageLoader {
         
         int rows = img.getHeight() / height;
         int columns = img.getWidth() / width;
-        BufferedImage[] splitImages = new BufferedImage[rows*columns];
+        BufferedImage[] splitImages = new BufferedImage[(rows*columns)];
         // split up the images to the right sizes
         for (int r=0; r<rows; r++) {
-            for (int c=0; c>columns; c++) {
+            for (int c=0; c<columns; c++) {
                 try {
-                    splitImages[(r+c)] = img.getSubimage(width*c, height*r, width, height);
+                    splitImages[((r*columns)+c)] = img.getSubimage(width*c, height*r, width, height);
                 } catch(Exception e) {
                     print(e.toString(), ERROR);
                 }

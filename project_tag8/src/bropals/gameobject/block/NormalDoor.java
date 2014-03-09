@@ -28,7 +28,7 @@ public class NormalDoor extends Block implements Interactable {
 
     @Override
     public float getInteractDistance() {
-        return 100; // random number
+        return 150; // random number
     }
 
     public boolean isOpen() {

@@ -133,21 +133,27 @@ public class Renderer {
             BufferedImage drawnImage = null;
             System.out.println("We are somehow drawing an interactable");
             if (in instanceof NormalDoor) {
-                drawnImage = ((NormalDoor)in).isOpen() ? 
-                        ImageLoader.getLoader().getImage("ActionIcons", 1) : ImageLoader.getLoader().getImage("ActionIcons", 0);
+                if (((NormalDoor)in).isOpen()) {
+                    drawnImage = ImageLoader.getLoader().getImage("ActionIcons", 1);
+                } else {
+                    drawnImage = ImageLoader.getLoader().getImage("ActionIcons", 0);
+                }
             } else if (in instanceof HayBale) {
-                drawnImage = area.getPlayer().isHiding() ? 
-                        ImageLoader.getLoader().getImage("ActionIcons", 3) : ImageLoader.getLoader().getImage("ActioIcons", 2);
+                if (area.getPlayer().isHiding()) {
+                    drawnImage = ImageLoader.getLoader().getImage("ActionIcons", 3);
+                } else {
+                    drawnImage = ImageLoader.getLoader().getImage("ActioIcons", 2);
+                }
             } else if (in instanceof Avacado) {
                 drawnImage = ImageLoader.getLoader().getImage("ActionIcons", 4);
             } else if (in instanceof GrappleHookPoint) {
                 drawnImage = ImageLoader.getLoader().getImage("ActionIcons", 5);
             } else if (in instanceof AvacadoBin) {
                 drawnImage = ImageLoader.getLoader().getImage("ActionIcons", 6);
-            } else {
-                return;
             }
-            g2d.drawImage(drawnImage, (int)(((GameObject)in).getX()), (int)(((GameObject)in).getY()), null);
+            if (drawnImage != null) {
+              g2d.drawImage(drawnImage, (int)(((GameObject)in).getX()), (int)(((GameObject)in).getY()), null);  
+            }
         }
     }
 

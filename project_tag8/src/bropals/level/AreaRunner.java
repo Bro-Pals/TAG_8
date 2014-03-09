@@ -60,6 +60,7 @@ public class AreaRunner {
             } else if (!movement[Direction.NORTH.getDirectionId()] && !movement[Direction.SOUTH.getDirectionId()] &&
                     (movement[Direction.WEST.getDirectionId()] || movement[Direction.EAST.getDirectionId()])) {
                 playerFaceDir.setY(0);
+                player.getMoveVector().setY(0);
             }
             
             if (movement[Direction.EAST.getDirectionId()]) {
@@ -69,11 +70,10 @@ public class AreaRunner {
             } else if (!movement[Direction.EAST.getDirectionId()] && !movement[Direction.WEST.getDirectionId()] &&
                     (movement[Direction.NORTH.getDirectionId()] || movement[Direction.SOUTH.getDirectionId()])) {
                 playerFaceDir.setX(0);
+                player.getMoveVector().setX(0);
             }
             
             player.setFaceDirection(playerFaceDir.getUnitVector());
-            System.out.println("MOVE!!! vector: "+player.getFaceDirection());
-            
             
             if (!movement[0] && !movement[1] && !movement[2] && !movement[3]) {
                 player.setMoveVector(new Vector2(0, 0));
