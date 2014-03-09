@@ -82,12 +82,27 @@ public class Human extends Creature {
         return true;
     }
     
+    public void backtrack() {
+        if (backTrackWaypoints.size() > 0) {
+            if (canSee(backTrackWaypoints.get(0).getX(), backTrackWaypoints.get(0).getY())) {
+                moveTowardsPoint(backTrackWaypoints.get(0));
+            }
+        }
+    }
+    
     @Override
     public void update() {
         if (alerted) {
-            //chase player            
-            if (playerRef.getHealth() <= 0 || !canSeePlayer() && alertTimer == ALERT_TIME) {
-                backTrackWaypoints.add(currentGoalWaypoint);
+            // if the player is not to be seen or dead
+            if (playerRef.getHealth() <= 0 || !canSeePlayer()) {
+                if (alertTimer < 0) {
+                    backtrack();
+                    if (backTrackWaypoints.isEmpty()) {
+                        alerted = false;
+                    }
+                } else {
+                    alertTimer--;
+                }
             } else if (playerRef.getHealth() > 0 && canSeePlayer()) {
                 if (type == HumanType.PITCHFORK) {
                     if (recordTime < 0) {
@@ -97,6 +112,8 @@ public class Human extends Creature {
                     recordTime--;
                     alertTimer = ALERT_TIME;
                     this.moveTowardsPoint(playerRef.getCenterX(), playerRef.getCenterY());
+                } else if (type == HumanType.ROCK_THROWER) {
+                    facePoint(playerRef.getCenterX(), playerRef.getCenterY());
                 }
             }
         } else if (!alerted && patrolPath.length > 0) {
@@ -178,14 +195,6 @@ public class Human extends Creature {
 
     public void setPatrolPath(Waypoint[] patrolPath) {
         this.patrolPath = patrolPath;
-    }
-
-    public Waypoint getStoredWaypoint() {
-        return storedWaypoint;
-    }
-
-    public void setStoredWaypoint(Waypoint storedWaypoint) {
-        this.storedWaypoint = storedWaypoint;
     }
 
     public ArrayList<Waypoint> getBackTrackWaypoints() {

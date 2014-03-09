@@ -11,6 +11,7 @@ import bropals.debug.Debugger;
 import bropals.gameobject.GameObject;
 import bropals.gameobject.GrappleHookPoint;
 import bropals.gameobject.Human;
+import bropals.gameobject.HumanType;
 import bropals.gameobject.Waypoint;
 import bropals.gameobject.block.Avacado;
 import bropals.gameobject.block.AvacadoBin;
@@ -57,6 +58,7 @@ public class AreaFactory {
             h.setParent(theArea);
             if (theArea.getPlayer() == null) Debugger.print("PLAYER IS NULL!", Debugger.ERROR);
             h.givePlayerRef(theArea.getPlayer());
+            h.setType(HumanType.ROCK_THROWER);
             
             HayBale hb = new HayBale(500, 300, 50, 50);
             hb.setParent(theArea);
