@@ -114,8 +114,8 @@ public class Renderer {
                // working.translate(drawing.getX(), drawing.getY());
                // g2d.setTransform(working);
                 //System.out.println("This creatures is at an angle of " + (((Creature)drawing).getAngleFacing()/Math.PI) + " PI");
-                g2d.drawImage(drawing.getTexture(), (int)(drawing.getX() - ((Creature)drawing).getRadius()), 
-                        (int)(drawing.getY() - ((Creature)drawing).getRadius()), null);
+                g2d.drawImage(drawing.getTexture(), (int)(drawing.getX()), 
+                        (int)(drawing.getY()), null);
             } else if (drawing.getTexture() != null) {
                 //g2d.setTransform(identity);
                 g2d.drawImage(drawing.getTexture(), (int)drawing.getX(), (int)drawing.getY(), null);

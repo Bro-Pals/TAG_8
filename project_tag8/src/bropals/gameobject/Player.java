@@ -7,6 +7,7 @@ package bropals.gameobject;
 import bropals.level.Area;
 import bropals.level.AvacadoManager;
 import bropals.util.Direction;
+import bropals.util.Vector2;
 import java.awt.image.BufferedImage;
 
 /**
@@ -19,7 +20,7 @@ public class Player extends Creature {
     private final int maxHealth = 5;
     
     public Player(Area parent, float x, float y) {
-        super(parent, x, y, 25, 10, Direction.getUnitVector(Direction.NORTH));
+        super(parent, x, y, 50, 50, 10, Direction.getUnitVector(Direction.NORTH));
         health = 5;
     }
     

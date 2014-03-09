@@ -17,14 +17,6 @@ import bropals.gameobject.block.HayBale;
 import bropals.gameobject.block.NormalDoor;
 import bropals.gameobject.block.TeleportDoor;
 import bropals.gameobject.block.Wall;
-import bropals.gameobject.pools.AvacadoBinPool;
-import bropals.gameobject.pools.AvacadoPool;
-import bropals.gameobject.pools.BlockPool;
-import bropals.gameobject.pools.HayBalePool;
-import bropals.gameobject.pools.HumanPool;
-import bropals.gameobject.pools.NormalDoorPool;
-import bropals.gameobject.pools.TeleportDoorPool;
-import bropals.gameobject.pools.WallPool;
 
 /**
  *
@@ -33,29 +25,12 @@ import bropals.gameobject.pools.WallPool;
 public class AreaFactory {
     
     private final Area theArea;
-    private final AvacadoBinPool avacadoBinPool;
-    private final AvacadoPool avacadoPool;
-    private final BlockPool blockPool;
-    private final HayBalePool hayBalePool;
-    private final NormalDoorPool normalDoorPool;
-    private final TeleportDoorPool teleportDoorPool;
-    private final WallPool wallPool;
-    private final HumanPool humanPool;
     private CowAreaFileManager cowAreaFileManager;
     
     public Area getArea() { return theArea; }
     
     public AreaFactory() {
         theArea = new Area(this);
-        avacadoBinPool = new AvacadoBinPool(theArea);
-        avacadoPool = new AvacadoPool(theArea);
-        blockPool = new BlockPool(theArea);
-        hayBalePool = new HayBalePool(theArea);
-        normalDoorPool = new NormalDoorPool(theArea);
-        teleportDoorPool = new TeleportDoorPool(theArea);
-        wallPool = new WallPool(theArea);
-        humanPool = new HumanPool(theArea);
-        
         cowAreaFileManager = new CowAreaFileManager();
     }
     
@@ -64,23 +39,11 @@ public class AreaFactory {
      * @param id the id of the area that you want.
      */
     public void setArea(int id) {
-        theArea.recycleAll();
-        theArea.defaults();
         switch(id) {
             case -2:
             Debugger.print("I am running setArea!", Debugger.INFO);
-            Block b = requestNormalDoor();
-            b.setX(150);
-            b.setY(200);
-            b.setHeight(100);
-            b.setWidth(300);
-            
-            /*Block d = requestBlock();
-            d.setParent(theArea);
-            d.setX(10);
-            d.setY(300);
-            d.setWidth(140);
-            d.setHeight(130);*/
+            Block b = new Block(theArea, 150, 200, 100, 300);
+            Block b2 = new Block(theArea, 250, 200, 130, 200);
             
             Debugger.print("Made an area with " + theArea.getObjects().size() + " objects!", Debugger.INFO);
                 break;
@@ -89,68 +52,5 @@ public class AreaFactory {
             default:
                 Debugger.print("Need constructor for ID: " + id + " in AreaFactory", Debugger.ERROR);
         }
-    }
-    
-    /**
-     * Puts an object back into the game object pool to be reused.
-     * @param recycle the GameObject being recycled
-     */
-    public void recycleGameObject(GameObject recycle) {
-        if (recycle instanceof Block) {
-            blockPool.recycle((Block)recycle);
-        } else
-        if (recycle instanceof Wall) {
-            wallPool.recycle((Wall)recycle);
-        } else
-        if (recycle instanceof Avacado) {
-            avacadoPool.recycle((Avacado)recycle);
-        } else
-        if (recycle instanceof HayBale) {
-            hayBalePool.recycle((HayBale)recycle);
-        } else
-        if (recycle instanceof NormalDoor) {
-            normalDoorPool.recycle((NormalDoor)recycle);
-        } else
-        if (recycle instanceof TeleportDoor) {
-            teleportDoorPool.recycle((TeleportDoor)recycle);
-        } else
-        if (recycle instanceof AvacadoBin) {
-            avacadoBinPool.recycle((AvacadoBin)recycle);
-        } else
-        if (recycle instanceof Human) {
-            humanPool.recycle((Human)recycle);
-        }
-    }
-    
-    public Human requestHuman() {
-        return humanPool.request();
-    }
-    
-    public Block requestBlock() {
-        return blockPool.request();
-    }
-    
-    public Wall requestWall() {
-        return wallPool.request();
-    }
-    
-    public HayBale requestHayBale() {
-        return hayBalePool.request();
-    }
-    
-    public Avacado requestAvacado() {
-        return avacadoPool.request();
-    }
-    
-    public AvacadoBin requestAvacadoBin() {
-        return avacadoBinPool.request();
-    }
-    
-    public NormalDoor requestNormalDoor() {
-        return normalDoorPool.request();
-    }
-    
-    public TeleportDoor requestTeleportDoor() {
-        return teleportDoorPool.request();
     }
 }

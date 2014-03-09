@@ -28,8 +28,9 @@ public abstract class GameObject {
         this.x = x;
         this.y = y;
         this.parent = parent;
-        
-        parent.getObjects().add(this);
+        if (parent!=null) {
+            parent.addObject(this);
+        }
     }
     
     public abstract BufferedImage getTexture();

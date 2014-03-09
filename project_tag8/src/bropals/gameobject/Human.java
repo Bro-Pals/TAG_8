@@ -33,7 +33,7 @@ public class Human extends Creature {
     private float turnSpeed;
     
     public Human(Area parent, float x, float y, float size, float speed, Vector2 faceDirection) {
-        super(parent, x, y, size, speed, faceDirection);
+        super(parent, x, y, size, size, speed, faceDirection);
     }
 
     /**

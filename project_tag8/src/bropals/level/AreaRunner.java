@@ -72,11 +72,13 @@ public class AreaRunner {
             }
             
             player.setFaceDirection(playerFaceDir.getUnitVector());
+            System.out.println("MOVE!!! vector: "+player.getFaceDirection());
+            
             
             if (!movement[0] && !movement[1] && !movement[2] && !movement[3]) {
-                player.setSpeed(0);
+                player.setMoveVector(new Vector2(0, 0));
             } else {
-                player.setSpeed(player.getMoveSpeed());
+                player.setMoveVector(player.getFaceDirection().clone());
             }
         }
         ArrayList<GameObject> objects = areaFactory.getArea().getObjects();

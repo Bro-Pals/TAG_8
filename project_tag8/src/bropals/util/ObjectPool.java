@@ -16,11 +16,9 @@ import java.util.ArrayList;
 public abstract class ObjectPool<O> {
     
     private ArrayList<O> pool;
-    protected Area area;
     
-    public ObjectPool(Area area) {
+    public ObjectPool() {
         pool = new ArrayList<O>();
-        this.area = area;
     }
     
     public O request() {
