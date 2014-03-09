@@ -44,12 +44,14 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -107,6 +109,7 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
     private final AreaFactory theFactory;
     private Grid grid;
     private final String mainTitle = "Cow Area Level Designer";
+    private final JFileChooser fc;
     
     public CowAreaLevelDesignerMain() {
         initializeIconForWindows();
@@ -119,6 +122,7 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
         initializeGrid();
         centerFrame();
         initializeWhatButtonsDo();
+        fc = new JFileChooser();
         selectedGameObject = null;
         theFactory = new AreaFactory();
         mainFrame.setVisible(true);
@@ -434,6 +438,50 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
                 dialog.setSize(mainFrame.getWidth()/2, mainFrame.getHeight()/2);
                 dialog.setLocationRelativeTo(mainFrame);
                 dialog.setVisible(true);
+            }
+        });
+        
+        save.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (editingArea!=null) {
+                    int returned = fc.showSaveDialog(mainFrame);
+                    if (returned==JFileChooser.APPROVE_OPTION) {
+                        //Save the area!
+                        File f = fc.getSelectedFile();
+                        String[] tokenized = f.getName().split(".");
+                        String use;
+                        if (tokenized.length>0) {
+                            use = tokenized[0];
+                        } else {
+                            use = f.getName();
+                        }
+                        f = new File(f.getParentFile().getPath() + "/" + use + ".cowarea");
+                        theFactory.getFileManager().export(editingArea, f);
+                    }
+                }
+            }
+        });
+        
+        open.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                boolean canGoThrough = true;
+                if (editingArea!=null) {
+                    //Prompt user
+                    int picked = JOptionPane.showConfirmDialog(mainFrame, "If you haven't saved your current changes, then all of your work will be lost if you overwrite it with a blank Area. Are you sure you want to continue?", "Confirm overwriting possibly unsaved data", JOptionPane.YES_NO_OPTION);
+                    if (picked==JOptionPane.NO_OPTION) {
+                        canGoThrough = false;
+                    }
+                }
+                if (canGoThrough) {
+                    //Open file stuff
+                    int returned = fc.showOpenDialog(mainFrame);
+                    if (returned==JFileChooser.APPROVE_OPTION) {
+                        //Save the area!
+                        theFactory.getFileManager().loadArea(theFactory, fc.getSelectedFile());
+                    }
+                }
             }
         });
     }
