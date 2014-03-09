@@ -67,6 +67,18 @@ public class ImageLoader {
         return images.get(name)[index];
     }
     
+    public BufferedImage getRepeatingTexture(BufferedImage repeatingImg, int width, int height) {
+        BufferedImage img = new BufferedImage(width, height, BufferedImage.OPAQUE);
+        int rows = (width/repeatingImg.getWidth()) + 1;
+        int columns = (height/repeatingImg.getHeight()) + 1;
+        for (int r=0; r<rows; r++) {
+            for (int c=0; c<columns; c++) {
+                img.getGraphics().drawImage(repeatingImg, r*repeatingImg.getWidth(), c*repeatingImg.getHeight(), null);
+            }
+        }
+        return img;
+    }
+    
      /**
      * Gets a loaded image from ImageLoader. Gets the image at the index 0 of the array
      * @param name the name of the loading image (no extension).

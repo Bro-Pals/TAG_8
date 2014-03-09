@@ -33,9 +33,9 @@ public class Human extends Creature {
     private Player playerRef;
     private ArrayList<Waypoint> backTrackWaypoints;
     private int recordTime;
-    private int RECORD_RATE = 4;
+    private int RECORD_RATE = 2;
     
-    float nearEnough = 20;
+    float nearEnough = 40;
     
     private int alertTimer;
     private int ALERT_TIME = 15;
@@ -43,6 +43,8 @@ public class Human extends Creature {
     private float sightRange;
     private float fieldOfView;
     private float attackDistance;
+    private int attackTimer;
+    private final int ATTACK_SPEED = 20; // frames
     private float turnSpeed;
     
     public Human(float x, float y, float size, float speed, Vector2 faceDirection) {
@@ -51,7 +53,8 @@ public class Human extends Creature {
         waypointOn = 0;
         alerted = false;
         sightRange = 300;
-        fieldOfView = (float)(Math.PI); // radians
+        fieldOfView = (float)(Math.PI*5.0/6.0); // radians
+        attackTimer = 0;
         setSpeed(10);
     }
 
@@ -59,7 +62,7 @@ public class Human extends Creature {
         alerted = true;
         alertTimer = ALERT_TIME;
         backTrackWaypoints = new ArrayList<>();
-        backTrackWaypoints.add(new Waypoint(getX(), getY())); // waypoint to return to
+        backTrackWaypoints.add(new Waypoint(getCenterX(), getCenterY())); // waypoint to return to
         recordTime = RECORD_RATE; // recrod a new point every 4 frames
         setStandingStill(false);
     }
@@ -73,9 +76,9 @@ public class Human extends Creature {
      *         point, otherwise returns false
      */
     public boolean canSee(float x, float y) {
-        Line2D.Float sightLine = new Line2D.Float(getX(), getY(), x, y);
+        Line2D.Float sightLine = new Line2D.Float(getCenterX(), getCenterY(), x, y);
         for (GameObject obj : getParent().getObjects()) {
-            if (obj instanceof Block) {
+            if (obj != this && obj!= playerRef && obj instanceof Block) {
                 // skip checking if there is an open door
                 if (obj instanceof NormalDoor && ((NormalDoor)obj).isOpen()) continue;
                 
@@ -88,12 +91,24 @@ public class Human extends Creature {
     }
     
     public void backtrack() {
+        System.out.println("Backtrackign");
         if (backTrackWaypoints.size() > 0) {
+            int moveToNum = 0;
             if (backTrackWaypoints.size() > 1 && !canSee(backTrackWaypoints.get(0).getX(), backTrackWaypoints.get(0).getY())) {
-                moveTowardsPoint(backTrackWaypoints.get(backTrackWaypoints.size()-1));
+                moveToNum = backTrackWaypoints.size()-1;
             } else {
-                moveTowardsPoint(backTrackWaypoints.get(0));   
+                moveToNum = 0;
             }
+                moveTowardsPoint(backTrackWaypoints.get(moveToNum));   
+                float xDiff = backTrackWaypoints.get(moveToNum).getX() - getCenterX();
+                float yDiff = backTrackWaypoints.get(moveToNum).getY() - getCenterY();
+                if (canSee(patrolPath[waypointOn].getX(), patrolPath[waypointOn].getY())) {
+                    System.out.println("Done backgracking!");
+                    currentGoalWaypoint = patrolPath[waypointOn];
+                    backTrackWaypoints.clear();
+                } else if (nearEnough*nearEnough > (xDiff*xDiff)+(yDiff*yDiff)) {
+                    backTrackWaypoints.remove(moveToNum);
+                }
         }
     }
     
@@ -105,75 +120,95 @@ public class Human extends Creature {
                 if (alertTimer < 0) {
                     setStandingStill(false);
                     backtrack();
-                    if (backTrackWaypoints.isEmpty()) {
+                    if (canSee(patrolPath[waypointOn].getX(), patrolPath[waypointOn].getY())) {
                         alerted = false;
+                        currentGoalWaypoint = patrolPath[waypointOn];
+                        backTrackWaypoints.clear();
                     }
                 } else {
                     setStandingStill(true);
                     alertTimer--;
                 }
             } else if (playerRef.getHealth() > 0 && canSeePlayer()) {
+                float xDiff = playerRef.getCenterX() - getCenterX();
+                float yDiff = playerRef.getCenterY() - getCenterY();
                 if (type == HumanType.PITCHFORK) {
                     setStandingStill(false);
                     if (recordTime < 0) {
                         recordTime = RECORD_RATE;
-                        float xDiff = backTrackWaypoints.get(backTrackWaypoints.size()-1).getX() - getCenterX();
-                        float yDiff = backTrackWaypoints.get(backTrackWaypoints.size()-1).getY() - getCenterY();
-                        // only adds to it if it is not too close to the last point
-                        if (nearEnough*nearEnough > (xDiff*xDiff)+(yDiff*yDiff)) {
-                            backTrackWaypoints.add(new Waypoint(getX(), getY()));
+                        int lastIndex = backTrackWaypoints.size()-1;
+                        if (!canSee(backTrackWaypoints.get(lastIndex).getX(), backTrackWaypoints.get(lastIndex).getY())) {
+                            backTrackWaypoints.add(new Waypoint(getCenterX(), getCenterY()));
                         }
                     }
                     recordTime--;
-                    alertTimer = ALERT_TIME;
-                    this.moveTowardsPoint(playerRef.getCenterX(), playerRef.getCenterY());
+                    Debugger.print("attackTimer:"+attackTimer+"  AttackSpeed:"+ATTACK_SPEED, Debugger.INFO);
+                    if (attackTimer > ATTACK_SPEED && attackDistance*attackDistance > (xDiff*xDiff)+(yDiff*yDiff)) {
+                        setStandingStill(true);
+                        playerRef.damage();
+                        attackTimer = 0;
+                    } else {
+                        this.moveTowardsPoint(playerRef.getCenterX(), playerRef.getCenterY());   
+                    }
                 } else if (type == HumanType.ROCK_THROWER) {
                     setStandingStill(true);
                     facePoint(playerRef.getCenterX(), playerRef.getCenterY());
+                    
+                    if (attackTimer > ATTACK_SPEED && attackDistance*attackDistance > (xDiff*xDiff)+(yDiff*yDiff)) {
+                        setStandingStill(true);
+                        playerRef.damage();
+                        attackTimer = 0;
+                    }
                 }
             }
         } else if (!alerted && patrolPath.length > 0) {
-            setStandingStill(false);
             //Debugger.print("I have a path :D", Debugger.INFO);
             if (currentGoalWaypoint == null) currentGoalWaypoint = patrolPath[waypointOn];
+            
+            currentGoalWaypoint = patrolPath[waypointOn];
+            moveTowardsPoint(currentGoalWaypoint);
+            
             float xDiff = getCenterX() - currentGoalWaypoint.getX();
             float yDiff = getCenterY() - currentGoalWaypoint.getY();
             //Debugger.print("Distance from goal: " + Math.sqrt(((xDiff*xDiff) + (yDiff*yDiff))), Debugger.INFO);
             if (((xDiff*xDiff) + (yDiff*yDiff)) < nearEnough*nearEnough) {
+                setStandingStill(true);
                 if (waypointWait > currentGoalWaypoint.getDelay()) {
+                    System.out.println("WaypointOn:"+waypointOn + "  waypointTimerWait:"+waypointWait);
                     waypointOn++;
                     waypointWait = 0; // reset wait timer
                     if (waypointOn >= patrolPath.length) waypointOn = 0;
                 } else {
                     waypointWait++;
                 }
+            } else {
+                setStandingStill(false);   
             }
             //Debugger.print("Currently on point "+waypointOn, Debugger.INFO);
-            currentGoalWaypoint = patrolPath[waypointOn];
-            moveTowardsPoint(currentGoalWaypoint);
-            
             if (canSeePlayer()) {
                 Debugger.print("The human can see the player", Debugger.INFO);
                 alerted();
             }
         }
+        attackTimer++;
         super.update();
     }
     
     public boolean canSeePlayer() {
         if (playerRef != null) {
-            if (playerRef.isHiding()) return false;
+            if (playerRef.isHiding() || playerRef.getHealth() <= 0) return false;
             
             float playerXDiff = playerRef.getCenterX() - getCenterX();
             float playerYDiff = playerRef.getCenterY() - getCenterY();
             Vector2 playerPositionVector = (new Vector2(playerXDiff, playerYDiff)).getUnitVector();
-            Debugger.print("There is a player", Debugger.INFO);
-            Debugger.print("Angle between human facing direction and player position: " + Vector2.dot(playerPositionVector, getFaceDirection()), Debugger.INFO);
-            if (Vector2.dot(playerPositionVector, getFaceDirection()) > Math.cos(fieldOfView/2)) {
-                Debugger.print("Player in the FOV", Debugger.INFO);
+            //Debugger.print("There is a player", Debugger.INFO);
+            //Debugger.print("Angle between human facing direction and player position: " + Vector2.dot(playerPositionVector, getFaceDirection()), Debugger.INFO);
+            if ((playerXDiff*playerXDiff)+(playerYDiff*playerYDiff) < sightRange*sightRange) {
+                // if the player is too close they see them anyways
+                boolean override = (playerXDiff*playerXDiff)+(playerYDiff*playerYDiff) < 50*50;
                 // in their field of view!
-                if ((playerXDiff*playerXDiff)+(playerYDiff*playerYDiff) < sightRange*sightRange) {
-                    Debugger.print("Player is close enough", Debugger.INFO);
+                if (override || Vector2.dot(playerPositionVector, getFaceDirection()) > Math.cos(fieldOfView/2)) {
+                    //Debugger.print("Player is close enough", Debugger.INFO);
                     if (canSee(playerRef.getCenterX(), playerRef.getCenterY())) {
                         return true;
                     }
@@ -194,6 +229,8 @@ public class Human extends Creature {
 
     public void setType(HumanType type) {
         this.type = type;
+        if (type == HumanType.PITCHFORK) attackDistance = 30;
+        else if (type == HumanType.ROCK_THROWER) attackDistance = 400;
     }
 
     public HumanState getState() {

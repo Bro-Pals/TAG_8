@@ -7,6 +7,7 @@
 package bropals.level;
 
 import bropals.debug.Debugger;
+import bropals.engine.Engine;
 import bropals.gameobject.Creature;
 import bropals.gameobject.GameObject;
 import bropals.gameobject.GrappleHookPoint;
@@ -39,9 +40,9 @@ public class AreaRunner {
             
     public AreaRunner() {
         areaFactory = new AreaFactory();
-        player = new Player(40, 100);
+        player = new Player(150, 150);
         //Initial area
-        setCurrentArea(-2);
+        setCurrentArea(1);
     }
     
     public Area getCurrentArea() {
@@ -85,6 +86,35 @@ public class AreaRunner {
                 player.setMoveVector(new Vector2(0, 0));
             } else {
                 player.setMoveVector(player.getFaceDirection().clone());
+            }
+            if (player.getCenterY() < 0 && areaFactory.getArea().getNorthTargetId() != 0) {
+                Debugger.print("Going north!", Debugger.INFO);
+                areaFactory.setArea(areaFactory.getArea().getNorthTargetId());
+                player.setY(Engine.SCREEN_HEIGHT - (int)(player.getHeight()));
+                player.setParent(areaFactory.getArea());
+            } else if (player.getCenterY() > Engine.SCREEN_HEIGHT && areaFactory.getArea().getSouthTargetId() != 0) {
+                Debugger.print("Going south!", Debugger.INFO);
+                areaFactory.setArea(areaFactory.getArea().getSouthTargetId());
+                player.setY(0);
+                player.setParent(areaFactory.getArea());
+            } else if (player.getCenterX() < 0 && areaFactory.getArea().getWestTargetId() != 0) {
+                Debugger.print("Going west!", Debugger.INFO);
+                areaFactory.setArea(areaFactory.getArea().getWestTargetId());
+                player.setX(Engine.SCREEN_WIDTH - (int)(player.getWidth()));
+                player.setParent(areaFactory.getArea());
+            } else if (player.getCenterX() > Engine.SCREEN_WIDTH && areaFactory.getArea().getEastTargetId() != 0) {
+                Debugger.print("Going east!", Debugger.INFO);
+                areaFactory.setArea(areaFactory.getArea().getEastTargetId());
+                player.setX(0);
+                player.setParent(areaFactory.getArea());
+            }
+            
+            if (player.getHealth() <= 0) {
+                areaFactory.setArea(1); // the barn
+                player.setX(150);
+                player.setY(150);
+                player.setParent(areaFactory.getArea());
+                player.resetHealth();
             }
         }
         ArrayList<GameObject> objects = areaFactory.getArea().getObjects();

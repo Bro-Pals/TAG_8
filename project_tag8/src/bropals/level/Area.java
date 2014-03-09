@@ -10,6 +10,7 @@ import bropals.debug.Debugger;
 import bropals.engine.Engine;
 import bropals.gameobject.GameObject;
 import bropals.gameobject.Player;
+import bropals.gameobject.block.Wall;
 import bropals.graphics.ImageLoader;
 import bropals.util.Direction;
 import bropals.util.Direction;
@@ -26,7 +27,8 @@ public class Area {
     
     private ArrayList<GameObject> objects;
     private Player player;
-    private final int[] boundryTargetIds;
+    private int[] boundryTargetIds;
+    private Wall[] boundryWalls;
     private AreaFactory factory;
     private int areaId;
     private BufferedImage backgroundTile;
@@ -49,6 +51,41 @@ public class Area {
         this.backgroundTile = backgroundTile;
         bgTimesX = (int)Math.ceil((float)canvasX/(float)backgroundTile.getWidth());
         bgTimesY = (int)Math.ceil((float)canvasY/(float)backgroundTile.getHeight());
+    }
+    
+    public void updateBoundries() {
+        Debugger.print("Screen size: "+Engine.SCREEN_WIDTH+", "+Engine.SCREEN_HEIGHT, Debugger.INFO);
+        int wallSize = 20;
+        if (boundryTargetIds[Direction.NORTH.getDirectionId()] == 0) {
+            Debugger.print("North was 0", Debugger.INFO);
+            Wall w = new Wall(0, -wallSize, Engine.SCREEN_WIDTH, wallSize);
+            w.setParent(this);
+            boundryWalls[Direction.NORTH.getDirectionId()] = w;
+        }
+        if (boundryTargetIds[Direction.SOUTH.getDirectionId()] == 0) {
+            Debugger.print("South was 0", Debugger.INFO);
+            Wall w = new Wall(0, Engine.SCREEN_HEIGHT, Engine.SCREEN_WIDTH, wallSize);
+            w.setParent(this);
+            boundryWalls[Direction.SOUTH.getDirectionId()] = w;
+        }
+        if (boundryTargetIds[Direction.EAST.getDirectionId()] == 0) {
+            Debugger.print("East was 0", Debugger.INFO);
+            Wall w =  new Wall(Engine.SCREEN_WIDTH, 0, wallSize, Engine.SCREEN_HEIGHT);
+            w.setParent(this);
+            boundryWalls[Direction.EAST.getDirectionId()] = w;
+        }
+        if (boundryTargetIds[Direction.WEST.getDirectionId()] == 0) {
+            Debugger.print("West was 0", Debugger.INFO);
+            Wall w = new Wall(-wallSize, 0, wallSize, Engine.SCREEN_HEIGHT);
+            w.setParent(this);
+            boundryWalls[Direction.WEST.getDirectionId()] = w;
+        }
+        for (int i=0; i<4; i++ ) {
+            if (boundryTargetIds[i]!=0 && boundryWalls[i] != null) { 
+                boundryWalls[i].setParent(null); 
+                System.out.println("Erased the wall in index "+i);
+            }
+        }
     }
     
     public int getNorthTargetId() { return boundryTargetIds[Direction.getDirectionId(Direction.NORTH)]; }
@@ -76,7 +113,8 @@ public class Area {
         areaCount++;
         Debugger.print("There are "+areaCount+" area object(s)", Debugger.INFO);
         areaId = -1;
-        boundryTargetIds = new int[]{ -1, -1, -1, -1 };
+        boundryTargetIds = new int[]{ 0, 0, 0, 0};
+        boundryWalls = new Wall[4]; // holds boundry walls
         this.factory = factory;
         objects = new ArrayList<GameObject>();
         defaults();
@@ -87,6 +125,7 @@ public class Area {
      */
     public void defaults() {
         objects.clear();
+        boundryTargetIds = new int[]{0, 0, 0, 0};
         setBackgroundTile(ImageLoader.getLoader().getImage("placeholder_background", 0), Engine.SCREEN_WIDTH, Engine.SCREEN_HEIGHT);
     }
     
