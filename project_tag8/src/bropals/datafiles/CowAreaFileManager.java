@@ -214,12 +214,19 @@ public class CowAreaFileManager {
 
         @Override
         public String makeDataLine(GrappleHookPoint object) {
-            return AVACADOBIN + SEPARATOR + object.getX() + SEPARATOR + object.getY() + SEPARATOR + object.getTextureString() + SEPARATOR + object.getTextureIndex();
+            return AVACADOBIN + SEPARATOR + object.getX() + SEPARATOR + object.getY() + SEPARATOR + object.getInteractDistance() + SEPARATOR + object.getTextureString() + SEPARATOR + object.getTextureIndex();
         }
 
         @Override
         public GrappleHookPoint readDataLine(String line) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            String[] block = line.split(SEPARATOR);
+            GrappleHookPoint object = new GrappleHookPoint(0, 0);
+            object.setX( Float.parseFloat(block[1]) );
+            object.setY( Float.parseFloat(block[2]) );
+            object.setInteractDistance( Float.parseFloat(block[3]) );
+            object.setTextureString(block[4]);
+            object.setTextureIndex(Integer.parseInt(block[5]));
+            return object;
         }
         
         
@@ -373,7 +380,7 @@ public class CowAreaFileManager {
 
             @Override
             public Waypoint readDataLine(String line) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                return null;
             }
             
         }
@@ -383,12 +390,21 @@ public class CowAreaFileManager {
 
         @Override
         public String makeDataLine(HayBale object) {
-            return HAYBALE + SEPARATOR + object.getX() + SEPARATOR + object.getY() + SEPARATOR + object.getWidth() + SEPARATOR + object.getHeight() + SEPARATOR + object.getTextureString() + SEPARATOR + object.getTextureIndex();
+            return HAYBALE + SEPARATOR + object.getX() + SEPARATOR + object.getY() + SEPARATOR + object.getWidth() + SEPARATOR + object.getHeight() + SEPARATOR + object.getInteractDistance() + SEPARATOR + object.getTextureString() + SEPARATOR + object.getTextureIndex();
         }
 
         @Override
         public HayBale readDataLine(String line) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            String[] block = line.split(SEPARATOR);
+            HayBale object = new HayBale(0, 0, 0, 0);
+            object.setX( Float.parseFloat(block[1]) );
+            object.setY( Float.parseFloat(block[2]) );
+            object.setWidth( Float.parseFloat(block[3]) );
+            object.setHeight( Float.parseFloat(block[4]) );
+            object.setInteractDistance( Float.parseFloat(block[5]) );
+            object.setTextureString(block[6]);
+            object.setTextureIndex(Integer.parseInt(block[7]));
+            return object;          
         }
         
     }
@@ -402,7 +418,15 @@ public class CowAreaFileManager {
 
         @Override
         public Wall readDataLine(String line) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            String[] block = line.split(SEPARATOR);
+            Wall object = new Wall(0, 0, 0, 0);
+            object.setX( Float.parseFloat(block[1]) );
+            object.setY( Float.parseFloat(block[2]) );
+            object.setWidth( Float.parseFloat(block[3]) );
+            object.setHeight( Float.parseFloat(block[4]) );
+            object.setTextureString(block[5]);
+            object.setTextureIndex(Integer.parseInt(block[6]));
+            return object;        
         }
 
     }
