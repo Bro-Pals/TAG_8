@@ -6,7 +6,20 @@
 
 package bropals.leveldesigner;
 
+import bropals.datafiles.CowAreaFileManager;
+import bropals.gameobject.GameObject;
+import bropals.gameobject.GrappleHookPoint;
+import bropals.gameobject.Human;
+import bropals.gameobject.block.Avacado;
+import bropals.gameobject.block.AvacadoBin;
+import bropals.gameobject.block.Block;
+import bropals.gameobject.block.NormalDoor;
+import bropals.gameobject.block.TeleportDoor;
+import bropals.gameobject.block.Wall;
+import bropals.graphics.ImageLoader;
 import bropals.level.Area;
+import bropals.level.AreaFactory;
+import bropals.util.Vector2;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.DisplayMode;
@@ -14,15 +27,20 @@ import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
 /**
@@ -32,6 +50,14 @@ import javax.swing.JTabbedPane;
 public class CowAreaLevelDesignerMain {
     
     public static void main(String args[]) {
+        //Load images here
+        ImageLoader loader = ImageLoader.getLoader();
+        loader.loadSingleImage("placeholder_background", "backgrounds/placeholder.png");
+        loader.loadSingleImage("GameIcon", "GameIcon.png");
+        loader.loadSingleImage("testCreature", "sprites/testCreature.png");
+        loader.loadSpriteSheet("ActionIcons", "actionIcons.png", 80, 80);
+        
+        //Then start the program
         CowAreaLevelDesignerMain cldm = new CowAreaLevelDesignerMain();
     }
     
@@ -50,6 +76,9 @@ public class CowAreaLevelDesignerMain {
             
     //Data based things
     private Area editingArea;
+    private CowAreaFileManager fileManager;
+    private GameObject selectedGameObject;
+    private final AreaFactory theFactory;
     
     public CowAreaLevelDesignerMain() {
         initializeIconForWindows();
@@ -59,7 +88,10 @@ public class CowAreaLevelDesignerMain {
         initializeCanvas();
         initializeFormatter();
         initializeObjectCreationPanel();
+        initializeFileManager();
         centerFrame();
+        initializeWhatButtonsDo();
+        theFactory = new AreaFactory();
         mainFrame.setVisible(true);
     }
     
@@ -68,7 +100,7 @@ public class CowAreaLevelDesignerMain {
         mainFrame.setIconImage(iconImage);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setSize(1200, 720);
-        mainFrame.setMinimumSize(new Dimension(900, 700));
+        mainFrame.setMinimumSize(new Dimension(950, 720));
     }
     
     private void initializeIconForWindows() {
@@ -82,11 +114,22 @@ public class CowAreaLevelDesignerMain {
     private void setupPropertyTabs() {
         globalProperties = new JPanel();
         objectProperties = new JPanel();
+        globalProperties.setMinimumSize(new Dimension(250, 600));
+        objectProperties.setMinimumSize(new Dimension(250, 600));
         JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+        //Put each panel into a scrolly pane and that into a tab
         propertyExplorer.add(tabbedPane, BorderLayout.CENTER);
         //Put things in tabs
-        tabbedPane.add("Object Properties", objectProperties);
-        tabbedPane.add("Global Properties", globalProperties);
+        JScrollPane objectScrollyPane = new JScrollPane(objectProperties);
+        objectScrollyPane.createVerticalScrollBar();
+        objectScrollyPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        objectScrollyPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        JScrollPane globalScrollyPane = new JScrollPane(globalProperties);
+        globalScrollyPane.createVerticalScrollBar();
+        globalScrollyPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED); 
+        globalScrollyPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        tabbedPane.add("Object Properties", objectScrollyPane);
+        tabbedPane.add("Global Properties", globalScrollyPane);
     }
     
     private void formatBottomPart() {
@@ -104,6 +147,7 @@ public class CowAreaLevelDesignerMain {
         formatBottomPart();
         mainFrame.add(bottomFormatter, BorderLayout.SOUTH);
         setupPropertyTabs();
+        mainFrame.add(propertyExplorer, BorderLayout.EAST);
     }
 
     private void initializeFileMenu() {
@@ -120,8 +164,11 @@ public class CowAreaLevelDesignerMain {
     }
 
     private void initializeCanvas() {
-        canvas = new LevelDesignerCanvas();
+        canvas = new LevelDesignerCanvas(this);
         canvas.setPreferredSize(new Dimension(800, 600));
+        canvas.setMaximumSize(canvas.getPreferredSize());
+        canvas.setMinimumSize(canvas.getPreferredSize());
+        canvas.setSize(canvas.getPreferredSize());
         mainFrame.add(canvas, BorderLayout.CENTER);
     }
 
@@ -158,5 +205,175 @@ public class CowAreaLevelDesignerMain {
         objectCreation.add(createTeleportDoor);
         objectCreation.add(createHuman);
         objectCreation.add(deleteSelected);
+    }
+
+    private void initializeFileManager() {
+        fileManager = new CowAreaFileManager();
+    }
+
+    private void initializeWhatButtonsDo() {
+        //What all of the buttons and file menu bars do is defined in this method
+        createBlock.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (editingArea!=null) {
+                    Block block = new Block(editingArea, 0, 0, 0, 0);
+                    makeCreateDialog(block, "Create Block");
+                }
+            }
+        });
+        createWall.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (editingArea!=null) {
+                    Wall wall = new Wall(editingArea, 0, 0, 0, 0);
+                    makeCreateDialog(wall, "Create Wall");
+                }
+            }
+        });
+        createGrapplePoint.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (editingArea!=null) {
+                    GrappleHookPoint grapple = new GrappleHookPoint(editingArea, 0, 0);
+                    makeCreateDialog(grapple, "Create Grapple Hook Point");
+                }
+            }
+        });
+        createTeleportDoor.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (editingArea!=null) {
+                    TeleportDoor teleDoor = new TeleportDoor(editingArea, 0, 0, 0, 0, -1, 0, 0);
+                    makeCreateDialog(teleDoor, "Create Teleport Door");
+                }
+            }
+        });
+        createNormalDoor.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (editingArea!=null) {
+                    NormalDoor door = new NormalDoor(editingArea, 0, 0, 0, 0);
+                    makeCreateDialog(door, "Create Normal Door");
+                }
+            }
+        });
+        createAvacado.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (editingArea!=null) {
+                    Avacado avacado = new Avacado(editingArea, 0, 0, 0, 0, editingArea.getAreaId());
+                    makeCreateDialog(avacado, "Create Avacado");
+                }
+            }
+        });
+        createAvacadoBin.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (editingArea!=null) {
+                    AvacadoBin bin = new AvacadoBin(editingArea, 0, 0, 0, 0);
+                    makeCreateDialog(bin, "Create Avacado Bin");
+                }
+            }
+        });
+        createHuman.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (editingArea!=null) {
+                    Human human = new Human(editingArea, 0, 0, 0, 0, Vector2.UNIT_Y);
+                    makeCreateDialog(human, "Create Human");
+                }
+            }
+        });
+        
+        create.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                boolean canGoThrough = true;
+                if (editingArea!=null) {
+                    //Prompt user
+                    int picked = JOptionPane.showConfirmDialog(mainFrame, "If you haven't saved your current changes, then all of your work will be lost if you overwrite it with a blank Area. Are you sure you want to continue?", "Confirm overwriting possibly unsaved data", JOptionPane.YES_NO_OPTION);
+                    if (picked==JOptionPane.NO_OPTION) {
+                        canGoThrough = false;
+                    }
+                }
+                if (canGoThrough) {
+                    //Overwrite current area
+                    setArea(null);
+                    Area area = new Area(theFactory);
+                    setArea(area);
+                }
+            }
+        });
+    }
+    
+    private void makeCreateDialog(GameObject forObject, String title) {
+        JDialog l = makeDialog(title);
+        JPanel core = new JPanel();
+        JPanel accept = new JPanel();
+        accept.setLayout(new GridLayout(1, 2, hSpacing, vSpacing));
+        //Make accept and cancel buttons for dialog
+        JButton acceptButton = new JButton("Create");
+        JButton cancelCreate = new JButton("Cancel");
+        accept.add(cancelCreate);
+        accept.add(acceptButton);
+        //Format for properties of block
+        propertyFormatter.format(forObject, core);
+        l.add(core, BorderLayout.CENTER);
+        l.add(accept, BorderLayout.SOUTH);
+        //Make accept/cancel buttons do things
+        acceptButton.addActionListener(new AcceptCreationButtonListener(l, forObject));
+        cancelCreate.addActionListener(new CancelCreationButtonListener(l));
+        l.setSize(mainFrame.getWidth()/3, mainFrame.getHeight()/2);
+        l.setLocationRelativeTo(mainFrame);
+        l.setVisible(true);
+    }
+    
+    private JDialog makeDialog(String title) {
+        JDialog l = new JDialog(mainFrame, title, true);
+        l.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        l.setLayout(new BorderLayout());
+        return l;
+    }
+    
+    //Actual methods that do actual things
+    
+    public void setArea(Area area) {
+        this.editingArea = area;
+        canvas.setDrawing(this.editingArea);
+        canvas.repaint();
+    }
+    
+    public void setSelectedGameObject(GameObject object) {
+        this.selectedGameObject = object;
+        propertyFormatter.format(this.selectedGameObject, objectProperties);
+    }
+    
+    public GameObject getSelectedGameObject() {
+        return this.selectedGameObject;
+    }
+    
+    class AcceptCreationButtonListener implements ActionListener {
+        private GameObject object;
+        private JDialog dialog;
+        public AcceptCreationButtonListener(JDialog log, GameObject object) {
+            this.object = object;
+            this.dialog = log;
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            ///Places block into area
+            editingArea.addObject(object);
+            dialog.dispose();
+        }
+    }
+    
+    class CancelCreationButtonListener implements ActionListener {
+        private JDialog dialog;
+        public CancelCreationButtonListener(JDialog dialog) { this.dialog = dialog; }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            dialog.dispose();
+        }
     }
 }
