@@ -14,6 +14,8 @@ import static bropals.debug.Debugger.print;
 import bropals.gameobject.GameObject;
 import bropals.gameobject.GrappleHookPoint;
 import bropals.gameobject.Human;
+import bropals.gameobject.HumanState;
+import bropals.gameobject.HumanType;
 import bropals.gameobject.Waypoint;
 import bropals.gameobject.block.Avacado;
 import bropals.gameobject.block.AvacadoBin;
@@ -24,6 +26,7 @@ import bropals.gameobject.block.TeleportDoor;
 import bropals.gameobject.block.Wall;
 import bropals.level.Area;
 import bropals.level.AreaFactory;
+import bropals.util.Vector2;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -75,6 +78,14 @@ public class CowAreaFileManager {
         hayBaleMachine = new HayBaleMachine();
     }
     
+    private String makeFirstLine(Area area) {
+        return area.getAreaId() + SEPARATOR + area.getNorthTargetId() + SEPARATOR + area.getSouthTargetId() + SEPARATOR + area.getEastTargetId() + SEPARATOR + area.getWestTargetId();
+    }
+    
+    private void readAndSetFirstLine(Area area, String firstLine) {
+        
+    }
+    
     public void export(Area area, File asFile) {
         //Export all objects in area to a text file
         try {
@@ -82,7 +93,8 @@ public class CowAreaFileManager {
             BufferedWriter writer = new BufferedWriter(new FileWriter(asFile));
             ArrayList<GameObject> objects = area.getObjects();
             humanMachine.giveWriter(writer); //Needs writer reference
-            
+            writer.write(makeFirstLine(area));
+            writer.newLine();
             for (int i=0; i<objects.size(); i++) {
                 writer.write(makeDataLineFor(objects.get(i)));
                 if (i<(objects.size()-1)) {
@@ -107,6 +119,9 @@ public class CowAreaFileManager {
             humanMachine.giveReader(reader); //Needs reader for special case
             
             String line = "";
+            line = reader.readLine();
+            readAndSetFirstLine(area, line);
+            
             line = reader.readLine();
             while(line!=null) {
                 area.addObject(
@@ -214,12 +229,19 @@ public class CowAreaFileManager {
 
         @Override
         public String makeDataLine(GrappleHookPoint object) {
-            return AVACADOBIN + SEPARATOR + object.getX() + SEPARATOR + object.getY() + SEPARATOR + object.getTextureString() + SEPARATOR + object.getTextureIndex();
+            return AVACADOBIN + SEPARATOR + object.getX() + SEPARATOR + object.getY() + SEPARATOR + object.getInteractDistance() + SEPARATOR + object.getTextureString() + SEPARATOR + object.getTextureIndex();
         }
 
         @Override
         public GrappleHookPoint readDataLine(String line) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            String[] block = line.split(SEPARATOR);
+            GrappleHookPoint object = new GrappleHookPoint(0, 0);
+            object.setX( Float.parseFloat(block[1]) );
+            object.setY( Float.parseFloat(block[2]) );
+            object.setInteractDistance( Float.parseFloat(block[3]) );
+            object.setTextureString(block[4]);
+            object.setTextureIndex(Integer.parseInt(block[5]));
+            return object;
         }
         
         
@@ -343,14 +365,52 @@ public class CowAreaFileManager {
         @Override
         public String makeDataLine(Human object) {
             String firstLine = 
-            HUMAN + SEPARATOR + object.getX() + SEPARATOR + object.getY() + SEPARATOR + object.getWidth() + SEPARATOR + object.getWidth() + SEPARATOR + object.getType() + SEPARATOR + object.getState().toString() + SEPARATOR + object.getFaceDirection().getX() + SEPARATOR + object.getFaceDirection().getY() + SEPARATOR + object.getSpeed() + SEPARATOR + object.getFieldOfView() + SEPARATOR + object.getAlertTimer() + SEPARATOR + object.getSightRange() + SEPARATOR + object.getAttackDistance() + SEPARATOR + object.getTextureString() + SEPARATOR + object.getTextureIndex();
+            HUMAN + SEPARATOR + object.getX() + SEPARATOR + object.getY() + SEPARATOR + object.getWidth() + SEPARATOR + object.getHeight() + SEPARATOR + object.getType().toString() + SEPARATOR + object.getState().toString() + SEPARATOR + object.getFaceDirection().getX() + SEPARATOR + object.getFaceDirection().getY() + SEPARATOR + object.getSpeed() + SEPARATOR + object.getFieldOfView() + SEPARATOR + object.getAlertTimer() + SEPARATOR + object.getSightRange() + SEPARATOR + object.getAttackDistance() + SEPARATOR + object.getTextureString() + SEPARATOR + object.getTextureIndex();
             firstLine = firstLine + "\n" + constructWayPointStrings(object);
             return firstLine;
         }
 
         @Override
         public Human readDataLine(String line) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            String[] block = line.split(SEPARATOR);
+            Human human = new Human(0, 0, 0, 0, Vector2.UNIT_X);
+            
+            human.setX( Float.parseFloat(block[1]) );
+            human.setY( Float.parseFloat(block[2]) );
+            human.setWidth( Float.parseFloat(block[3]) );
+            human.setHeight( Float.parseFloat(block[4]) );
+            human.setType( HumanType.fromString(block[5]) );
+            human.setState( HumanState.fromString(block[6]) );
+            
+            Vector2 faceDir = new Vector2(
+                    Float.parseFloat(block[7]),
+                    Float.parseFloat(block[8])
+            );
+            human.setFaceDirection(faceDir);
+            
+            human.setSpeed( Float.parseFloat(block[9]) );
+            human.setFieldOfView( Float.parseFloat(block[10] ));
+            human.setAlertTimer( Integer.parseInt(block[11]) );
+            human.setSightRange( Float.parseFloat( block[12] ));
+            human.setAttackDistance( Float.parseFloat( block[13] ));
+            human.setTextureString( block[14] );
+            human.setTextureIndex( Integer.parseInt( block[15] ));
+            
+            //Now we have to start reading the way point lines following all that
+            try {
+                String currentLine = reader.readLine();
+                ArrayList<Waypoint> patrolPath = new ArrayList<>();
+                while(!currentLine.equals(WAYPOINTENDER)) {
+                    //Keep reading lines and appending more waypoints
+                    patrolPath.add(waypointMachine.readDataLine(currentLine));
+                    currentLine = reader.readLine();
+                }
+                //When the end of the line is reached, put the path into the human
+                Waypoint[] path = (Waypoint[])patrolPath.toArray(new Waypoint[patrolPath.size()]);
+            } catch(Exception e) {
+                Debugger.print("Error while reading a Waypoint list!", ERROR);
+            }
+            return human;
         }
 
         private String constructWayPointStrings(Human forHuman) {
@@ -373,9 +433,13 @@ public class CowAreaFileManager {
 
             @Override
             public Waypoint readDataLine(String line) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                String[] block = line.split(SEPARATOR);
+                Waypoint object = new Waypoint(0, 0, 0);
+                object.setX( Float.parseFloat(block[0]) );
+                object.setY( Float.parseFloat(block[1]) );
+                object.setDelay( Integer.parseInt(block[2]) );
+                return object;
             }
-            
         }
     }
     
@@ -383,12 +447,21 @@ public class CowAreaFileManager {
 
         @Override
         public String makeDataLine(HayBale object) {
-            return HAYBALE + SEPARATOR + object.getX() + SEPARATOR + object.getY() + SEPARATOR + object.getWidth() + SEPARATOR + object.getHeight() + SEPARATOR + object.getTextureString() + SEPARATOR + object.getTextureIndex();
+            return HAYBALE + SEPARATOR + object.getX() + SEPARATOR + object.getY() + SEPARATOR + object.getWidth() + SEPARATOR + object.getHeight() + SEPARATOR + object.getInteractDistance() + SEPARATOR + object.getTextureString() + SEPARATOR + object.getTextureIndex();
         }
 
         @Override
         public HayBale readDataLine(String line) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            String[] block = line.split(SEPARATOR);
+            HayBale object = new HayBale(0, 0, 0, 0);
+            object.setX( Float.parseFloat(block[1]) );
+            object.setY( Float.parseFloat(block[2]) );
+            object.setWidth( Float.parseFloat(block[3]) );
+            object.setHeight( Float.parseFloat(block[4]) );
+            object.setInteractDistance( Float.parseFloat(block[5]) );
+            object.setTextureString(block[6]);
+            object.setTextureIndex(Integer.parseInt(block[7]));
+            return object;          
         }
         
     }
@@ -402,7 +475,15 @@ public class CowAreaFileManager {
 
         @Override
         public Wall readDataLine(String line) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            String[] block = line.split(SEPARATOR);
+            Wall object = new Wall(0, 0, 0, 0);
+            object.setX( Float.parseFloat(block[1]) );
+            object.setY( Float.parseFloat(block[2]) );
+            object.setWidth( Float.parseFloat(block[3]) );
+            object.setHeight( Float.parseFloat(block[4]) );
+            object.setTextureString(block[5]);
+            object.setTextureIndex(Integer.parseInt(block[6]));
+            return object;        
         }
 
     }
