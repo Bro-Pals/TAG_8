@@ -9,6 +9,7 @@ package bropals.level;
 import bropals.datafiles.CowAreaFileManager;
 import bropals.debug.Debugger;
 import bropals.gameobject.GameObject;
+import bropals.gameobject.GrappleHookPoint;
 import bropals.gameobject.Human;
 import bropals.gameobject.Waypoint;
 import bropals.gameobject.block.Avacado;
@@ -44,10 +45,10 @@ public class AreaFactory {
     public void setArea(int id) {
         switch(id) {
             case -2:
-            Debugger.print("I am running setArea!", Debugger.INFO);
+            //Debugger.print("I am running setArea!", Debugger.INFO);
             Block b = new Block(150, 200, 100, 300);
             b.setParent(theArea);
-            Block b2 = new NormalDoor(260, 200, 130, 200);
+            NormalDoor b2 = new NormalDoor(260, 200, 80, 80);
             b2.setParent(theArea);
             
             Human h = new Human(300, 50, 30, 10, Direction.getUnitVector(Direction.EAST));
@@ -58,7 +59,7 @@ public class AreaFactory {
             HayBale hb = new HayBale(500, 300, 50, 50);
             hb.setParent(theArea);
             
-            Avacado a = new Avacado(450, 450, 30, 30, -2);
+            GrappleHookPoint a = new GrappleHookPoint(450, 450);
             a.setParent(theArea);
             
             Debugger.print("Made an area with " + theArea.getObjects().size() + " objects!", Debugger.INFO);

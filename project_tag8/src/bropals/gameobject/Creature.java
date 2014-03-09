@@ -10,6 +10,7 @@ import bropals.gameobject.block.NormalDoor;
 import bropals.gameobject.block.Wall;
 import bropals.graphics.ImageLoader;
 import bropals.level.Area;
+import bropals.util.Direction;
 import bropals.util.Vector2;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -23,7 +24,7 @@ public abstract class Creature extends GameObject {
     
     private float width, height;
     private float speed;
-    private final float moveSpeed;
+    private final float MOVE_SPEED;
     private Vector2 faceDirection;
     private Vector2 moveVector;
     private float fieldOfView;
@@ -32,7 +33,9 @@ public abstract class Creature extends GameObject {
     private boolean grappling;
     private boolean hiding;
     private float grappleDistanceLeft;
-    float grappleSpeed = 15; // random number
+    private GrappleHookPoint hookUsing;
+    private Vector2 grappleVector;
+    float GRAPPLE_SPEED = 25; // random number
     
     /**
      * A creature that can move around and collide into things
@@ -48,10 +51,11 @@ public abstract class Creature extends GameObject {
         this.width = width;
         this.height = height;
         this.speed = speed;
-        this.moveSpeed = speed;
+        this.MOVE_SPEED = speed;
         this.faceDirection = faceDirection;
         this.grappling = false;
         this.moveVector = new Vector2();
+        this.hookUsing = null;
     }
     
     @Override
@@ -68,9 +72,19 @@ public abstract class Creature extends GameObject {
         float minInteractableDist = 10000*10000;
         boolean collide = false;
         
+        if (grappling && grappleVector!= null && grappleDistanceLeft > 0) {
+            moveVector = grappleVector.clone();
+            speed = GRAPPLE_SPEED;
+            grappleDistanceLeft = grappleDistanceLeft - GRAPPLE_SPEED;
+        } else {
+            speed = MOVE_SPEED;
+            grappling = false;
+            grappleDistanceLeft = 0;
+        }
+        
         if (!hiding) { // you don't move when you're hiding
-            setX((float)(getX() + (moveVector.getX() * moveSpeed)));
-            setY((float)(getY() + (moveVector.getY() * moveSpeed)));
+            setX((float)(getX() + (moveVector.getX() * speed)));
+            setY((float)(getY() + (moveVector.getY() * speed)));
         }
         
         for (int i=0; i<getParent().getObjects().size(); i++) {
@@ -149,25 +163,25 @@ public abstract class Creature extends GameObject {
     
     public boolean intersects(Block other) {
         float xMax1 = getX() + getWidth();
-                float xMin1 = getX();
-                float xMax2 = other.getX() + other.getWidth();
-                float xMin2 = other.getX();
-                
-                float smallestMaxX = xMax1 < xMax2 ? xMax1 : xMax2;
-                float largestMinX = xMin1 > xMin2 ? xMin1 : xMin2;
-                
-                //y axis
-                float yMax1 = getY() + getHeight();
-                float yMin1 = getY();
-                float yMax2 = other.getY() + other.getHeight();
-                float yMin2 = other.getY();
-                
-                float smallestMaxY = yMax1 < yMax2 ? yMax1 : yMax2;
-                float largestMinY = yMin1 > yMin2 ? yMin1 : yMin2;
-                
-                float xPenetration = smallestMaxX - largestMinX;
-                float yPenetration = smallestMaxY - largestMinY;
-                return (xPenetration > 0 && yPenetration > 0);
+        float xMin1 = getX();
+        float xMax2 = other.getX() + other.getWidth();
+        float xMin2 = other.getX();
+
+        float smallestMaxX = xMax1 < xMax2 ? xMax1 : xMax2;
+        float largestMinX = xMin1 > xMin2 ? xMin1 : xMin2;
+
+        //y axis
+        float yMax1 = getY() + getHeight();
+        float yMin1 = getY();
+        float yMax2 = other.getY() + other.getHeight();
+        float yMin2 = other.getY();
+
+        float smallestMaxY = yMax1 < yMax2 ? yMax1 : yMax2;
+        float largestMinY = yMin1 > yMin2 ? yMin1 : yMin2;
+
+        float xPenetration = smallestMaxX - largestMinX;
+        float yPenetration = smallestMaxY - largestMinY;
+        return (xPenetration > 0 && yPenetration > 0);
     }
 
     public void moveTowardsPoint(Waypoint point) {
@@ -181,10 +195,13 @@ public abstract class Creature extends GameObject {
     }
     
     public void grapple(GrappleHookPoint ghp) {
-        Vector2 grappleVector = new Vector2(ghp.getX() - getX(), ghp.getY() - getY());
+        grappleVector = new Vector2(ghp.getX() - getX(), ghp.getY() - getY());
         faceDirection = grappleVector.getUnitVector();
         grappleDistanceLeft = (float)(2 * grappleVector.getMagnitude());
         grappling = true;
+        hookUsing = ghp;
+        grappleVector = grappleVector.getUnitVector();
+        Debugger.print("We are now grappling!", Debugger.INFO);
     }
     
     /**
@@ -192,7 +209,7 @@ public abstract class Creature extends GameObject {
      * @return The direction it's facing in radians.
      */
     public float getAngleFacing() {
-        float angle = 0;
+        float angle = (float)Math.atan2(faceDirection.getX(), -faceDirection.getY());
         return angle;
     }
     
@@ -235,7 +252,7 @@ public abstract class Creature extends GameObject {
     }
     
     public float getMoveSpeed() {
-        return moveSpeed;
+        return MOVE_SPEED;
     }
 
     public float getWidth() {
@@ -268,5 +285,17 @@ public abstract class Creature extends GameObject {
     
     public float getCenterY() {
         return (getY() + (height/2));
+    }
+    
+    public void setSelectedInteractable(Interactable in) {
+        this.selectedInteractable = in;
+    }
+    
+    public GrappleHookPoint getHookUsing() {
+        return hookUsing;
+    }
+    
+    public boolean isGrappling() {
+        return grappling;
     }
 }

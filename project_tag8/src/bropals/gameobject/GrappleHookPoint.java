@@ -4,6 +4,7 @@
  */
 package bropals.gameobject;
 
+import bropals.graphics.ImageLoader;
 import bropals.level.Area;
 import java.awt.image.BufferedImage;
 
@@ -17,12 +18,12 @@ public class GrappleHookPoint extends GameObject implements MouseInteractable {
     
     public GrappleHookPoint(float x, float y) {
         super(x, y);
-        interactDistance = 200;
+        interactDistance = 50; // from the mouse
     }
     
     @Override
     public BufferedImage getTexture() {
-        return null;
+        return ImageLoader.getLoader().getImage("Blocks", 6);
     }
 
     @Override
@@ -40,6 +41,19 @@ public class GrappleHookPoint extends GameObject implements MouseInteractable {
     @Override
     public void setInteractDistance(float distance) {
         interactDistance = distance;
+    }
+
+    @Override
+    public float getCreatureInteractDistance() {
+        return 200; // how close does the creature have to be to it
+    }
+    
+    public float getCenterX() {
+        return getX() + (getTexture().getWidth()/2);
+    }
+    
+    public float getCenterY() {
+        return getY() + (getTexture().getHeight()/2);
     }
     
 }

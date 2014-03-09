@@ -7,6 +7,7 @@ package bropals.level;
 import bropals.debug.Debugger;
 import bropals.gameobject.block.Avacado;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 
 /**
  *
@@ -72,13 +73,17 @@ public class AvacadoManager {
      * @param a The avacado being picked up
      */
     public void pickUpAvacado(Avacado a) {
-        for (Avacado find : avacadosInWorld) {
-            if (find == a) {
+        for (int i=0; i<avacadosInWorld.size(); i++) {
+            if (avacadosInWorld.get(i) == a) {
                 Debugger.print("We have picked up an avacado", Debugger.INFO);
-                avacadosInWorld.remove(a);
-                avacadoPouch.add(a);
-                a.setParent(null); // remove from world
-                a.setCollected(true);
+                try {
+                    avacadosInWorld.remove(i);
+                    avacadoPouch.add(a);
+                    a.setParent(null); // remove from world
+                    a.setCollected(true);
+                } catch(ConcurrentModificationException e) {
+                    Debugger.print(e.toString(), Debugger.ERROR);
+                }
             }
         }
     }

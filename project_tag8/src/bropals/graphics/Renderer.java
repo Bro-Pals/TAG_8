@@ -10,6 +10,7 @@ import bropals.gameobject.Creature;
 import bropals.gameobject.GameObject;
 import bropals.gameobject.GrappleHookPoint;
 import bropals.gameobject.Interactable;
+import bropals.gameobject.Player;
 import bropals.gameobject.block.Avacado;
 import bropals.gameobject.block.AvacadoBin;
 import bropals.gameobject.block.Block;
@@ -18,10 +19,12 @@ import bropals.gameobject.block.NormalDoor;
 import bropals.level.Area;
 import bropals.level.AreaRunner;
 import bropals.level.AvacadoManager;
+import java.awt.BasicStroke;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -111,13 +114,23 @@ public class Renderer {
         for (GameObject drawing : objs) {
             if (drawing instanceof Creature) {
                 if (((Creature)drawing).isHiding()) return; // don't draw a hiding creature!
-                //System.out.println("Drew a creature!");
-                //working.setToRotation(((Creature)drawing).getAngleFacing());
-               // working.translate(drawing.getX(), drawing.getY());
-               // g2d.setTransform(working);
-                //System.out.println("This creatures is at an angle of " + (((Creature)drawing).getAngleFacing()/Math.PI) + " PI");
-                g2d.drawImage(drawing.getTexture(), (int)(drawing.getX()), 
-                        (int)(drawing.getY()), null);
+                // thanks stack overflow!!!
+                float rotationRequired = ((Creature)drawing).getAngleFacing();
+                float locationX = ((Creature)drawing).getTexture().getWidth() / 2;
+                float locationY = ((Creature)drawing).getTexture().getHeight() / 2;
+                AffineTransform tx = AffineTransform.getRotateInstance(rotationRequired, locationX, locationY);
+                AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+
+                // Drawing the rotated image at the required drawing locations
+                g2d.drawImage(op.filter(((Creature)drawing).getTexture(), null), (int)((Creature)drawing).getX(), (int)((Creature)drawing).getY(), null);
+                System.out.println("This creatures is at an angle of " + (((Creature)drawing).getAngleFacing()) + " radians");
+                if (drawing instanceof Player && ((Player)drawing).getHookUsing() != null && ((Player)drawing).isGrappling()) {
+                    Player p = (Player)drawing;
+                    g2d.setColor(new Color(160, 60, 0));
+                    g2d.setStroke(new BasicStroke(3));
+                    g2d.drawLine((int)p.getCenterX(), (int)p.getCenterY(), 
+                            (int)p.getHookUsing().getCenterX(), (int)p.getHookUsing().getCenterY());
+                }
             } else if (drawing.getTexture() != null) {
                 //g2d.setTransform(identity);
                 g2d.drawImage(drawing.getTexture(), (int)drawing.getX(), (int)drawing.getY(), null);
