@@ -13,8 +13,11 @@ import java.awt.image.BufferedImage;
  */
 public class GrappleHookPoint extends GameObject implements MouseInteractable {
 
+    private float interactDistance;
+    
     public GrappleHookPoint(float x, float y) {
         super(x, y);
+        interactDistance = 200;
     }
     
     @Override
@@ -31,7 +34,12 @@ public class GrappleHookPoint extends GameObject implements MouseInteractable {
 
     @Override
     public float getInteractDistance() {
-        return 150; // meh
+        return interactDistance; // meh
+    }
+
+    @Override
+    public void setInteractDistance(float distance) {
+        interactDistance = distance;
     }
     
 }

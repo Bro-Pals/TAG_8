@@ -66,7 +66,13 @@ public abstract class Creature extends GameObject {
         selectedInteractable = null;
         
         float minInteractableDist = 10000*10000;
-        boolean collideX = false, collideY = false;
+        boolean collide = false;
+        
+        if (!hiding) { // you don't move when you're hiding
+            setX((float)(getX() + (moveVector.getX() * moveSpeed)));
+            setY((float)(getY() + (moveVector.getY() * moveSpeed)));
+        }
+        
         for (int i=0; i<getParent().getObjects().size(); i++) {
             boolean canTest = true;
             if (grappling && !(getParent().getObjects().get(i) instanceof Wall)) {
@@ -78,79 +84,60 @@ public abstract class Creature extends GameObject {
             if (canTest && getParent().getObjects().get(i) != this && getParent().getObjects().get(i) instanceof Block && 
                     getParent().getObjects().get(i).getParent() == getParent()) {
                 Block curBlock = (Block)(getParent().getObjects().get(i));
-                if (this.intersectsVelocityPathX(curBlock)) {
-                    boolean valid = true;
-                    float moveToX = -100000;
-                    if (moveVector.getX() > 0) {
-                        moveToX = curBlock.getX() - getWidth(); // left of the block
-                        for (int g=0; g<getParent().getObjects().size(); g++) {
-                            if (getParent().getObjects().get(g) != this && getParent().getObjects().get(g) instanceof Block) {
-                                Block localBlock = (Block)(getParent().getObjects().get(g));
-                                if (intersects(moveToX, getY(), localBlock)) {
-                                    valid = false;
-                                    break;
-                                }
-                            }
+                
+                //x axis
+                float xMax1 = getX() + getWidth();
+                float xMin1 = getX();
+                float xMax2 = curBlock.getX() + curBlock.getWidth();
+                float xMin2 = curBlock.getX();
+                
+                float smallestMaxX = xMax1 < xMax2 ? xMax1 : xMax2;
+                float largestMinX = xMin1 > xMin2 ? xMin1 : xMin2;
+                
+                //y axis
+                float yMax1 = getY() + getHeight();
+                float yMin1 = getY();
+                float yMax2 = curBlock.getY() + curBlock.getHeight();
+                float yMin2 = curBlock.getY();
+                
+                float smallestMaxY = yMax1 < yMax2 ? yMax1 : yMax2;
+                float largestMinY = yMin1 > yMin2 ? yMin1 : yMin2;
+                
+                float xPenetration = smallestMaxX - largestMinX;
+                float yPenetration = smallestMaxY - largestMinY;
+                if (xPenetration > 0 && yPenetration > 0) {
+                    collide = true;
+                    if (Math.abs(xPenetration) < Math.abs(yPenetration)) {
+                        if (getCenterX() > curBlock.getX() + curBlock.getWidth()) {
+                            setX(curBlock.getX() + curBlock.getWidth());
+                        } else {
+                            setX(curBlock.getX() - getWidth());   
                         }
-                    } else if (moveVector.getX() < 0) {
-                        moveToX = curBlock.getX() + curBlock.getWidth(); // left of the block
-                        for (int g=0; g<getParent().getObjects().size(); g++) {
-                            if (getParent().getObjects().get(g) != this && getParent().getObjects().get(g) instanceof Block) {
-                                Block localBlock = (Block)(getParent().getObjects().get(g));
-                                if (intersects(moveToX, getY(), localBlock)) {
-                                    valid = false;
-                                    break;
-                                }
-                            }
+                        moveVector.setX(0);
+                    } else {
+                        if (getCenterY() > curBlock.getY() + curBlock.getHeight()) {
+                            setY(curBlock.getY() + curBlock.getHeight());
+                        } else {
+                            setY(curBlock.getY() - getHeight());   
                         }
-                    }
-                    if (valid && moveToX != -100000) {
-                        collideX = true;
-                        setX(moveToX);
-                    }
-                }
-                if (this.intersectsVelocityPathY(curBlock)) {
-                    boolean valid = true;
-                    float moveToY = -100000;
-                    if (moveVector.getY() > 0) {
-                        moveToY = curBlock.getY() - getHeight(); // left of the block
-                        for (int g=0; g<getParent().getObjects().size(); g++) {
-                            if (getParent().getObjects().get(g) != this && getParent().getObjects().get(g) instanceof Block) {
-                                Block localBlock = (Block)(getParent().getObjects().get(g));
-                                if (intersects(getX(), moveToY, localBlock)) {
-                                    valid = false;
-                                    break;
-                                }
-                            }
-                        }
-                    } else if (moveVector.getY() < 0) {
-                        moveToY = curBlock.getY() + curBlock.getHeight(); // left of the block
-                        for (int g=0; g<getParent().getObjects().size(); g++) {
-                            if (getParent().getObjects().get(g) != this && getParent().getObjects().get(g) instanceof Block) {
-                                Block localBlock = (Block)(getParent().getObjects().get(g));
-                                if (intersects(getX(), moveToY, localBlock)) {
-                                    valid = false;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    if (valid && moveToY != -100000) {
-                        collideY = true;
-                        setY(moveToY);
+                        moveVector.setY(0);
                     }
                 }
             }
 
             if (getParent().getObjects().get(i) instanceof Interactable) {
                 Interactable in = (Interactable)getParent().getObjects().get(i);
-                float distanceFrom = 0;
+                float distanceFrom = 1020101010;
                 if (in instanceof Creature) {
                     Creature c = (Creature) in;
-                    distanceFrom = (c.getCenterX() - getCenterX())*(c.getCenterX() - getCenterX()) + (c.getCenterY() - getCenterY())*(c.getCenterY() - getCenterY());
+                    float xDiff = c.getCenterX() - getCenterX();
+                    float yDiff = c.getCenterY() - getCenterY();
+                    distanceFrom = (xDiff*xDiff) + (yDiff*yDiff);
                 } else if(in instanceof Block) {
                     Block b = (Block) in;
-                    distanceFrom = (b.getCenterX() - getCenterX())*(b.getCenterX() - getCenterX()) + (b.getCenterY() - getCenterY())*(b.getCenterY() - getCenterY());
+                    float xDiff = b.getCenterX() - getCenterX();
+                    float yDiff = b.getCenterY() - getCenterY();
+                    distanceFrom = (xDiff*xDiff) + (yDiff*yDiff);
                 }
                 if (distanceFrom < minInteractableDist && distanceFrom < (in.getInteractDistance())*(in.getInteractDistance())) {
                     selectedInteractable = in;
@@ -158,35 +145,31 @@ public abstract class Creature extends GameObject {
                 }
             }
         }
-        if (hiding) return; // don't bother moving if you are hiding
-        
-        if (!collideX) setX((float)(getX() + (moveVector.getX() * moveSpeed))); else moveVector.setX(0);
-        if (!collideY) setY((float)(getY() + (moveVector.getY() * moveSpeed))); else moveVector.setY(0);
     }
     
-    public boolean intersects(float x, float y, Block other) {
-        return new Rectangle2D.Double(x, y, getWidth(), getHeight())
-                .intersects(other.getX(), other.getY(), other.getWidth(), other.getHeight());
+    public boolean intersects(Block other) {
+        float xMax1 = getX() + getWidth();
+                float xMin1 = getX();
+                float xMax2 = other.getX() + other.getWidth();
+                float xMin2 = other.getX();
+                
+                float smallestMaxX = xMax1 < xMax2 ? xMax1 : xMax2;
+                float largestMinX = xMin1 > xMin2 ? xMin1 : xMin2;
+                
+                //y axis
+                float yMax1 = getY() + getHeight();
+                float yMin1 = getY();
+                float yMax2 = other.getY() + other.getHeight();
+                float yMin2 = other.getY();
+                
+                float smallestMaxY = yMax1 < yMax2 ? yMax1 : yMax2;
+                float largestMinY = yMin1 > yMin2 ? yMin1 : yMin2;
+                
+                float xPenetration = smallestMaxX - largestMinX;
+                float yPenetration = smallestMaxY - largestMinY;
+                return (xPenetration > 0 && yPenetration > 0);
     }
-    
-    public boolean intersectsVelocityPathY(Block other) {
-        if (moveVector.getY() >= 0) {
-            return new Rectangle2D.Double(getX(), getY(), getWidth(), getHeight() + moveVector.getY())
-                .intersects(other.getX(), other.getY(), other.getWidth(), other.getHeight());
-        }
-        return new Rectangle2D.Double(getX(), getY() + moveVector.getY(), getWidth(), getHeight() + Math.abs(moveVector.getY()))
-                .intersects(other.getX(), other.getY(), other.getWidth(), other.getHeight());
-    }
-    
-    public boolean intersectsVelocityPathX(Block other) {
-        if (moveVector.getX() >= 0) {
-            return new Rectangle2D.Double(getX(), getY(), getWidth() + moveVector.getX(), getHeight())
-                .intersects(other.getX(), other.getY(), other.getWidth(), other.getHeight());
-        }
-        return new Rectangle2D.Double(getX() + moveVector.getX(), getY(), getWidth() + Math.abs(moveVector.getX()), getHeight())
-                .intersects(other.getX(), other.getY(), other.getWidth(), other.getHeight());
-    }
-    
+
     public void moveTowardsPoint(Waypoint point) {
         moveTowardsPoint(point.getX(), point.getY());
     }
@@ -280,10 +263,10 @@ public abstract class Creature extends GameObject {
     }
     
     public float getCenterX() {
-        return (getX() - (width/2));
+        return (getX() + (width/2));
     }
     
     public float getCenterY() {
-        return (getY() - (height/2));
+        return (getY() + (height/2));
     }
 }
