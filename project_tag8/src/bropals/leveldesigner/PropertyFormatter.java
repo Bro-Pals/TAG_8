@@ -10,6 +10,9 @@ import bropals.debug.Debugger;
 import bropals.gameobject.GameObject;
 import bropals.gameobject.GrappleHookPoint;
 import bropals.gameobject.Human;
+import bropals.gameobject.HumanState;
+import bropals.gameobject.HumanType;
+import bropals.gameobject.Waypoint;
 import bropals.gameobject.block.Avacado;
 import bropals.gameobject.block.AvacadoBin;
 import bropals.gameobject.block.Block;
@@ -17,13 +20,25 @@ import bropals.gameobject.block.HayBale;
 import bropals.gameobject.block.NormalDoor;
 import bropals.gameobject.block.TeleportDoor;
 import bropals.gameobject.block.Wall;
+import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListDataListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  *
@@ -31,6 +46,12 @@ import javax.swing.JTextField;
  */
 public class PropertyFormatter {
 
+    public PropertyFormatter(CowAreaLevelDesignerMain caldm) {
+        this.caldm = caldm;
+    }
+    
+    protected CowAreaLevelDesignerMain caldm;
+    
     private final int pw = 10, mpw = 4;
     private final int ph = 25, mph = 10;
     
@@ -57,7 +78,7 @@ public class PropertyFormatter {
             makeTeleportDoorFormat(forObject, formatting, acceptButton);
         } else
         if (forObject instanceof Human) {
-            makeHumanFormat(forObject, formatting, acceptButton);
+            makeHumanFormat((Human)forObject, formatting, acceptButton);
         } else
         if (forObject instanceof HayBale) {
             makeHayBaleFormat((HayBale)forObject, formatting, acceptButton);
@@ -440,75 +461,157 @@ public class PropertyFormatter {
         Debugger.print("Made property panel for Teleport Door", Debugger.INFO);
     }
     
-    private void makeHumanFormat(GameObject forObject, JPanel inPanel, JButton acceptButton) {
+    private void makeHumanFormat(final Human forObject, JPanel inPanel, JButton acceptButton) {
+        inPanel.setLayout(new GridLayout(8, 1, pw, ph));
+        
+        JPanel titlePanel = new JPanel();
+        titlePanel.add(new JLabel("Human:"));
+        
+        //
+        
+        JPanel physicalPanel = new JPanel();
+        physicalPanel.setLayout(new GridLayout(2, 4, mpw, mph));
+        
+        physicalPanel.add(new JLabel("X Position"));
+        final JTextField xPosInput = new JTextField("" + (int)forObject.getX() + "", 3);
+        physicalPanel.add(xPosInput);
+        
+        physicalPanel.add(new JLabel("Y Position"));
+        final JTextField yPosInput = new JTextField("" + (int)forObject.getY() + "", 3);
+        physicalPanel.add(yPosInput);
+        
+        physicalPanel.add(new JLabel("Width"));
+        final JTextField widthInput = new JTextField("" + (int)forObject.getWidth() + "", 3);
+        physicalPanel.add(widthInput);
+        
+        physicalPanel.add(new JLabel("Height"));
+        final JTextField heightInput = new JTextField("" + (int)forObject.getHeight() + "", 3);
+        physicalPanel.add(heightInput);
+        
+        //
+        
+        JPanel statePanel = new JPanel();
+        statePanel.setLayout(new GridLayout(1, 2, mpw, mph));
+        final JComboBox typeBox = new JComboBox(new HumanType[]{HumanType.PITCHFORK, HumanType.ROCK_THROWER});
+        final JComboBox stateBox = new JComboBox(new HumanState[]{HumanState.PATROLLING, HumanState.ALERT});
+        statePanel.add(typeBox);
+        statePanel.add(stateBox);
+        
+        //
+        
+        WaypointPanel waypointPanel = new WaypointPanel();
+        
+        //
+        
+        inPanel.add(titlePanel);
+        inPanel.add(physicalPanel);
+        inPanel.add(statePanel);
+        inPanel.add(waypointPanel);
         
         Debugger.print("Made property panel for Human", Debugger.INFO);
     }
-    /*
-    class XPositionFieldListener implements ActionListener {
-        private GameObject editing;
-        public XPositionFieldListener(GameObject editing) { this.editing = editing; }
+    
+    class WaypointPanel extends JPanel {
+        
+        protected final JPanel leftSide, rightSide;
+        protected final JTextField waypointXPosition, waypointYPosition;
+        protected final JButton createWaypoint, deleteWaypoint, moveUp, moveDown;
+        protected final WayPointListModel wayPointDataModel;
+        protected final JList waypointList;
+        
+        public WaypointPanel() {
 
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            try {
-                editing.setX(Integer.parseInt( ((JTextField)e.getSource()).getText() ));
-            } catch(Exception ex) {
-                Debugger.print("Bad argument for X Position", Debugger.ERROR);
+            this.setLayout(new BorderLayout(mpw, mph));
+            leftSide = new JPanel();
+            leftSide.setLayout(new BorderLayout(mpw, mph));
+            rightSide = new JPanel();
+            rightSide.setLayout(new GridLayout(4, 2, mpw, mph));
+
+            //Setup the right side
+            rightSide.add(new JLabel("Selected X Position"));
+            waypointXPosition = new JTextField();
+            rightSide.add(waypointXPosition);
+            rightSide.add(new JLabel("Selected Y Position"));
+            waypointYPosition = new JTextField();
+            rightSide.add(waypointYPosition);
+
+            //Buttons
+            createWaypoint = new JButton("Create Waypoint");
+            deleteWaypoint = new JButton("Delete Waypoint");
+            moveUp = new JButton("Move up");
+            moveDown = new JButton("Move down");
+
+            //Add them buttons
+            rightSide.add(moveUp);
+            rightSide.add(createWaypoint);
+            rightSide.add(moveDown);
+            rightSide.add(deleteWaypoint);
+            
+            //Add them listeners
+            createWaypoint.addActionListener(new CreateWaypointButtonListener());
+            deleteWaypoint.addActionListener(new DeleteWaypointButtonListener());
+            
+            //Setup the left side
+            wayPointDataModel = new WayPointListModel();
+            waypointList = new JList(wayPointDataModel);
+            waypointList.setLayoutOrientation(JList.VERTICAL);
+            waypointList.setDragEnabled(true);
+            waypointList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            waypointList.addListSelectionListener(new WayPointListSelectionListener());
+
+            //Scrolly bar
+            JScrollPane scrolly = new JScrollPane(waypointList);
+            scrolly.createVerticalScrollBar();
+            scrolly.createHorizontalScrollBar();
+            scrolly.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            
+             //Add the list to the left side
+            leftSide.add(scrolly, BorderLayout.CENTER);
+            
+            this.add(leftSide, BorderLayout.CENTER);
+            this.add(rightSide, BorderLayout.EAST);
+            this.add(new JLabel("Waypoints"), BorderLayout.NORTH);
+
+        }
+        
+        class CreateWaypointButtonListener implements ActionListener {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DefaultListModel m = (DefaultListModel)waypointList.getModel();
+                int selectedIndex = waypointList.getSelectedIndex();
+                if (waypointList.getSelectedValue()!=null) {
+                    m.add(selectedIndex++, new Waypoint(0, 0));
+                } else {
+                    m.add(m.size(), new Waypoint(0, 0));
+                }
+                m.trimToSize();
             }
         }
-    }
-    
-    class YPositionFieldListener implements ActionListener {
-        private GameObject editing;
-        public YPositionFieldListener(GameObject editing) { this.editing = editing; }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            try {
-                editing.setY(Integer.parseInt( ((JTextField)e.getSource()).getText() ));
-            } catch(Exception ex) {
-                Debugger.print("Bad argument for Y Position", Debugger.ERROR);
+        
+        class DeleteWaypointButtonListener implements ActionListener {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Waypoint p = (Waypoint)waypointList.getSelectedValue();
+                if (p!=null) {
+                    ((DefaultListModel)waypointList.getModel()).remove(waypointList.getSelectedIndex());
+                    caldm.getArea().removeObject(p);
+                }
+                ((DefaultListModel)waypointList.getModel()).trimToSize();
             }
         }
-    }
-    
-    class WidthFieldListener implements ActionListener {
-        private Block editing;
-        public WidthFieldListener(Block editing) { this.editing = editing; }
+        
+        class WayPointListSelectionListener implements ListSelectionListener {
 
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            try {
-                editing.setWidth(Integer.parseInt( ((JTextField)e.getSource()).getText() ));
-            } catch(Exception ex) {
-                Debugger.print("Bad argument for Width", Debugger.ERROR);
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                //Waypoint selection logic here
+                caldm.setSelectedWaypoint((Waypoint)((JList)e.getSource()).getSelectedValue());
             }
+            
+        } 
+        
+        class WayPointListModel extends DefaultListModel<Waypoint> {
+            
         }
     }
-    
-    class HeightFieldListener implements ActionListener {
-        private Block editing;
-        public HeightFieldListener(Block editing) { this.editing = editing; }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            try {
-                editing.setHeight(Integer.parseInt( ((JTextField)e.getSource()).getText() ));
-            } catch(Exception ex) {
-                Debugger.print("Bad argument for Height", Debugger.ERROR);
-            }
-        }
-    }
-    
-    class TextureFieldListener implements ActionListener {
-        private GameObject editing;
-        public TextureFieldListener(GameObject editing) { this.editing = editing; }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            editing.setTextureString(((JTextField)e.getSource()).getText());
-        }
-    }
-    */
 }
