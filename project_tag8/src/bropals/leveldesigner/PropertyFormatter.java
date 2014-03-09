@@ -45,6 +45,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -357,6 +358,60 @@ public class PropertyFormatter {
         //  
         final WidthHeightPanel whPanel = new WidthHeightPanel(forObject);
         // 
+        JPanel targetAreaPanel = new JPanel();
+        targetAreaPanel.setLayout(new GridLayout(2, 4, mpw, mph));
+        final JTextField targetAreaIdInput = new JTextField("" + forObject.getTargetAreaID() + "");
+        final JTextField playerXPosInput = new JTextField("" + forObject.getXPlayerPos() + "");
+        final JTextField playerYPosInput = new JTextField("" + forObject.getYPlayerPos() + "");
+
+        targetAreaIdInput.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    forObject.setTargetAreaID(Integer.parseInt( targetAreaIdInput.getText() )); //Area id is an int!
+                } catch(NumberFormatException nfe) {
+                    forObject.setTargetAreaID(0);
+                    targetAreaIdInput.setText("0");
+                    targetAreaIdInput.repaint();
+                }
+            }
+        });
+        
+        playerXPosInput.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    forObject.setXPlayerPos(Float.parseFloat( playerXPosInput.getText() ));
+                } catch(NumberFormatException nfe) {
+                    forObject.setXPlayerPos(0);
+                    playerXPosInput.setText("0");
+                    playerXPosInput.repaint();
+                }
+            }
+        });
+        
+        playerYPosInput.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    forObject.setYPlayerPos(Float.parseFloat( playerYPosInput.getText() ));
+                } catch(NumberFormatException nfe) {
+                    forObject.setYPlayerPos(0);
+                    playerYPosInput.setText("0");
+                    playerYPosInput.repaint();
+                }
+            }
+        });
+        
+        targetAreaPanel.add(new JLabel("Target Area ID"));
+        targetAreaPanel.add(targetAreaIdInput);
+        targetAreaPanel.add(new JLabel()); //Spacer
+        targetAreaPanel.add(new JLabel()); //Spacer
+        targetAreaPanel.add(new JLabel("Player X Position"));
+        targetAreaPanel.add(playerXPosInput);
+        targetAreaPanel.add(new JLabel("Player Y Position"));
+        targetAreaPanel.add(playerYPosInput);
+        
         final InteractablePanel interactablePanel = new InteractablePanel(forObject);
         
         final TexturePanel texturePanel = new TexturePanel(forObject);
@@ -365,6 +420,7 @@ public class PropertyFormatter {
         inPanel.add(titlePanel);
         inPanel.add(xyPanel);
         inPanel.add(whPanel);
+        inPanel.add(targetAreaPanel);
         inPanel.add(interactablePanel);
         inPanel.add(texturePanel);
         
@@ -376,6 +432,31 @@ public class PropertyFormatter {
                     forObject.setY(xyPanel.getInputY());
                     forObject.setWidth(whPanel.getInputWidth());
                     forObject.setHeight(whPanel.getInputHeight());
+                    
+                    try {
+                        forObject.setTargetAreaID(Integer.parseInt( targetAreaIdInput.getText() )); //Area id is an int!
+                    } catch(NumberFormatException nfe) {
+                        forObject.setTargetAreaID(0);
+                        targetAreaIdInput.setText("0");
+                        targetAreaIdInput.repaint();
+                    }
+                    
+                    try {
+                        forObject.setXPlayerPos(Float.parseFloat( playerXPosInput.getText() ));
+                    } catch(NumberFormatException nfe) {
+                        forObject.setXPlayerPos(0);
+                        playerXPosInput.setText("0");
+                        playerXPosInput.repaint();
+                    }
+                    
+                    try {
+                        forObject.setYPlayerPos(Float.parseFloat( playerYPosInput.getText() ));
+                    } catch(NumberFormatException nfe) {
+                        forObject.setYPlayerPos(0);
+                        playerYPosInput.setText("0");
+                        playerYPosInput.repaint();
+                    }
+                    
                     forObject.setInteractDistance(interactablePanel.getInteractInput());
                     forObject.setTextureString(texturePanel.getTextureInput());
                 }
@@ -400,7 +481,9 @@ public class PropertyFormatter {
         JPanel statePanel = new JPanel();
         statePanel.setLayout(new GridLayout(1, 2, mpw, mph));
         final JComboBox typeBox = new JComboBox(new HumanType[]{HumanType.PITCHFORK, HumanType.ROCK_THROWER});
+        typeBox.setSelectedItem(forObject.getType());
         final JComboBox stateBox = new JComboBox(new HumanState[]{HumanState.PATROLLING, HumanState.ALERT});
+        stateBox.setSelectedItem(forObject.getState());
         typeBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -419,11 +502,48 @@ public class PropertyFormatter {
         
         //
         
-        final WaypointPanel waypointPanel = new WaypointPanel();
+        final WaypointPanel waypointPanel = new WaypointPanel(forObject);
         
         //
         
-        final FaceDirectionPanel directionPanel = new FaceDirectionPanel();
+        JPanel speedPanel = new JPanel();
+        speedPanel.setLayout(new GridLayout(1, 4, mpw, mph));
+        final JTextField speedInput = new JTextField("" + forObject.getSpeed() + "");
+        final JTextField turnSpeedInput = new JTextField("" + forObject.getTurnSpeed() + "");
+        
+        speedInput.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    forObject.setSpeed( Float.parseFloat(speedInput.getText()) );
+                } catch(NumberFormatException nfe) {
+                    forObject.setSpeed(0);
+                    speedInput.setText("0");
+                    speedInput.repaint();
+                }
+            }
+        });
+        
+        turnSpeedInput.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    forObject.setTurnSpeed( Float.parseFloat(turnSpeedInput.getText()) );
+                } catch(NumberFormatException nfe) {
+                    forObject.setTurnSpeed(0);
+                    turnSpeedInput.setText("0");
+                    turnSpeedInput.repaint();
+                }
+            }
+        });
+        
+        speedPanel.add(new JLabel("Move Speed"));
+        speedPanel.add(speedInput);
+        speedPanel.add(new JLabel("Turn Speed"));
+        speedPanel.add(turnSpeedInput);
+        //
+        
+        final FaceDirectionPanel directionPanel = new FaceDirectionPanel(forObject);
         
         //
         
@@ -490,6 +610,7 @@ public class PropertyFormatter {
         inPanel.add(whPanel);
         inPanel.add(statePanel);
         inPanel.add(waypointPanel);
+        inPanel.add(speedPanel);
         inPanel.add(directionPanel);
         inPanel.add(visionPanel);
         inPanel.add(texturePanel);
@@ -527,6 +648,24 @@ public class PropertyFormatter {
                     }
                     //End of vision panel
                     
+                    //Speed panel begin
+                    try {
+                        forObject.setSpeed( Float.parseFloat(speedInput.getText()) );
+                    } catch(NumberFormatException nfe) {
+                        forObject.setSpeed(0);
+                        speedInput.setText("0");
+                        speedInput.repaint();
+                    }
+                    
+                    try {
+                        forObject.setTurnSpeed( Float.parseFloat(turnSpeedInput.getText()) );
+                    } catch(NumberFormatException nfe) {
+                        forObject.setTurnSpeed(0);
+                        turnSpeedInput.setText("0");
+                        turnSpeedInput.repaint();
+                    }
+                    
+                    //Speed panel end
                     forObject.setFaceDirection(directionPanel.getFaceDirectionInput());
                     
                     forObject.setTextureString(texturePanel.getTextureInput());
@@ -538,14 +677,15 @@ public class PropertyFormatter {
     
     class WaypointPanel extends JPanel {
         
+        protected final Human human;
         protected final JPanel leftSide, rightSide;
         protected final JTextField waypointXPosition, waypointYPosition;
         protected final JButton createWaypoint, deleteWaypoint, moveUp, moveDown;
         protected final WayPointListModel wayPointDataModel;
         protected final JList waypointList;
         
-        public WaypointPanel() {
-
+        public WaypointPanel(Human h) {
+            this.human = h;
             this.setLayout(new BorderLayout(mpw, mph));
             leftSide = new JPanel();
             leftSide.setLayout(new BorderLayout(mpw, mph));
@@ -577,7 +717,7 @@ public class PropertyFormatter {
             deleteWaypoint.addActionListener(new DeleteWaypointButtonListener());
             
             //Setup the left side
-            wayPointDataModel = new WayPointListModel();
+            wayPointDataModel = new WayPointListModel(human.getPatrolPath());
             waypointList = new JList(wayPointDataModel);
             waypointList.setLayoutOrientation(JList.VERTICAL);
             waypointList.setDragEnabled(true);
@@ -597,17 +737,19 @@ public class PropertyFormatter {
             this.add(rightSide, BorderLayout.EAST);
             this.add(new JLabel("Waypoints"), BorderLayout.NORTH);
 
+            //Put waypoint data into list to start editing it
+            
         }
         
         class CreateWaypointButtonListener implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
-                DefaultListModel m = (DefaultListModel)waypointList.getModel();
+                WayPointListModel m = (WayPointListModel)waypointList.getModel();
                 int selectedIndex = waypointList.getSelectedIndex();
                 if (waypointList.getSelectedValue()!=null) {
                     m.add(selectedIndex++, new Waypoint(0, 0));
                 } else {
-                    m.add(m.size(), new Waypoint(0, 0));
+                    m.add(m.getSize(), new Waypoint(0, 0));
                 }
                 m.trimToSize();
             }
@@ -618,10 +760,10 @@ public class PropertyFormatter {
             public void actionPerformed(ActionEvent e) {
                 Waypoint p = (Waypoint)waypointList.getSelectedValue();
                 if (p!=null) {
-                    ((DefaultListModel)waypointList.getModel()).remove(waypointList.getSelectedIndex());
+                    ((WayPointListModel)waypointList.getModel()).remove(waypointList.getSelectedIndex());
                     caldm.getArea().removeObject(p);
                 }
-                ((DefaultListModel)waypointList.getModel()).trimToSize();
+                ((WayPointListModel)waypointList.getModel()).trimToSize();
             }
         }
         
@@ -635,18 +777,83 @@ public class PropertyFormatter {
             
         } 
         
-        class WayPointListModel extends DefaultListModel<Waypoint> {
+        class WayPointListModel implements ListModel<Waypoint> {
+
+            private ArrayList<Waypoint> data;
+            private ArrayList<ListDataListener> dataListeners;
+            
+            public WayPointListModel(Waypoint[] existingData) {
+                data = new ArrayList<Waypoint>();
+                dataListeners = new ArrayList<ListDataListener>();
+                for (int i=0; i<existingData.length; i++) {
+                    data.add(i, existingData[i]);
+                }
+            }
+            
+            public void shiftUp(int shiftingIndex, JList toRepaint) {
+                if (shiftingIndex>0) {
+                    data.set(shiftingIndex-1, data.get(shiftingIndex));
+                }
+            }
+            
+            public void shiftDown(int shiftingIndex, JList toRepaint) {
+                if (shiftingIndex<(getSize()-1)) {
+                    data.set(shiftingIndex+1, data.get(shiftingIndex));
+                }
+            }
+            
+            private void notifyDataListenersOfContentsChanged(int element) {
+                for (int j=0; j<dataListeners.size(); j++) {
+                    dataListeners.get(j).contentsChanged(new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, element, element));
+                }
+            }
+            
+            @Override
+            public int getSize() {
+                return data.size();
+            }
+
+            @Override
+            public Waypoint getElementAt(int index) {
+                return data.get(index);
+            }
+
+            @Override
+            public void addListDataListener(ListDataListener l) {
+                dataListeners.add(l);
+            }
+
+            @Override
+            public void removeListDataListener(ListDataListener l) {
+                dataListeners.remove(l);
+            }
+
+            private void trimToSize() {
+                data.trimToSize();
+            }
+
+            private void add(int i, Waypoint waypoint) {
+                data.add(i, waypoint);
+                notifyDataListenersOfContentsChanged(i);
+            }
+
+            private void remove(int selectedIndex) {
+                data.remove(selectedIndex);
+                notifyDataListenersOfContentsChanged(selectedIndex);
+            }
             
         }
     }
     
     class FaceDirectionPanel extends JPanel  {
         
+        private final Human human;
         private final MouseAdapter mouseListener;
         private final FancyDirectionGraphic fdg;
         private final JTextField xPos, yPos;
         
-        public FaceDirectionPanel() {
+        public FaceDirectionPanel(Human h) {
+            this.human = h;
             this.setLayout(new BorderLayout(mpw, mph));
             fdg = new FancyDirectionGraphic();
             
@@ -655,8 +862,8 @@ public class PropertyFormatter {
             JPanel right = new JPanel();
             right.setLayout(new GridLayout(2, 2, mpw, mph));
             
-            xPos = new JTextField();
-            yPos = new JTextField();
+            xPos = new JTextField( "" + human.getFaceDirection().getX() + "");
+            yPos = new JTextField( "" + human.getFaceDirection().getY() + "" );
             
             left.add(fdg, BorderLayout.CENTER);
             
@@ -676,6 +883,7 @@ public class PropertyFormatter {
                     fdg.setTo(e.getX(), e.getY());
                     xPos.setText("" + fdg.getFaceDir().getX() + "");
                     yPos.setText("" + fdg.getFaceDir().getY() + "");
+                    human.setFaceDirection(fdg.getFaceDir().clone());
                     fdg.repaint();
                     caldm.tellRepaint();
                 }

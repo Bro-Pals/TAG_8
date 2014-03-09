@@ -40,6 +40,7 @@ public class Waypoint extends GameObject {
     public String toString() {
         return "Waypoint:\n" +
         "   X: " + getX() + "\n"+
-        "   Y: " + getY() + "\n";
+        "   Y: " + getY() + "\n"+
+        "   Hashcode: " + hashCode() + "";
     }
 }

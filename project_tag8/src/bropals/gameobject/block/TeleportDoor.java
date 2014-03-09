@@ -43,13 +43,25 @@ public class TeleportDoor extends Block implements Interactable {
     public int getTargetAreaID() {
         return targetAreaID;
     }
+    
+    public void setTargetAreaID(int id) {
+        this.targetAreaID = id;
+    }
 
-    public float getxPlayerPos() {
+    public float getXPlayerPos() {
         return xPlayerPos;
     }
 
-    public float getyPlayerPos() {
+    public float getYPlayerPos() {
         return yPlayerPos;
+    }
+    
+    public void setXPlayerPos(float xPos) {
+        this.xPlayerPos = xPos;
+    }
+    
+    public void setYPlayerPos(float yPos) {
+        this.yPlayerPos = yPos;
     }
     
     @Override
