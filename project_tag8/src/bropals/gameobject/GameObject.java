@@ -17,7 +17,7 @@ public abstract class GameObject {
     private float x, y;
     private Area parent;
     private String texture;
-    
+    private int textureIndex;
     /**
      * The basic game object
      * @param x The x position of the GameObject
@@ -26,6 +26,7 @@ public abstract class GameObject {
     public GameObject(float x, float y) {
         this.x = x;
         this.y = y;
+        textureIndex = 0;
     }
     
     public abstract BufferedImage getTexture();
@@ -82,5 +83,13 @@ public abstract class GameObject {
         "   Texture String: " + getTextureString()+ "\n"+
         "";
         return str;
+    }
+
+    public int getTextureIndex() {
+        return textureIndex;
+    }
+    
+    public void setTextureIndex(int index) {
+        this.textureIndex = index;
     }
 }

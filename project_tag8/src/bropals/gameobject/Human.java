@@ -44,6 +44,7 @@ public class Human extends Creature {
     
     public Human(float x, float y, float size, float speed, Vector2 faceDirection) {
         super(x, y, size, size, speed, faceDirection);
+        patrolPath = new Waypoint[0];
         waypointOn = 0;
         alerted = false;
         sightRange = 300;

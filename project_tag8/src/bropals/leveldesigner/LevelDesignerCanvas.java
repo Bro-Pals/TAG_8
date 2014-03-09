@@ -7,6 +7,7 @@
 package bropals.leveldesigner;
 
 import bropals.debug.Debugger;
+import bropals.gameobject.Creature;
 import bropals.gameobject.GameObject;
 import bropals.gameobject.block.Block;
 import bropals.level.Area;
@@ -58,7 +59,12 @@ public class LevelDesignerCanvas extends Canvas {
                             g.setColor(Color.BLUE);
                             if (caldm.getSelectedGameObject() instanceof Block) {
                                 g.fillRect((int)(caldm.getSelectedGameObject().getX())-5, (int)(caldm.getSelectedGameObject().getY())-5, (int)((Block)caldm.getSelectedGameObject()).getWidth()+10, (int)((Block)caldm.getSelectedGameObject()).getHeight()+10);
-                            } else {
+                            } else 
+                            if (caldm.getSelectedGameObject() instanceof Creature) {
+                               Creature c =((Creature)caldm.getSelectedGameObject());
+                               g.fillOval( (int)(c.getX()) - 5 , (int)(c.getY()) - 5, (int)(c.getWidth() + 10) , (int)(c.getHeight() + 10)); 
+                            }
+                            else {
                                 g.fillOval((int)(objects.get(j).getX())-(sizelessRadius/2)-5, (int)(objects.get(j).getY())-(sizelessRadius/2)-5, sizelessRadius+10, sizelessRadius+10);
                             }
                         }

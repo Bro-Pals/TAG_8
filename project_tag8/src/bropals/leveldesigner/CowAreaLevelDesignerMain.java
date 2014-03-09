@@ -8,6 +8,7 @@ package bropals.leveldesigner;
 
 import bropals.datafiles.CowAreaFileManager;
 import bropals.debug.Debugger;
+import bropals.gameobject.Creature;
 import bropals.gameobject.GameObject;
 import bropals.gameobject.GrappleHookPoint;
 import bropals.gameobject.Human;
@@ -530,6 +531,13 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
                     Rectangle2D rect = (Rectangle2D)((Block)os.get(i)).getRectangle2D();
                     if (rect.contains(e.getPoint())) {
                         //Select this!
+                        setSelectedGameObject(os.get(i));
+                        return;
+                    }
+                } else
+                if (os.get(i) instanceof Creature) {
+                    if ( ((((Creature)os.get(i)).getCenterX()-e.getX())*(((Creature)os.get(i)).getCenterX()-e.getX()))+((((Creature)os.get(i)).getCenterY()-e.getY())*((Creature)os.get(i)).getCenterY()-e.getY()) < (SIZELESS_RADIUS*SIZELESS_RADIUS) ) {
+                        //Close enough according to our friend pythagoreous
                         setSelectedGameObject(os.get(i));
                         return;
                     }

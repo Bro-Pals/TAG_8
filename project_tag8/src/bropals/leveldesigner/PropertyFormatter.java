@@ -21,6 +21,7 @@ import bropals.gameobject.block.HayBale;
 import bropals.gameobject.block.NormalDoor;
 import bropals.gameobject.block.TeleportDoor;
 import bropals.gameobject.block.Wall;
+import bropals.graphics.ImageLoader;
 import bropals.util.Vector2;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
@@ -33,13 +34,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.swing.AbstractListModel;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -101,16 +105,17 @@ public class PropertyFormatter {
     //Formatters: Add components to edit game objects
     
     private void makeBlockFormat(final Block forObject, JPanel inPanel, JButton acceptButton) {
-        inPanel.setLayout(new GridLayout(4, 1, pw, ph));
+        BoxLayout boxLayout = new BoxLayout(inPanel, BoxLayout.Y_AXIS);
+        inPanel.setLayout(boxLayout);
         
         final JPanel titlePanel = new JPanel();
         titlePanel.add(new JLabel("Block:"));   
         //    
         final XYPositionPanel xyPanel = new XYPositionPanel(forObject);  
         //  
-        final WidthHeightPanel whPanel = new WidthHeightPanel(forObject);
-        // 
         final TexturePanel texturePanel = new TexturePanel(forObject);
+        final WidthHeightPanel whPanel = new WidthHeightPanel(forObject, texturePanel);
+        // 
         
         //
         inPanel.add(titlePanel);
@@ -134,17 +139,17 @@ public class PropertyFormatter {
     }
     
     private void makeWallFormat(final Wall forObject, JPanel inPanel, JButton acceptButton) {
-        inPanel.setLayout(new GridLayout(4, 1, pw, ph));
+        BoxLayout boxLayout = new BoxLayout(inPanel, BoxLayout.Y_AXIS);
+        inPanel.setLayout(boxLayout);
         
         final JPanel titlePanel = new JPanel();
         titlePanel.add(new JLabel("Wall:"));   
         //    
         final XYPositionPanel xyPanel = new XYPositionPanel(forObject);  
         //  
-        final WidthHeightPanel whPanel = new WidthHeightPanel(forObject);
-        // 
         final TexturePanel texturePanel = new TexturePanel(forObject);
-        
+        final WidthHeightPanel whPanel = new WidthHeightPanel(forObject, texturePanel);
+        //         
         //
         inPanel.add(titlePanel);
         inPanel.add(xyPanel);
@@ -167,7 +172,8 @@ public class PropertyFormatter {
     }
     
     private void makeAvacadoFormat(final Avacado forObject, JPanel inPanel, JButton acceptButton) {
-        inPanel.setLayout(new GridLayout(5, 1, pw, ph));
+        BoxLayout boxLayout = new BoxLayout(inPanel, BoxLayout.Y_AXIS);
+        inPanel.setLayout(boxLayout);
         
         final JPanel titlePanel = new JPanel();
         titlePanel.add(new JLabel("Avacado:"));   
@@ -175,12 +181,12 @@ public class PropertyFormatter {
         final XYPositionPanel xyPanel = new XYPositionPanel(forObject);
         
         //  
-        final WidthHeightPanel whPanel = new WidthHeightPanel(forObject);
+        final TexturePanel texturePanel = new TexturePanel(forObject);
+        final WidthHeightPanel whPanel = new WidthHeightPanel(forObject, texturePanel);
         whPanel.setEditable(false);
         // 
         final InteractablePanel interactablePanel = new InteractablePanel(forObject);
         //
-        final TexturePanel texturePanel = new TexturePanel(forObject);
         texturePanel.setEditable(false);
         //
         inPanel.add(titlePanel);
@@ -206,19 +212,19 @@ public class PropertyFormatter {
     }
     
     private void makeAvacadoBinFormat(final AvacadoBin forObject, JPanel inPanel, JButton acceptButton) {
-        inPanel.setLayout(new GridLayout(5, 1, pw, ph));
+        BoxLayout boxLayout = new BoxLayout(inPanel, BoxLayout.Y_AXIS);
+        inPanel.setLayout(boxLayout);
         
         final JPanel titlePanel = new JPanel();
         titlePanel.add(new JLabel("Avacado Bin:"));   
         //    
         final XYPositionPanel xyPanel = new XYPositionPanel(forObject);  
-        //  
-        final WidthHeightPanel whPanel = new WidthHeightPanel(forObject);
+        // 
+        final TexturePanel texturePanel = new TexturePanel(forObject);
+        final WidthHeightPanel whPanel = new WidthHeightPanel(forObject, texturePanel);
         // 
         final InteractablePanel interactablePanel = new InteractablePanel(forObject);
-        
-        final TexturePanel texturePanel = new TexturePanel(forObject);
-        
+                
         //
         inPanel.add(titlePanel);
         inPanel.add(xyPanel);
@@ -243,19 +249,19 @@ public class PropertyFormatter {
     }
     
     private void makeHayBaleFormat(final HayBale forObject, JPanel inPanel, JButton acceptButton) {
-        inPanel.setLayout(new GridLayout(5, 1, pw, ph));
+        BoxLayout boxLayout = new BoxLayout(inPanel, BoxLayout.Y_AXIS);
+        inPanel.setLayout(boxLayout);
         
         final JPanel titlePanel = new JPanel();
         titlePanel.add(new JLabel("Hay Bale:"));   
         //    
         final XYPositionPanel xyPanel = new XYPositionPanel(forObject);  
         //  
-        final WidthHeightPanel whPanel = new WidthHeightPanel(forObject);
+        final TexturePanel texturePanel = new TexturePanel(forObject);
+        final WidthHeightPanel whPanel = new WidthHeightPanel(forObject, texturePanel);
         // 
         final InteractablePanel interactablePanel = new InteractablePanel(forObject);
-        
-        final TexturePanel texturePanel = new TexturePanel(forObject);
-        
+                
         //
         inPanel.add(titlePanel);
         inPanel.add(xyPanel);
@@ -280,7 +286,8 @@ public class PropertyFormatter {
     }
     
     private void makeGrapplePointFormat(final GrappleHookPoint forObject, JPanel inPanel, JButton acceptButton) {
-        inPanel.setLayout(new GridLayout(4, 1, pw, ph));
+        BoxLayout boxLayout = new BoxLayout(inPanel, BoxLayout.Y_AXIS);
+        inPanel.setLayout(boxLayout);
         
         final JPanel titlePanel = new JPanel();
         titlePanel.add(new JLabel("Grapple Hook Point:"));   
@@ -312,19 +319,19 @@ public class PropertyFormatter {
     }
     
     private void makeNormalDoorFormat(final NormalDoor forObject, JPanel inPanel, JButton acceptButton) {
-        inPanel.setLayout(new GridLayout(5, 1, pw, ph));
+        BoxLayout boxLayout = new BoxLayout(inPanel, BoxLayout.Y_AXIS);
+        inPanel.setLayout(boxLayout);
         
         final JPanel titlePanel = new JPanel();
         titlePanel.add(new JLabel("Normal Door:"));   
         //    
         final XYPositionPanel xyPanel = new XYPositionPanel(forObject);  
         //  
-        final WidthHeightPanel whPanel = new WidthHeightPanel(forObject);
+        final TexturePanel texturePanel = new TexturePanel(forObject);
+        final WidthHeightPanel whPanel = new WidthHeightPanel(forObject, texturePanel);
         // 
         final InteractablePanel interactablePanel = new InteractablePanel(forObject);
-        
-        final TexturePanel texturePanel = new TexturePanel(forObject);
-        
+                
         //
         inPanel.add(titlePanel);
         inPanel.add(xyPanel);
@@ -349,14 +356,16 @@ public class PropertyFormatter {
     }
     
     private void makeTeleportDoorFormat(final TeleportDoor forObject, JPanel inPanel, JButton acceptButton) {
-        inPanel.setLayout(new GridLayout(5, 1, pw, ph));
+        BoxLayout boxLayout = new BoxLayout(inPanel, BoxLayout.Y_AXIS);
+        inPanel.setLayout(boxLayout);
         
         final JPanel titlePanel = new JPanel();
         titlePanel.add(new JLabel("Teleport Door:"));   
         //    
         final XYPositionPanel xyPanel = new XYPositionPanel(forObject);  
         //  
-        final WidthHeightPanel whPanel = new WidthHeightPanel(forObject);
+        final TexturePanel texturePanel = new TexturePanel(forObject);
+        final WidthHeightPanel whPanel = new WidthHeightPanel(forObject, texturePanel);
         // 
         JPanel targetAreaPanel = new JPanel();
         targetAreaPanel.setLayout(new GridLayout(2, 4, mpw, mph));
@@ -414,8 +423,6 @@ public class PropertyFormatter {
         
         final InteractablePanel interactablePanel = new InteractablePanel(forObject);
         
-        final TexturePanel texturePanel = new TexturePanel(forObject);
-        
         //
         inPanel.add(titlePanel);
         inPanel.add(xyPanel);
@@ -466,7 +473,8 @@ public class PropertyFormatter {
     }
     
     private void makeHumanFormat(final Human forObject, JPanel inPanel, JButton acceptButton) {
-        inPanel.setLayout(new GridLayout(9, 1, pw, ph));
+        BoxLayout boxLayout = new BoxLayout(inPanel, BoxLayout.Y_AXIS);
+        inPanel.setLayout(boxLayout);
         
         JPanel titlePanel = new JPanel();
         titlePanel.add(new JLabel("Human:"));
@@ -475,7 +483,8 @@ public class PropertyFormatter {
         
         final XYPositionPanel xyPanel = new XYPositionPanel(forObject);  
         //  
-        final WidthHeightPanel2 whPanel = new WidthHeightPanel2(forObject);
+        final TexturePanel texturePanel = new TexturePanel(forObject);
+        final WidthHeightPanel2 whPanel = new WidthHeightPanel2(forObject, texturePanel);
         //
         
         JPanel statePanel = new JPanel();
@@ -601,7 +610,6 @@ public class PropertyFormatter {
         
         //
         
-        final TexturePanel texturePanel = new TexturePanel(forObject);
         
         //
         
@@ -690,7 +698,7 @@ public class PropertyFormatter {
             leftSide = new JPanel();
             leftSide.setLayout(new BorderLayout(mpw, mph));
             rightSide = new JPanel();
-            rightSide.setLayout(new GridLayout(4, 2, mpw, mph));
+            rightSide.setLayout(new GridLayout(5, 2, mpw, mph));
 
             //Setup the right side
             rightSide.add(new JLabel("Selected X Position"));
@@ -724,6 +732,23 @@ public class PropertyFormatter {
             waypointList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             waypointList.addListSelectionListener(new WayPointListSelectionListener());
 
+            //Shifting buttons
+            moveUp.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    wayPointDataModel.shiftUp(waypointList.getSelectedIndex(), waypointList);
+                    waypointList.repaint();
+                }
+            });
+            
+            moveDown.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    wayPointDataModel.shiftDown(waypointList.getSelectedIndex(), waypointList);
+                    waypointList.repaint();
+                }
+            });
+            
             //Scrolly bar
             JScrollPane scrolly = new JScrollPane(waypointList);
             scrolly.createVerticalScrollBar();
@@ -792,13 +817,35 @@ public class PropertyFormatter {
             
             public void shiftUp(int shiftingIndex, JList toRepaint) {
                 if (shiftingIndex>0) {
-                    data.set(shiftingIndex-1, data.get(shiftingIndex));
+                    Waypoint[] wpArray = (Waypoint[])data.toArray(new Waypoint[data.size()]);
+                    Waypoint shifting = wpArray[shiftingIndex];
+                    Waypoint replacing = wpArray[shiftingIndex-1];
+                    //Swap places
+                    wpArray[shiftingIndex-1] = shifting;
+                    wpArray[shiftingIndex] = replacing;
+                    //Back to ArrayList form
+                    data = new ArrayList<Waypoint>(wpArray.length);
+                    for (int i=0; i<wpArray.length; i++) {
+                        data.add(wpArray[i]);
+                    }
+                    toRepaint.setSelectedIndex(shiftingIndex-1);
                 }
             }
             
             public void shiftDown(int shiftingIndex, JList toRepaint) {
                 if (shiftingIndex<(getSize()-1)) {
-                    data.set(shiftingIndex+1, data.get(shiftingIndex));
+                    Waypoint[] wpArray = (Waypoint[])data.toArray(new Waypoint[data.size()]);
+                    Waypoint shifting = wpArray[shiftingIndex];
+                    Waypoint replacing = wpArray[shiftingIndex+1];
+                    //Swap places
+                    wpArray[shiftingIndex+1] = shifting;
+                    wpArray[shiftingIndex] = replacing;
+                    //Back to ArrayList form
+                    data = new ArrayList<Waypoint>(wpArray.length);
+                    for (int i=0; i<wpArray.length; i++) {
+                        data.add(wpArray[i]);
+                    }
+                    toRepaint.setSelectedIndex(shiftingIndex+1);
                 }
             }
             
@@ -949,10 +996,10 @@ public class PropertyFormatter {
     class TexturePanel extends JPanel {
         
         private GameObject object;
-        private JTextField textureInput;
+        private JTextField textureInput, indexInput;
         public TexturePanel(GameObject obj) {
             this.object = obj;
-            this.setLayout(new GridLayout(1, 2, mpw, mph));
+            this.setLayout(new GridLayout(1, 4, mpw, mph));
             this.add(new JLabel("Texture"));
             textureInput = new JTextField(obj.getTextureString());
             textureInput.addActionListener(new ActionListener() {
@@ -963,12 +1010,37 @@ public class PropertyFormatter {
                     caldm.tellRepaint();
                 }
             });
+            indexInput = new JTextField(""  + obj.getTextureIndex() + "" );
+            textureInput.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        object.setTextureIndex(Integer.parseInt(indexInput.getText()));
+                    } catch(NumberFormatException nfe) {
+                        indexInput.setText("0");
+                        object.setTextureIndex(0);
+                        indexInput.repaint();
+                    }
+                    textureInput.repaint();
+                    caldm.tellRepaint();
+                }
+            });
             //textureInput.addActionListener(new TextureFieldListener(forObject));
             this.add(textureInput);
         }
         
         public String getTextureInput() {
             return textureInput.getText();
+        }
+        
+        public int getTextureIndexInput() {
+            try {
+                return Integer.parseInt(indexInput.getText());
+            } catch(NumberFormatException nfe) {
+                indexInput.setText("0");
+                object.setTextureIndex(0);
+                return 0;
+            }
         }
 
         private void setEditable(boolean b) {
@@ -1042,11 +1114,13 @@ public class PropertyFormatter {
     class WidthHeightPanel extends JPanel {
             
             private final Block b;
+            private final TexturePanel tPanel;
             private final JTextField wInput, hInput;
                     
-            public WidthHeightPanel(Block bl) {
+            public WidthHeightPanel(Block bl, TexturePanel panel) {
+                this.tPanel = panel;
                 this.b = bl;
-                this.setLayout(new GridLayout(1, 4, mpw, mph));
+                this.setLayout(new GridLayout(2, 4, mpw, mph));
                 wInput = new JTextField("" + b.getWidth() + "");
                 hInput = new JTextField("" + b.getHeight() + "");
                 
@@ -1085,11 +1159,32 @@ public class PropertyFormatter {
                         caldm.tellRepaint();
                     }
                 });
-                
+                final JPanel tp = this;
+                JButton matchButton = new JButton("Match texture size");
+                matchButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            BufferedImage img = ImageLoader.getLoader().getImage(tPanel.getTextureInput(), tPanel.getTextureIndexInput());
+                            b.setWidth(img.getWidth());
+                            b.setHeight(img.getHeight());
+                            wInput.setText("" + b.getWidth() + "");
+                            hInput.setText("" + b.getHeight() + "");
+                            wInput.repaint();
+                            hInput.repaint();
+                            caldm.tellRepaint();
+                        } catch(NullPointerException nulle) {
+                            JOptionPane.showMessageDialog(tp, "Not a valid texture. Make sure this texture was loaded in the main method.", "Can't match texture size", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                });
                 this.add(new JLabel("Width"));
                 this.add(wInput);
                 this.add(new JLabel("Height"));
                 this.add(hInput);
+                this.add(matchButton);
+                //Formatting
+                this.add(new JLabel()); this.add(new JLabel()); this.add(new JLabel());
             }
             
             public float getInputWidth() {
@@ -1121,11 +1216,13 @@ public class PropertyFormatter {
     class WidthHeightPanel2 extends JPanel {
             
             private final Human b;
+            private final TexturePanel tPanel;
             private final JTextField wInput, hInput;
                     
-            public WidthHeightPanel2(Human bl) {
+            public WidthHeightPanel2(Human bl, TexturePanel panel) {
+                this.tPanel = panel;
                 this.b = bl;
-                this.setLayout(new GridLayout(1, 4, mpw, mph));
+                this.setLayout(new GridLayout(2, 4, mpw, mph));
                 wInput = new JTextField("" + b.getWidth() + "");
                 hInput = new JTextField("" + b.getHeight() + "");
                 
@@ -1136,7 +1233,7 @@ public class PropertyFormatter {
                             float w = Float.parseFloat( wInput.getText() );
                             if (w<10) { w = 10; }
                             wInput.setText("" + w + "");
-                            b.setWidth(w);   
+                            b.setWidth(w);  
                             wInput.repaint();
                         } catch(NumberFormatException oe) {
                             wInput.setText("10");
@@ -1164,11 +1261,32 @@ public class PropertyFormatter {
                         caldm.tellRepaint();
                     }
                 });
-                
+                final JPanel tp = this;
+                JButton matchButton = new JButton("Match texture size");
+                matchButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            BufferedImage img = ImageLoader.getLoader().getImage(tPanel.getTextureInput(), tPanel.getTextureIndexInput());
+                            b.setWidth(img.getWidth());
+                            b.setHeight(img.getHeight());
+                            wInput.setText("" + b.getWidth() + "");
+                            hInput.setText("" + b.getHeight() + "");
+                            wInput.repaint();
+                            hInput.repaint();
+                            caldm.tellRepaint();
+                        } catch(NullPointerException nulle) {
+                            JOptionPane.showMessageDialog(tp, "Not a valid texture. Make sure this texture was loaded in the main method.", "Can't match texture size", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                });
                 this.add(new JLabel("Width"));
                 this.add(wInput);
                 this.add(new JLabel("Height"));
                 this.add(hInput);
+                this.add(matchButton);
+                //Formatting
+                this.add(new JLabel()); this.add(new JLabel()); this.add(new JLabel());
             }
             
             public float getInputWidth() {
