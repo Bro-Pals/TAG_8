@@ -360,6 +360,7 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
                     theFactory.makeNewAreaOverOldArea();
                     setArea(theFactory.getArea());
                     mainFrame.setTitle(mainTitle + " (Untitled.cowarea)");
+                    mainFrame.repaint();
                 }
             }
         });
@@ -460,6 +461,7 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
                         }
                         f = new File(f.getParentFile().getPath() + "/" + use + ".cowarea");
                         theFactory.getFileManager().export(editingArea, f);
+                        mainFrame.setTitle(mainTitle + "(" + use + ")");
                     }
                 }
             }
@@ -481,7 +483,10 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
                     int returned = fc.showOpenDialog(mainFrame);
                     if (returned==JFileChooser.APPROVE_OPTION) {
                         //Save the area!
+                        String name = fc.getSelectedFile().getName();
                         theFactory.getFileManager().loadArea(theFactory, fc.getSelectedFile());
+                        mainFrame.setTitle(mainTitle + "(" + name + ")");
+                        mainFrame.repaint();
                     }
                 }
             }
@@ -555,9 +560,11 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
             public void actionPerformed(ActionEvent e) {
                 if (editingArea!=null) {
                     try {
-                        
+                        editingArea.setRoomID( Integer.parseInt(areaIdInput.getText()) );
                     } catch(NumberFormatException efasd) {
-                        
+                        areaIdInput.setText("-1");
+                        editingArea.setRoomID(-1);
+                        areaIdInput.repaint();
                     }
                 }
             }
