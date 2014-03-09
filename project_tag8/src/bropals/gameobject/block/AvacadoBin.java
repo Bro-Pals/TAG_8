@@ -26,7 +26,7 @@ public class AvacadoBin extends Block implements Interactable {
 
     @Override
     public void interact(GameObject instance) {
-        AvacadoManager.get().collectAvacados();
+        AvacadoManager.get().depositAvacadoPouch();
     }
 
     @Override

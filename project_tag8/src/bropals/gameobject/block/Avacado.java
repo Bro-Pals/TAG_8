@@ -16,19 +16,23 @@ import java.awt.image.BufferedImage;
  * @author Owner
  */
 public class Avacado extends Block implements Interactable {
-
+    
+    private static int avacadosMade = 0;
+    
     // keep track of where it was
     private int id;
     private int roomId;
+    private boolean collected;
     private float interactDistance;
     
     public Avacado(float x, float y, float width, float height, int roomId) {
         super(x, y, width, height);
-        this.id = AvacadoManager.get().getAvacadosCollected().size() + AvacadoManager.get().getAvacadosInWorld().size();
+        avacadosMade++;
+        this.id = avacadosMade;
         this.roomId = roomId;
         interactDistance = 80;
         // add this avacado to the world
-        AvacadoManager.get().getAvacadosInWorld().add(this);
+        collected = false;
     }
     
     @Override
@@ -50,10 +54,6 @@ public class Avacado extends Block implements Interactable {
         return interactDistance; // some random number
     }
     
-    public void returnToSpawn() {
-        // return to where it's spawn location is
-    }
-    
     @Override
     public String toString() {
         String str = "Avacado:\n" + 
@@ -70,5 +70,20 @@ public class Avacado extends Block implements Interactable {
     public void setInteractDistance(float distance) {
         interactDistance = distance;
     }
-   
+
+    @Override
+    public void setParent(Area parent) {
+        if (parent != null) {
+            AvacadoManager.get().addAvacadoToWorld(this);
+        }
+        super.setParent(parent);
+    }
+    
+    public void setCollected(boolean c) {
+        collected = c;
+    }
+    
+    public boolean isCollected() {
+        return collected;
+    }
 }
