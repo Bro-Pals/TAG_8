@@ -6,12 +6,15 @@
 
 package bropals.leveldesigner;
 
+import bropals.debug.Debugger;
 import bropals.gameobject.GameObject;
+import bropals.gameobject.block.Block;
 import bropals.level.Area;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 /**
@@ -22,11 +25,12 @@ public class LevelDesignerCanvas extends Canvas {
 
     private Area drawing;
     private final CowAreaLevelDesignerMain caldm;
-    private Font bigFont;
+    private final Font bigFont, littleFont;
     
     public LevelDesignerCanvas(CowAreaLevelDesignerMain caldm) {
         this.caldm = caldm;
         bigFont = new Font(Font.SERIF, Font.BOLD, 40);
+        littleFont = new Font(Font.SERIF, Font.BOLD, 12);
     }
     
     public void setDrawing(Area area) {
@@ -37,21 +41,41 @@ public class LevelDesignerCanvas extends Canvas {
     public void paint(Graphics g) {
         clear(g, Color.WHITE);
         drawArea(g);
+        drawGrid(g);
         g.dispose();
     }
     
     private void drawArea(Graphics g) {
+        int sizelessRadius = 30;
         if (drawing!=null) {
             ArrayList<GameObject> objects = drawing.getObjects();
             for (int j=0; j<objects.size(); j++) {
                 if (objects.get(j)!=null) {
-                    if (objects.get(j).hashCode()==caldm.getSelectedGameObject().hashCode()) {
-                        //Blue outline to say this is being selected
-                        g.setColor(Color.BLUE);
-                        g.fillRect((int)(objects.get(j).getX())-5, (int)(objects.get(j).getY())-5, objects.get(j).getTexture().getWidth()+10, objects.get(j).getTexture().getHeight()+10);
+                    if (caldm.getSelectedGameObject()!=null) {
+                        if (objects.get(j).hashCode()==caldm.getSelectedGameObject().hashCode()) {
+                            //Blue outline to say this is being selected
+                            g.setColor(Color.BLUE);
+                            g.fillRect((int)(objects.get(j).getX())-5, (int)(objects.get(j).getY())-5, objects.get(j).getTexture().getWidth()+10, objects.get(j).getTexture().getHeight()+10);
+                        }
                     }
-                    g.drawImage(objects.get(j).getTexture(), (int)objects.get(j).getX(), (int)objects.get(j).getY(), null);
+                    BufferedImage texture = objects.get(j).getTexture();
+                    if (texture==null) {
+                        //Error graphic
+                        g.setColor(Color.RED);
+                        if (objects.get(j) instanceof Block) {
+                            g.fillRect((int)objects.get(j).getX(), (int)objects.get(j).getY(), (int)(((Block)objects.get(j)).getWidth()), (int)(((Block)objects.get(j)).getHeight()));
+                        } else {
+                           g.fillOval((int)(objects.get(j).getX())-(sizelessRadius/2), (int)(objects.get(j).getY())-(sizelessRadius/2), sizelessRadius, sizelessRadius);
+                        }
+                        g.setColor(Color.BLACK);
+                        g.setFont(littleFont);
+                        g.drawString("Need Texture", (int)(objects.get(j).getX()), (int)(objects.get(j).getY()));
+                    } else {
+                        g.drawImage(texture, (int)objects.get(j).getX(), (int)objects.get(j).getY(), null);
+                    }
                     //Addition debug rendering here
+                } else {
+                    Debugger.print("Null object in area!?", ERROR);
                 }
             }
         } else {
@@ -60,6 +84,26 @@ public class LevelDesignerCanvas extends Canvas {
             g.drawString("Not editing an Area!", 200, 200);
             g.drawString("Create a new Area with File->Create", 50, 300);
             g.drawString("Open an existing area with File->Open", 50, 400);
+        }
+    }
+    
+    private void drawGrid(Graphics g) {
+        Grid grid = caldm.getGrid();
+        int spacing = grid.getSpacing();
+        int timesX = (int)Math.ceil(getPreferredSize().width/spacing);
+        int timesY = (int)Math.ceil(getPreferredSize().height/spacing);
+        if (caldm.gridIsEnabled()) {
+            g.setColor(Color.BLACK);
+            for (int i=0; i<timesX; i++) {
+                //Draw black lines to represent grid
+                //Vertically
+                g.drawLine((i*spacing), 0, (i*spacing), getPreferredSize().height);
+            }
+            for (int j=0; j<timesY; j++) {
+                //Draw black lines to represent grid
+                //Horizontally
+                g.drawLine(0, (j*spacing), getPreferredSize().width, (j*spacing));
+            }
         }
     }
     

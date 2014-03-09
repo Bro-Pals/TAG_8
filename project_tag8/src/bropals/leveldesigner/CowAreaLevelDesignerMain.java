@@ -19,6 +19,7 @@ import bropals.gameobject.block.Wall;
 import bropals.graphics.ImageLoader;
 import bropals.level.Area;
 import bropals.level.AreaFactory;
+import bropals.leveldesigner.CowAreaLevelDesignerMain.GridSpacingOKButtonListener;
 import bropals.util.Vector2;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -27,21 +28,30 @@ import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
+import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
+import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  *
@@ -71,7 +81,7 @@ public class CowAreaLevelDesignerMain {
     private JPanel bottomFormatter;
     
     //Buttons and action doers
-    private JMenuItem save, open, create;
+    private JMenuItem save, open, create, gridEnabled, gridSpacing;
     private JButton createBlock, createWall, createAvacado, createAvacadoBin, createHayBale, createHuman, createGrapplePoint, createNormalDoor, createTeleportDoor, deleteSelected;
             
     //Data based things
@@ -79,16 +89,18 @@ public class CowAreaLevelDesignerMain {
     private CowAreaFileManager fileManager;
     private GameObject selectedGameObject;
     private final AreaFactory theFactory;
+    private Grid grid;
     
     public CowAreaLevelDesignerMain() {
         initializeIconForWindows();
         initializeMainFrame();
         initializeLayoutOfPanels();
-        initializeFileMenu();
+        initializeMenu();
         initializeCanvas();
         initializeFormatter();
         initializeObjectCreationPanel();
         initializeFileManager();
+        initializeGrid();
         centerFrame();
         initializeWhatButtonsDo();
         theFactory = new AreaFactory();
@@ -122,11 +134,11 @@ public class CowAreaLevelDesignerMain {
         //Put things in tabs
         JScrollPane objectScrollyPane = new JScrollPane(objectProperties);
         objectScrollyPane.createVerticalScrollBar();
-        objectScrollyPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        objectScrollyPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         objectScrollyPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         JScrollPane globalScrollyPane = new JScrollPane(globalProperties);
         globalScrollyPane.createVerticalScrollBar();
-        globalScrollyPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED); 
+        globalScrollyPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); 
         globalScrollyPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         tabbedPane.add("Object Properties", objectScrollyPane);
         tabbedPane.add("Global Properties", globalScrollyPane);
@@ -150,8 +162,9 @@ public class CowAreaLevelDesignerMain {
         mainFrame.add(propertyExplorer, BorderLayout.EAST);
     }
 
-    private void initializeFileMenu() {
+    private void initializeMenu() {
         JMenuBar bar = new JMenuBar();
+        
         JMenu menu = new JMenu("File");
         save = new JMenuItem("Save");
         open = new JMenuItem("Open");
@@ -159,7 +172,15 @@ public class CowAreaLevelDesignerMain {
         menu.add(create);
         menu.add(save);
         menu.add(open);
+        
+        JMenu menu2 = new JMenu("Grid");
+        gridEnabled = new JCheckBoxMenuItem("Grid Enabled");
+        gridSpacing = new JMenuItem("Grid Spacing...");
+        menu2.add(gridSpacing);
+        menu2.add(gridEnabled);
+        
         bar.add(menu);
+        bar.add(menu2);
         mainFrame.setJMenuBar(bar);
     }
 
@@ -210,6 +231,10 @@ public class CowAreaLevelDesignerMain {
     private void initializeFileManager() {
         fileManager = new CowAreaFileManager();
     }
+    
+    private void initializeGrid() {
+        grid = new Grid();
+    }
 
     private void initializeWhatButtonsDo() {
         //What all of the buttons and file menu bars do is defined in this method
@@ -217,7 +242,7 @@ public class CowAreaLevelDesignerMain {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editingArea!=null) {
-                    Block block = new Block(editingArea, 0, 0, 0, 0);
+                    Block block = new Block(null, 0, 0, 0, 0);
                     makeCreateDialog(block, "Create Block");
                 }
             }
@@ -226,7 +251,7 @@ public class CowAreaLevelDesignerMain {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editingArea!=null) {
-                    Wall wall = new Wall(editingArea, 0, 0, 0, 0);
+                    Wall wall = new Wall(null, 0, 0, 0, 0);
                     makeCreateDialog(wall, "Create Wall");
                 }
             }
@@ -235,7 +260,7 @@ public class CowAreaLevelDesignerMain {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editingArea!=null) {
-                    GrappleHookPoint grapple = new GrappleHookPoint(editingArea, 0, 0);
+                    GrappleHookPoint grapple = new GrappleHookPoint(null, 0, 0);
                     makeCreateDialog(grapple, "Create Grapple Hook Point");
                 }
             }
@@ -244,7 +269,7 @@ public class CowAreaLevelDesignerMain {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editingArea!=null) {
-                    TeleportDoor teleDoor = new TeleportDoor(editingArea, 0, 0, 0, 0, -1, 0, 0);
+                    TeleportDoor teleDoor = new TeleportDoor(null, 0, 0, 0, 0, -1, 0, 0);
                     makeCreateDialog(teleDoor, "Create Teleport Door");
                 }
             }
@@ -253,7 +278,7 @@ public class CowAreaLevelDesignerMain {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editingArea!=null) {
-                    NormalDoor door = new NormalDoor(editingArea, 0, 0, 0, 0);
+                    NormalDoor door = new NormalDoor(null, 0, 0, 0, 0);
                     makeCreateDialog(door, "Create Normal Door");
                 }
             }
@@ -262,7 +287,7 @@ public class CowAreaLevelDesignerMain {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editingArea!=null) {
-                    Avacado avacado = new Avacado(editingArea, 0, 0, 0, 0, editingArea.getAreaId());
+                    Avacado avacado = new Avacado(null, 0, 0, 0, 0, editingArea.getAreaId());
                     makeCreateDialog(avacado, "Create Avacado");
                 }
             }
@@ -271,7 +296,7 @@ public class CowAreaLevelDesignerMain {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editingArea!=null) {
-                    AvacadoBin bin = new AvacadoBin(editingArea, 0, 0, 0, 0);
+                    AvacadoBin bin = new AvacadoBin(null, 0, 0, 0, 0);
                     makeCreateDialog(bin, "Create Avacado Bin");
                 }
             }
@@ -280,7 +305,7 @@ public class CowAreaLevelDesignerMain {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editingArea!=null) {
-                    Human human = new Human(editingArea, 0, 0, 0, 0, Vector2.UNIT_Y);
+                    Human human = new Human(null, 0, 0, 0, 0, Vector2.UNIT_Y);
                     makeCreateDialog(human, "Create Human");
                 }
             }
@@ -305,6 +330,73 @@ public class CowAreaLevelDesignerMain {
                 }
             }
         });
+        
+        gridEnabled.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JCheckBoxMenuItem checkBox = (JCheckBoxMenuItem)e.getSource();
+                grid.setEnabled(checkBox.getState());
+                canvas.repaint();
+            }
+        });
+        
+        gridSpacing.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JDialog dialog = makeDialog("Change Grid Spacing");
+                JPanel formatterM = new JPanel();
+                formatterM.setLayout(new BorderLayout(30, 30));
+                dialog.setLayout(new BorderLayout(hSpacing, vSpacing));
+                //Add a scrolly thing to change the dialog value
+                JPanel core = new JPanel();
+                core.setLayout(new BorderLayout(hSpacing, vSpacing));
+                JPanel ok = new JPanel();
+                ok.setLayout(new GridLayout(1, 2, hSpacing, vSpacing));
+                
+                JButton okButton = new JButton("OK");
+                JButton cancelButton = new JButton("Cancel");
+                
+                JSlider spacingSlider = new JSlider(Grid.MIN_SPACING, Grid.MAX_SPACING);
+                spacingSlider.setValue(grid.getSpacing());
+                spacingSlider.createStandardLabels(30);
+                spacingSlider.setPaintTicks(true);
+                spacingSlider.setPaintTrack(true);
+                spacingSlider.setPaintLabels(true);
+                spacingSlider.setSnapToTicks(true);
+                spacingSlider.setMajorTickSpacing(30);
+                spacingSlider.setMinorTickSpacing(5);
+                spacingSlider.setValue(grid.getSpacing());
+                
+                JTextField textField = new JTextField(3);
+                textField.setMaximumSize(new Dimension(80, 40));
+                textField.setText("" + grid.getSpacing() + "");
+                
+                core.add(textField, BorderLayout.NORTH);
+                core.add(spacingSlider, BorderLayout.CENTER);
+                
+                spacingSlider.addChangeListener(new GridSpacingSliderListener(textField));
+                textField.addActionListener(new GridSpacingFieldListener(spacingSlider));
+                
+                ok.add(cancelButton);
+                ok.add(okButton);
+                
+                cancelButton.addActionListener(new GridSpacingCancelButtonListener(dialog));
+                okButton.addActionListener(new GridSpacingOKButtonListener(dialog, spacingSlider));
+                
+                formatterM.add(new JLabel(), BorderLayout.NORTH);
+                formatterM.add(new JLabel(), BorderLayout.SOUTH);
+                formatterM.add(new JLabel(), BorderLayout.EAST);
+                formatterM.add(new JLabel(), BorderLayout.WEST);
+                formatterM.add(core, BorderLayout.CENTER);
+                
+                dialog.add(formatterM, BorderLayout.CENTER);
+                dialog.add(ok, BorderLayout.SOUTH);
+                
+                dialog.setSize(mainFrame.getWidth()/2, mainFrame.getHeight()/2);
+                dialog.setLocationRelativeTo(mainFrame);
+                dialog.setVisible(true);
+            }
+        });
     }
     
     private void makeCreateDialog(GameObject forObject, String title) {
@@ -319,7 +411,12 @@ public class CowAreaLevelDesignerMain {
         accept.add(acceptButton);
         //Format for properties of block
         propertyFormatter.format(forObject, core);
-        l.add(core, BorderLayout.CENTER);
+        //Put "core" into a scrolly pane
+        JScrollPane scrolly = new JScrollPane(core);
+        scrolly.createVerticalScrollBar();
+        scrolly.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrolly.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        l.add(scrolly, BorderLayout.CENTER);
         l.add(accept, BorderLayout.SOUTH);
         //Make accept/cancel buttons do things
         acceptButton.addActionListener(new AcceptCreationButtonListener(l, forObject));
@@ -349,6 +446,14 @@ public class CowAreaLevelDesignerMain {
         propertyFormatter.format(this.selectedGameObject, objectProperties);
     }
     
+    Grid getGrid() {
+        return grid;
+    }
+    
+    boolean gridIsEnabled() {
+        return grid.isEnabled();
+    }
+    
     public GameObject getSelectedGameObject() {
         return this.selectedGameObject;
     }
@@ -375,5 +480,59 @@ public class CowAreaLevelDesignerMain {
         public void actionPerformed(ActionEvent e) {
             dialog.dispose();
         }
+    }
+    
+    class GridSpacingSliderListener implements ChangeListener {
+        private JTextField f;
+        public GridSpacingSliderListener(JTextField f) {
+            this.f = f;
+        }
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            f.setText("" + ((JSlider)e.getSource()).getValue() + "");
+        }
+    }
+    
+    class GridSpacingFieldListener implements ActionListener {
+        private JSlider slider;
+        public GridSpacingFieldListener(JSlider slider) {
+            this.slider=slider;
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            try {
+                int val = Integer.parseInt(((JTextField)e.getSource()).getText());
+                slider.setValue(val);
+            } catch(NumberFormatException ex) {
+                slider.setValue(10);
+                ((JTextField)e.getSource()).setText("0");
+            }
+        }
+    }
+    
+    class GridSpacingCancelButtonListener implements ActionListener {
+        private JDialog log;
+        public GridSpacingCancelButtonListener(JDialog log) {
+            this.log = log;
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            this.log.dispose();
+        } 
+    }
+    
+    class GridSpacingOKButtonListener implements ActionListener {
+        private JDialog log;
+        private JSlider slider;
+        public GridSpacingOKButtonListener(JDialog log, JSlider slider) {
+            this.log = log;
+            this.slider = slider;
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            grid.setSpacing(slider.getValue(), canvas.getPreferredSize().width, canvas.getPreferredSize().height);
+            canvas.repaint();
+            this.log.dispose();
+        } 
     }
 }
