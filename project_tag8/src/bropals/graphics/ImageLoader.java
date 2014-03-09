@@ -73,7 +73,11 @@ public class ImageLoader {
      * @return the image (if it is loaded)
      */
     public BufferedImage getImage(String name) {
-        return images.get(name)[0];
+        try {
+             return images.get(name)[0];
+        } catch(NullPointerException e) {
+            return null;
+        }
     }
     
     /**

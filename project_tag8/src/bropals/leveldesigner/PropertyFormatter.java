@@ -42,7 +42,7 @@ public class PropertyFormatter {
             makeWallFormat((Wall)forObject, formatting, acceptButton);
         } else
         if (forObject instanceof GrappleHookPoint) {
-            makeGrapplePointFormat(forObject, formatting, acceptButton);
+            makeGrapplePointFormat((GrappleHookPoint)forObject, formatting, acceptButton);
         } else
         if (forObject instanceof Avacado) {
             makeAvacadoFormat((Avacado)forObject, formatting, acceptButton);
@@ -82,22 +82,22 @@ public class PropertyFormatter {
         
         physicalPanel.add(new JLabel("X Position"));
         final JTextField xPosInput = new JTextField("" + (int)forObject.getX() + "", 3);
-        xPosInput.addActionListener(new XPositionFieldListener(forObject));
+      //  xPosInput.addActionListener(new XPositionFieldListener(forObject));
         physicalPanel.add(xPosInput);
         
         physicalPanel.add(new JLabel("Y Position"));
         final JTextField yPosInput = new JTextField("" + (int)forObject.getY() + "", 3);
-        yPosInput.addActionListener(new YPositionFieldListener(forObject));
+      //  yPosInput.addActionListener(new YPositionFieldListener(forObject));
         physicalPanel.add(yPosInput);
         
         physicalPanel.add(new JLabel("Width"));
         final JTextField widthInput = new JTextField("" + (int)forObject.getWidth() + "", 3);
-        widthInput.addActionListener(new WidthFieldListener(forObject));
+      //  widthInput.addActionListener(new WidthFieldListener(forObject));
         physicalPanel.add(widthInput);
         
         physicalPanel.add(new JLabel("Height"));
         final JTextField heightInput = new JTextField("" + (int)forObject.getHeight() + "", 3);
-        heightInput.addActionListener(new HeightFieldListener(forObject));
+       // heightInput.addActionListener(new HeightFieldListener(forObject));
         physicalPanel.add(heightInput);
         
         // 
@@ -106,7 +106,7 @@ public class PropertyFormatter {
         renderPanel.setLayout(new GridLayout(1, 2, mpw, mph));
         renderPanel.add(new JLabel("Texture"));
         final JTextField textureInput = new JTextField(forObject.getTextureString(), 10);
-        textureInput.addActionListener(new TextureFieldListener(forObject));
+       // textureInput.addActionListener(new TextureFieldListener(forObject));
         renderPanel.add(textureInput);
         
         //
@@ -126,6 +126,7 @@ public class PropertyFormatter {
                 }
             });
         }
+        Debugger.print("Made property panel for Block", Debugger.INFO);
     }
     
     private void makeWallFormat(final Wall forObject, JPanel inPanel, JButton acceptButton) {
@@ -141,22 +142,22 @@ public class PropertyFormatter {
         
         physicalPanel.add(new JLabel("X Position"));
         final JTextField xPosInput = new JTextField("" + (int)forObject.getX() + "", 3);
-        xPosInput.addActionListener(new XPositionFieldListener(forObject));
+        //xPosInput.addActionListener(new XPositionFieldListener(forObject));
         physicalPanel.add(xPosInput);
         
         physicalPanel.add(new JLabel("Y Position"));
         final JTextField yPosInput = new JTextField("" + (int)forObject.getY() + "", 3);
-        yPosInput.addActionListener(new YPositionFieldListener(forObject));
+      //  yPosInput.addActionListener(new YPositionFieldListener(forObject));
         physicalPanel.add(yPosInput);
         
         physicalPanel.add(new JLabel("Width"));
         final JTextField widthInput = new JTextField("" + (int)forObject.getWidth() + "", 3);
-        widthInput.addActionListener(new WidthFieldListener(forObject));
+       // widthInput.addActionListener(new WidthFieldListener(forObject));
         physicalPanel.add(widthInput);
         
         physicalPanel.add(new JLabel("Height"));
         final JTextField heightInput = new JTextField("" + (int)forObject.getHeight() + "", 3);
-        heightInput.addActionListener(new HeightFieldListener(forObject));
+       // heightInput.addActionListener(new HeightFieldListener(forObject));
         physicalPanel.add(heightInput);
         
         // 
@@ -165,7 +166,7 @@ public class PropertyFormatter {
         renderPanel.setLayout(new GridLayout(1, 2, mpw, mph));
         renderPanel.add(new JLabel("Texture"));
         final JTextField textureInput = new JTextField(forObject.getTextureString(), 10);
-        textureInput.addActionListener(new TextureFieldListener(forObject));
+       // textureInput.addActionListener(new TextureFieldListener(forObject));
         renderPanel.add(textureInput);
         
         //
@@ -185,6 +186,7 @@ public class PropertyFormatter {
                 }
             });
         }
+        Debugger.print("Made property panel for Wall", Debugger.INFO);
     }
     
     private void makeAvacadoFormat(final Avacado forObject, JPanel inPanel, JButton acceptButton) {
@@ -200,23 +202,23 @@ public class PropertyFormatter {
         
         physicalPanel.add(new JLabel("X Position"));
         final JTextField xPosInput = new JTextField("" + (int)forObject.getX() + "", 3);
-        xPosInput.addActionListener(new XPositionFieldListener(forObject));
+      //  xPosInput.addActionListener(new XPositionFieldListener(forObject));
         physicalPanel.add(xPosInput);
         
         physicalPanel.add(new JLabel("Y Position"));
         final JTextField yPosInput = new JTextField("" + (int)forObject.getY() + "", 3);
-        yPosInput.addActionListener(new YPositionFieldListener(forObject));
+       // yPosInput.addActionListener(new YPositionFieldListener(forObject));
         physicalPanel.add(yPosInput);
         
         physicalPanel.add(new JLabel("Width"));
         final JTextField widthInput = new JTextField("40", 3);
-        widthInput.addActionListener(new WidthFieldListener(forObject));
+       // widthInput.addActionListener(new WidthFieldListener(forObject));
         widthInput.setEditable(false);
         physicalPanel.add(widthInput);
         
         physicalPanel.add(new JLabel("Height"));
         final JTextField heightInput = new JTextField("40", 3);
-        heightInput.addActionListener(new HeightFieldListener(forObject));
+       // heightInput.addActionListener(new HeightFieldListener(forObject));
         heightInput.setEditable(false);
         physicalPanel.add(heightInput);
         
@@ -227,7 +229,7 @@ public class PropertyFormatter {
         renderPanel.add(new JLabel("Texture"));
         final JTextField textureInput = new JTextField("Avacado");
         textureInput.setEditable(false);
-        textureInput.addActionListener(new TextureFieldListener(forObject));
+       // textureInput.addActionListener(new TextureFieldListener(forObject));
         renderPanel.add(textureInput);
         
         //
@@ -247,6 +249,7 @@ public class PropertyFormatter {
                 }
             });
         }
+        Debugger.print("Made property panel for Avacado", Debugger.INFO);
     }
     
     private void makeAvacadoBinFormat(final AvacadoBin forObject, JPanel inPanel, JButton acceptButton) {
@@ -262,22 +265,22 @@ public class PropertyFormatter {
         
         physicalPanel.add(new JLabel("X Position"));
         final JTextField xPosInput = new JTextField("" + (int)forObject.getX() + "", 3);
-        xPosInput.addActionListener(new XPositionFieldListener(forObject));
+        //xPosInput.addActionListener(new XPositionFieldListener(forObject));
         physicalPanel.add(xPosInput);
         
         physicalPanel.add(new JLabel("Y Position"));
         final JTextField yPosInput = new JTextField("" + (int)forObject.getY() + "", 3);
-        yPosInput.addActionListener(new YPositionFieldListener(forObject));
+        //yPosInput.addActionListener(new YPositionFieldListener(forObject));
         physicalPanel.add(yPosInput);
         
         physicalPanel.add(new JLabel("Width"));
         final JTextField widthInput = new JTextField("" + (int)forObject.getWidth() + "", 3);
-        widthInput.addActionListener(new WidthFieldListener(forObject));
+        //widthInput.addActionListener(new WidthFieldListener(forObject));
         physicalPanel.add(widthInput);
         
         physicalPanel.add(new JLabel("Height"));
         final JTextField heightInput = new JTextField("" + (int)forObject.getHeight() + "", 3);
-        heightInput.addActionListener(new HeightFieldListener(forObject));
+        //heightInput.addActionListener(new HeightFieldListener(forObject));
         physicalPanel.add(heightInput);
         
         // 
@@ -286,7 +289,7 @@ public class PropertyFormatter {
         renderPanel.setLayout(new GridLayout(1, 2, mpw, mph));
         renderPanel.add(new JLabel("Texture"));
         final JTextField textureInput = new JTextField(forObject.getTextureString(), 10);
-        textureInput.addActionListener(new TextureFieldListener(forObject));
+        //textureInput.addActionListener(new TextureFieldListener(forObject));
         renderPanel.add(textureInput);
         
         //
@@ -306,6 +309,7 @@ public class PropertyFormatter {
                 }
             });
         }
+        Debugger.print("Made property panel for Avacado Bin", Debugger.INFO);
     }
     
     private void makeHayBaleFormat(final HayBale forObject, JPanel inPanel, JButton acceptButton) {
@@ -321,22 +325,22 @@ public class PropertyFormatter {
         
         physicalPanel.add(new JLabel("X Position"));
         final JTextField xPosInput = new JTextField("" + (int)forObject.getX() + "", 3);
-        xPosInput.addActionListener(new XPositionFieldListener(forObject));
+        //xPosInput.addActionListener(new XPositionFieldListener(forObject));
         physicalPanel.add(xPosInput);
         
         physicalPanel.add(new JLabel("Y Position"));
         final JTextField yPosInput = new JTextField("" + (int)forObject.getY() + "", 3);
-        yPosInput.addActionListener(new YPositionFieldListener(forObject));
+       // yPosInput.addActionListener(new YPositionFieldListener(forObject));
         physicalPanel.add(yPosInput);
         
         physicalPanel.add(new JLabel("Width"));
         final JTextField widthInput = new JTextField("" + (int)forObject.getWidth() + "", 3);
-        widthInput.addActionListener(new WidthFieldListener(forObject));
+        //widthInput.addActionListener(new WidthFieldListener(forObject));
         physicalPanel.add(widthInput);
         
         physicalPanel.add(new JLabel("Height"));
         final JTextField heightInput = new JTextField("" + (int)forObject.getHeight() + "", 3);
-        heightInput.addActionListener(new HeightFieldListener(forObject));
+       // heightInput.addActionListener(new HeightFieldListener(forObject));
         physicalPanel.add(heightInput);
         
         // 
@@ -345,7 +349,7 @@ public class PropertyFormatter {
         renderPanel.setLayout(new GridLayout(1, 2, mpw, mph));
         renderPanel.add(new JLabel("Texture"));
         final JTextField textureInput = new JTextField(forObject.getTextureString(), 10);
-        textureInput.addActionListener(new TextureFieldListener(forObject));
+        //textureInput.addActionListener(new TextureFieldListener(forObject));
         renderPanel.add(textureInput);
         
         //
@@ -365,24 +369,82 @@ public class PropertyFormatter {
                 }
             });
         }
+        Debugger.print("Made property panel for Hay Bale", Debugger.INFO);
     }
     
-    private void makeGrapplePointFormat(GameObject forObject, JPanel inPanel, JButton acceptButton) {
+    private void makeGrapplePointFormat(final GrappleHookPoint forObject, JPanel inPanel, JButton acceptButton) {
+        inPanel.setLayout(new GridLayout(4, 1, pw, ph));
         
+        JPanel titlePanel = new JPanel();
+        titlePanel.add(new JLabel("Grapple Hook Point:"));
+        
+        //
+        
+        JPanel physicalPanel = new JPanel();
+        physicalPanel.setLayout(new GridLayout(2, 4, mpw, mph));
+        
+        physicalPanel.add(new JLabel("X Position"));
+        final JTextField xPosInput = new JTextField("" + (int)forObject.getX() + "", 3);
+        //xPosInput.addActionListener(new XPositionFieldListener(forObject));
+        physicalPanel.add(xPosInput);
+        
+        physicalPanel.add(new JLabel("Y Position"));
+        final JTextField yPosInput = new JTextField("" + (int)forObject.getY() + "", 3);
+        //yPosInput.addActionListener(new YPositionFieldListener(forObject));
+        physicalPanel.add(yPosInput);
+        
+        // 
+        
+        JPanel interactDistancePanel = new JPanel();
+        interactDistancePanel.setLayout(new GridLayout(1, 2, mpw, mph));
+        final JTextField interactInput = new JTextField("" + forObject.getInteractDistance() + "");
+        interactInput.setEditable(false);
+        interactDistancePanel.add(interactInput);
+        
+        //
+        
+        JPanel renderPanel = new JPanel();
+        renderPanel.setLayout(new GridLayout(1, 2, mpw, mph));
+        renderPanel.add(new JLabel("Texture"));
+        final JTextField textureInput = new JTextField(forObject.getTextureString(), 10);
+        //textureInput.addActionListener(new TextureFieldListener(forObject));
+        renderPanel.add(textureInput);
+        
+        //
+        
+        inPanel.add(titlePanel);
+        inPanel.add(physicalPanel);
+        inPanel.add(interactDistancePanel);
+        inPanel.add(renderPanel);
+        
+        if (acceptButton!=null) {
+            acceptButton.addActionListener(new  ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    forObject.setX(Integer.parseInt(xPosInput.getText()));
+                    forObject.setY(Integer.parseInt(yPosInput.getText()));
+                    forObject.setTextureString(textureInput.getText());
+                }
+            });
+        }
+        Debugger.print("Made property panel for Grapple Hook Point", Debugger.INFO);
     }
     
     private void makeNormalDoorFormat(GameObject forObject, JPanel inPanel, JButton acceptButton) {
         
+        Debugger.print("Made property panel for Normal Door", Debugger.INFO);
     }
     
     private void makeTeleportDoorFormat(GameObject forObject, JPanel inPanel, JButton acceptButton) {
         
+        Debugger.print("Made property panel for Teleport Door", Debugger.INFO);
     }
     
     private void makeHumanFormat(GameObject forObject, JPanel inPanel, JButton acceptButton) {
         
+        Debugger.print("Made property panel for Human", Debugger.INFO);
     }
-    
+    /*
     class XPositionFieldListener implements ActionListener {
         private GameObject editing;
         public XPositionFieldListener(GameObject editing) { this.editing = editing; }
@@ -448,4 +510,5 @@ public class PropertyFormatter {
             editing.setTextureString(((JTextField)e.getSource()).getText());
         }
     }
+    */
 }

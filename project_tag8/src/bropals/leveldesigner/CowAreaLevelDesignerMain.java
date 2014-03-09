@@ -14,6 +14,7 @@ import bropals.gameobject.Human;
 import bropals.gameobject.block.Avacado;
 import bropals.gameobject.block.AvacadoBin;
 import bropals.gameobject.block.Block;
+import bropals.gameobject.block.HayBale;
 import bropals.gameobject.block.NormalDoor;
 import bropals.gameobject.block.TeleportDoor;
 import bropals.gameobject.block.Wall;
@@ -305,6 +306,15 @@ public class CowAreaLevelDesignerMain {
                 if (editingArea!=null) {
                     Human human = new Human(0, 0, 0, 0, Vector2.UNIT_Y);
                     makeCreateDialog(human, "Create Human");
+                }
+            }
+        });
+        createHayBale.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (editingArea!=null) {
+                    HayBale bale = new HayBale(0, 0, 0, 0);
+                    makeCreateDialog(bale, "Create Hay Bale");
                 }
             }
         });
