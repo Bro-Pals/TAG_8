@@ -32,7 +32,7 @@ public class Human extends Creature {
     private ArrayList<Waypoint> backTrackWaypoints;
     private int alertTimer;
     private float sightRange;
-    private float attachDistance;
+    private float attackDistance;
     private float turnSpeed;
     
     public Human(float x, float y, float size, float speed, Vector2 faceDirection) {
@@ -151,11 +151,11 @@ public class Human extends Creature {
     }
 
     public float getAttachDistance() {
-        return attachDistance;
+        return attackDistance;
     }
 
-    public void setAttachDistance(float attachDistance) {
-        this.attachDistance = attachDistance;
+    public void setAttackDistance(float attachDistance) {
+        this.attackDistance = attachDistance;
     }
 
     public float getTurnSpeed() {

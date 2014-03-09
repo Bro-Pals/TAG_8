@@ -472,6 +472,10 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
         setSelectedWaypoint(null);
         if (selectedGameObject!=null) {
             propertyFormatter.format(this.selectedGameObject, objectProperties, null);
+        } else {
+            objectProperties.removeAll(); //No selected object
+            objectProperties.revalidate();
+            objectProperties.repaint();
         }
         mainFrame.revalidate();
         canvas.repaint();
@@ -490,7 +494,9 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
     }
 
     void setSelectedWaypoint(Waypoint waypoint) {
-        this.selectedWaypoint = waypoint;
+        this.selectedWaypoint = waypoint; 
+        mainFrame.revalidate();
+        canvas.repaint();
     }
 
     Area getArea() {
@@ -631,5 +637,9 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
             canvas.repaint();
             this.log.dispose();
         } 
+    }
+    
+    public void tellRepaint() {
+        canvas.repaint();
     }
 }

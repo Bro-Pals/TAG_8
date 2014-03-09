@@ -12,6 +12,7 @@ import bropals.gameobject.GrappleHookPoint;
 import bropals.gameobject.Human;
 import bropals.gameobject.HumanState;
 import bropals.gameobject.HumanType;
+import bropals.gameobject.Interactable;
 import bropals.gameobject.Waypoint;
 import bropals.gameobject.block.Avacado;
 import bropals.gameobject.block.AvacadoBin;
@@ -80,10 +81,10 @@ public class PropertyFormatter {
             makeAvacadoBinFormat((AvacadoBin)forObject, formatting, acceptButton);
         } else
         if (forObject instanceof NormalDoor) {
-            makeNormalDoorFormat(forObject, formatting, acceptButton);
+            makeNormalDoorFormat((NormalDoor)forObject, formatting, acceptButton);
         } else
         if (forObject instanceof TeleportDoor) {
-            makeTeleportDoorFormat(forObject, formatting, acceptButton);
+            makeTeleportDoorFormat((TeleportDoor)forObject, formatting, acceptButton);
         } else
         if (forObject instanceof Human) {
             makeHumanFormat((Human)forObject, formatting, acceptButton);
@@ -99,53 +100,31 @@ public class PropertyFormatter {
     //Formatters: Add components to edit game objects
     
     private void makeBlockFormat(final Block forObject, JPanel inPanel, JButton acceptButton) {
-        inPanel.setLayout(new GridLayout(3, 1, pw, ph));
+        inPanel.setLayout(new GridLayout(4, 1, pw, ph));
         
-        JPanel titlePanel = new JPanel();
-        titlePanel.add(new JLabel("Block:"));
-        
-        //
-        
-        JPanel physicalPanel = new JPanel();
-        physicalPanel.setLayout(new GridLayout(2, 4, mpw, mph));
-        
-        physicalPanel.add(new JLabel("X Position"));
-        final JTextField xPosInput = new JTextField("" + (int)forObject.getX() + "", 3);
-      //  xPosInput.addActionListener(new XPositionFieldListener(forObject));
-        physicalPanel.add(xPosInput);
-        
-        physicalPanel.add(new JLabel("Y Position"));
-        final JTextField yPosInput = new JTextField("" + (int)forObject.getY() + "", 3);
-      //  yPosInput.addActionListener(new YPositionFieldListener(forObject));
-        physicalPanel.add(yPosInput);
-        
-        physicalPanel.add(new JLabel("Width"));
-        final JTextField widthInput = new JTextField("" + (int)forObject.getWidth() + "", 3);
-      //  widthInput.addActionListener(new WidthFieldListener(forObject));
-        physicalPanel.add(widthInput);
-        
-        physicalPanel.add(new JLabel("Height"));
-        final JTextField heightInput = new JTextField("" + (int)forObject.getHeight() + "", 3);
-       // heightInput.addActionListener(new HeightFieldListener(forObject));
-        physicalPanel.add(heightInput);
-        
+        final JPanel titlePanel = new JPanel();
+        titlePanel.add(new JLabel("Block:"));   
+        //    
+        final XYPositionPanel xyPanel = new XYPositionPanel(forObject);  
+        //  
+        final WidthHeightPanel whPanel = new WidthHeightPanel(forObject);
         // 
-        
         final TexturePanel texturePanel = new TexturePanel(forObject);
         
         //
         inPanel.add(titlePanel);
-        inPanel.add(physicalPanel);
+        inPanel.add(xyPanel);
+        inPanel.add(whPanel);
         inPanel.add(texturePanel);
         
         if (acceptButton!=null) {
             acceptButton.addActionListener(new  ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    forObject.setX(Integer.parseInt(xPosInput.getText()));
-                    forObject.setY(Integer.parseInt(yPosInput.getText()));
-                    forObject.setWidth(Integer.parseInt(widthInput.getText()));
-                    forObject.setHeight(Integer.parseInt(heightInput.getText()));
+                    forObject.setX(xyPanel.getInputX());
+                    forObject.setY(xyPanel.getInputY());
+                    forObject.setWidth(whPanel.getInputWidth());
+                    forObject.setHeight(whPanel.getInputHeight());
                     forObject.setTextureString(texturePanel.getTextureInput());
                 }
             });
@@ -154,53 +133,31 @@ public class PropertyFormatter {
     }
     
     private void makeWallFormat(final Wall forObject, JPanel inPanel, JButton acceptButton) {
-        inPanel.setLayout(new GridLayout(3, 1, pw, ph));
+        inPanel.setLayout(new GridLayout(4, 1, pw, ph));
         
-        JPanel titlePanel = new JPanel();
-        titlePanel.add(new JLabel("Wall:"));
-        
-        //
-        
-        JPanel physicalPanel = new JPanel();
-        physicalPanel.setLayout(new GridLayout(2, 4, mpw, mph));
-        
-        physicalPanel.add(new JLabel("X Position"));
-        final JTextField xPosInput = new JTextField("" + (int)forObject.getX() + "", 3);
-        //xPosInput.addActionListener(new XPositionFieldListener(forObject));
-        physicalPanel.add(xPosInput);
-        
-        physicalPanel.add(new JLabel("Y Position"));
-        final JTextField yPosInput = new JTextField("" + (int)forObject.getY() + "", 3);
-      //  yPosInput.addActionListener(new YPositionFieldListener(forObject));
-        physicalPanel.add(yPosInput);
-        
-        physicalPanel.add(new JLabel("Width"));
-        final JTextField widthInput = new JTextField("" + (int)forObject.getWidth() + "", 3);
-       // widthInput.addActionListener(new WidthFieldListener(forObject));
-        physicalPanel.add(widthInput);
-        
-        physicalPanel.add(new JLabel("Height"));
-        final JTextField heightInput = new JTextField("" + (int)forObject.getHeight() + "", 3);
-       // heightInput.addActionListener(new HeightFieldListener(forObject));
-        physicalPanel.add(heightInput);
-        
+        final JPanel titlePanel = new JPanel();
+        titlePanel.add(new JLabel("Wall:"));   
+        //    
+        final XYPositionPanel xyPanel = new XYPositionPanel(forObject);  
+        //  
+        final WidthHeightPanel whPanel = new WidthHeightPanel(forObject);
         // 
-        
         final TexturePanel texturePanel = new TexturePanel(forObject);
         
         //
         inPanel.add(titlePanel);
-        inPanel.add(physicalPanel);
+        inPanel.add(xyPanel);
+        inPanel.add(whPanel);
         inPanel.add(texturePanel);
         
         if (acceptButton!=null) {
             acceptButton.addActionListener(new  ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    forObject.setX(Integer.parseInt(xPosInput.getText()));
-                    forObject.setY(Integer.parseInt(yPosInput.getText()));
-                    forObject.setWidth(Integer.parseInt(widthInput.getText()));
-                    forObject.setHeight(Integer.parseInt(heightInput.getText()));
+                    forObject.setX(xyPanel.getInputX());
+                    forObject.setY(xyPanel.getInputY());
+                    forObject.setWidth(whPanel.getInputWidth());
+                    forObject.setHeight(whPanel.getInputHeight());
                     forObject.setTextureString(texturePanel.getTextureInput());
                 }
             });
@@ -209,55 +166,37 @@ public class PropertyFormatter {
     }
     
     private void makeAvacadoFormat(final Avacado forObject, JPanel inPanel, JButton acceptButton) {
-        inPanel.setLayout(new GridLayout(3, 1, pw, ph));
+        inPanel.setLayout(new GridLayout(5, 1, pw, ph));
         
-        JPanel titlePanel = new JPanel();
-        titlePanel.add(new JLabel("Avacado:"));
+        final JPanel titlePanel = new JPanel();
+        titlePanel.add(new JLabel("Avacado:"));   
+        //    
+        final XYPositionPanel xyPanel = new XYPositionPanel(forObject);
         
-        //
-        
-        JPanel physicalPanel = new JPanel();
-        physicalPanel.setLayout(new GridLayout(2, 4, mpw, mph));
-        
-        physicalPanel.add(new JLabel("X Position"));
-        final JTextField xPosInput = new JTextField("" + (int)forObject.getX() + "", 3);
-      //  xPosInput.addActionListener(new XPositionFieldListener(forObject));
-        physicalPanel.add(xPosInput);
-        
-        physicalPanel.add(new JLabel("Y Position"));
-        final JTextField yPosInput = new JTextField("" + (int)forObject.getY() + "", 3);
-       // yPosInput.addActionListener(new YPositionFieldListener(forObject));
-        physicalPanel.add(yPosInput);
-        
-        physicalPanel.add(new JLabel("Width"));
-        final JTextField widthInput = new JTextField("40", 3);
-       // widthInput.addActionListener(new WidthFieldListener(forObject));
-        widthInput.setEditable(false);
-        physicalPanel.add(widthInput);
-        
-        physicalPanel.add(new JLabel("Height"));
-        final JTextField heightInput = new JTextField("40", 3);
-       // heightInput.addActionListener(new HeightFieldListener(forObject));
-        heightInput.setEditable(false);
-        physicalPanel.add(heightInput);
-        
+        //  
+        final WidthHeightPanel whPanel = new WidthHeightPanel(forObject);
+        whPanel.setEditable(false);
         // 
-        
+        final InteractablePanel interactablePanel = new InteractablePanel(forObject);
+        //
         final TexturePanel texturePanel = new TexturePanel(forObject);
-        
+        texturePanel.setEditable(false);
         //
         inPanel.add(titlePanel);
-        inPanel.add(physicalPanel);
+        inPanel.add(xyPanel);
+        inPanel.add(whPanel);
+        inPanel.add(interactablePanel);
         inPanel.add(texturePanel);
         
         if (acceptButton!=null) {
             acceptButton.addActionListener(new  ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    forObject.setX(Integer.parseInt(xPosInput.getText()));
-                    forObject.setY(Integer.parseInt(yPosInput.getText()));
-                    forObject.setWidth(Integer.parseInt(widthInput.getText()));
-                    forObject.setHeight(Integer.parseInt(heightInput.getText()));
+                    forObject.setX(xyPanel.getInputX());
+                    forObject.setY(xyPanel.getInputY());
+                    forObject.setWidth(whPanel.getInputWidth());
+                    forObject.setHeight(whPanel.getInputHeight());
+                    forObject.setInteractDistance(interactablePanel.getInteractInput());
                     forObject.setTextureString(texturePanel.getTextureInput());
                 }
             });
@@ -266,53 +205,35 @@ public class PropertyFormatter {
     }
     
     private void makeAvacadoBinFormat(final AvacadoBin forObject, JPanel inPanel, JButton acceptButton) {
-        inPanel.setLayout(new GridLayout(3, 1, pw, ph));
+        inPanel.setLayout(new GridLayout(5, 1, pw, ph));
         
-        JPanel titlePanel = new JPanel();
-        titlePanel.add(new JLabel("Avacado Bin:"));
-        
-        //
-        
-        JPanel physicalPanel = new JPanel();
-        physicalPanel.setLayout(new GridLayout(2, 4, mpw, mph));
-        
-        physicalPanel.add(new JLabel("X Position"));
-        final JTextField xPosInput = new JTextField("" + (int)forObject.getX() + "", 3);
-        //xPosInput.addActionListener(new XPositionFieldListener(forObject));
-        physicalPanel.add(xPosInput);
-        
-        physicalPanel.add(new JLabel("Y Position"));
-        final JTextField yPosInput = new JTextField("" + (int)forObject.getY() + "", 3);
-        //yPosInput.addActionListener(new YPositionFieldListener(forObject));
-        physicalPanel.add(yPosInput);
-        
-        physicalPanel.add(new JLabel("Width"));
-        final JTextField widthInput = new JTextField("" + (int)forObject.getWidth() + "", 3);
-        //widthInput.addActionListener(new WidthFieldListener(forObject));
-        physicalPanel.add(widthInput);
-        
-        physicalPanel.add(new JLabel("Height"));
-        final JTextField heightInput = new JTextField("" + (int)forObject.getHeight() + "", 3);
-        //heightInput.addActionListener(new HeightFieldListener(forObject));
-        physicalPanel.add(heightInput);
-        
+        final JPanel titlePanel = new JPanel();
+        titlePanel.add(new JLabel("Avacado Bin:"));   
+        //    
+        final XYPositionPanel xyPanel = new XYPositionPanel(forObject);  
+        //  
+        final WidthHeightPanel whPanel = new WidthHeightPanel(forObject);
         // 
+        final InteractablePanel interactablePanel = new InteractablePanel(forObject);
         
         final TexturePanel texturePanel = new TexturePanel(forObject);
         
         //
         inPanel.add(titlePanel);
-        inPanel.add(physicalPanel);
+        inPanel.add(xyPanel);
+        inPanel.add(whPanel);
+        inPanel.add(interactablePanel);
         inPanel.add(texturePanel);
         
         if (acceptButton!=null) {
             acceptButton.addActionListener(new  ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    forObject.setX(Integer.parseInt(xPosInput.getText()));
-                    forObject.setY(Integer.parseInt(yPosInput.getText()));
-                    forObject.setWidth(Integer.parseInt(widthInput.getText()));
-                    forObject.setHeight(Integer.parseInt(heightInput.getText()));
+                    forObject.setX(xyPanel.getInputX());
+                    forObject.setY(xyPanel.getInputY());
+                    forObject.setWidth(whPanel.getInputWidth());
+                    forObject.setHeight(whPanel.getInputHeight());
+                    forObject.setInteractDistance(interactablePanel.getInteractInput());
                     forObject.setTextureString(texturePanel.getTextureInput());
                 }
             });
@@ -321,53 +242,35 @@ public class PropertyFormatter {
     }
     
     private void makeHayBaleFormat(final HayBale forObject, JPanel inPanel, JButton acceptButton) {
-        inPanel.setLayout(new GridLayout(3, 1, pw, ph));
+        inPanel.setLayout(new GridLayout(5, 1, pw, ph));
         
-        JPanel titlePanel = new JPanel();
-        titlePanel.add(new JLabel("Hay Bale:"));
-        
-        //
-        
-        JPanel physicalPanel = new JPanel();
-        physicalPanel.setLayout(new GridLayout(2, 4, mpw, mph));
-        
-        physicalPanel.add(new JLabel("X Position"));
-        final JTextField xPosInput = new JTextField("" + (int)forObject.getX() + "", 3);
-        //xPosInput.addActionListener(new XPositionFieldListener(forObject));
-        physicalPanel.add(xPosInput);
-        
-        physicalPanel.add(new JLabel("Y Position"));
-        final JTextField yPosInput = new JTextField("" + (int)forObject.getY() + "", 3);
-       // yPosInput.addActionListener(new YPositionFieldListener(forObject));
-        physicalPanel.add(yPosInput);
-        
-        physicalPanel.add(new JLabel("Width"));
-        final JTextField widthInput = new JTextField("" + (int)forObject.getWidth() + "", 3);
-        //widthInput.addActionListener(new WidthFieldListener(forObject));
-        physicalPanel.add(widthInput);
-        
-        physicalPanel.add(new JLabel("Height"));
-        final JTextField heightInput = new JTextField("" + (int)forObject.getHeight() + "", 3);
-       // heightInput.addActionListener(new HeightFieldListener(forObject));
-        physicalPanel.add(heightInput);
-        
+        final JPanel titlePanel = new JPanel();
+        titlePanel.add(new JLabel("Hay Bale:"));   
+        //    
+        final XYPositionPanel xyPanel = new XYPositionPanel(forObject);  
+        //  
+        final WidthHeightPanel whPanel = new WidthHeightPanel(forObject);
         // 
+        final InteractablePanel interactablePanel = new InteractablePanel(forObject);
         
         final TexturePanel texturePanel = new TexturePanel(forObject);
         
         //
         inPanel.add(titlePanel);
-        inPanel.add(physicalPanel);
+        inPanel.add(xyPanel);
+        inPanel.add(whPanel);
+        inPanel.add(interactablePanel);
         inPanel.add(texturePanel);
         
         if (acceptButton!=null) {
             acceptButton.addActionListener(new  ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    forObject.setX(Integer.parseInt(xPosInput.getText()));
-                    forObject.setY(Integer.parseInt(yPosInput.getText()));
-                    forObject.setWidth(Integer.parseInt(widthInput.getText()));
-                    forObject.setHeight(Integer.parseInt(heightInput.getText()));
+                    forObject.setX(xyPanel.getInputX());
+                    forObject.setY(xyPanel.getInputY());
+                    forObject.setWidth(whPanel.getInputWidth());
+                    forObject.setHeight(whPanel.getInputHeight());
+                    forObject.setInteractDistance(interactablePanel.getInteractInput());
                     forObject.setTextureString(texturePanel.getTextureInput());
                 }
             });
@@ -378,31 +281,203 @@ public class PropertyFormatter {
     private void makeGrapplePointFormat(final GrappleHookPoint forObject, JPanel inPanel, JButton acceptButton) {
         inPanel.setLayout(new GridLayout(4, 1, pw, ph));
         
+        final JPanel titlePanel = new JPanel();
+        titlePanel.add(new JLabel("Grapple Hook Point:"));   
+        //    
+        final XYPositionPanel xyPanel = new XYPositionPanel(forObject);  
+        // 
+        final InteractablePanel interactablePanel = new InteractablePanel(forObject);
+        
+        final TexturePanel texturePanel = new TexturePanel(forObject);
+        
+        //
+        inPanel.add(titlePanel);
+        inPanel.add(xyPanel);
+        inPanel.add(interactablePanel);
+        inPanel.add(texturePanel);
+        
+        if (acceptButton!=null) {
+            acceptButton.addActionListener(new  ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    forObject.setX(xyPanel.getInputX());
+                    forObject.setY(xyPanel.getInputY());
+                    forObject.setInteractDistance(interactablePanel.getInteractInput());
+                    forObject.setTextureString(texturePanel.getTextureInput());
+                }
+            });
+        }
+        Debugger.print("Made property panel for Grapple Hook Point", Debugger.INFO);
+    }
+    
+    private void makeNormalDoorFormat(final NormalDoor forObject, JPanel inPanel, JButton acceptButton) {
+        inPanel.setLayout(new GridLayout(5, 1, pw, ph));
+        
+        final JPanel titlePanel = new JPanel();
+        titlePanel.add(new JLabel("Normal Door:"));   
+        //    
+        final XYPositionPanel xyPanel = new XYPositionPanel(forObject);  
+        //  
+        final WidthHeightPanel whPanel = new WidthHeightPanel(forObject);
+        // 
+        final InteractablePanel interactablePanel = new InteractablePanel(forObject);
+        
+        final TexturePanel texturePanel = new TexturePanel(forObject);
+        
+        //
+        inPanel.add(titlePanel);
+        inPanel.add(xyPanel);
+        inPanel.add(whPanel);
+        inPanel.add(interactablePanel);
+        inPanel.add(texturePanel);
+        
+        if (acceptButton!=null) {
+            acceptButton.addActionListener(new  ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    forObject.setX(xyPanel.getInputX());
+                    forObject.setY(xyPanel.getInputY());
+                    forObject.setWidth(whPanel.getInputWidth());
+                    forObject.setHeight(whPanel.getInputHeight());
+                    forObject.setInteractDistance(interactablePanel.getInteractInput());
+                    forObject.setTextureString(texturePanel.getTextureInput());
+                }
+            });
+        }
+        Debugger.print("Made property panel for Normal Door", Debugger.INFO);
+    }
+    
+    private void makeTeleportDoorFormat(final TeleportDoor forObject, JPanel inPanel, JButton acceptButton) {
+        inPanel.setLayout(new GridLayout(5, 1, pw, ph));
+        
+        final JPanel titlePanel = new JPanel();
+        titlePanel.add(new JLabel("Teleport Door:"));   
+        //    
+        final XYPositionPanel xyPanel = new XYPositionPanel(forObject);  
+        //  
+        final WidthHeightPanel whPanel = new WidthHeightPanel(forObject);
+        // 
+        final InteractablePanel interactablePanel = new InteractablePanel(forObject);
+        
+        final TexturePanel texturePanel = new TexturePanel(forObject);
+        
+        //
+        inPanel.add(titlePanel);
+        inPanel.add(xyPanel);
+        inPanel.add(whPanel);
+        inPanel.add(interactablePanel);
+        inPanel.add(texturePanel);
+        
+        if (acceptButton!=null) {
+            acceptButton.addActionListener(new  ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    forObject.setX(xyPanel.getInputX());
+                    forObject.setY(xyPanel.getInputY());
+                    forObject.setWidth(whPanel.getInputWidth());
+                    forObject.setHeight(whPanel.getInputHeight());
+                    forObject.setInteractDistance(interactablePanel.getInteractInput());
+                    forObject.setTextureString(texturePanel.getTextureInput());
+                }
+            });
+        }
+        Debugger.print("Made property panel for Teleport Door", Debugger.INFO);
+    }
+    
+    private void makeHumanFormat(final Human forObject, JPanel inPanel, JButton acceptButton) {
+        inPanel.setLayout(new GridLayout(9, 1, pw, ph));
+        
         JPanel titlePanel = new JPanel();
-        titlePanel.add(new JLabel("Grapple Hook Point:"));
+        titlePanel.add(new JLabel("Human:"));
         
         //
         
-        JPanel physicalPanel = new JPanel();
-        physicalPanel.setLayout(new GridLayout(2, 4, mpw, mph));
+        final XYPositionPanel xyPanel = new XYPositionPanel(forObject);  
+        //  
+        final WidthHeightPanel2 whPanel = new WidthHeightPanel2(forObject);
+        //
         
-        physicalPanel.add(new JLabel("X Position"));
-        final JTextField xPosInput = new JTextField("" + (int)forObject.getX() + "", 3);
-        //xPosInput.addActionListener(new XPositionFieldListener(forObject));
-        physicalPanel.add(xPosInput);
+        JPanel statePanel = new JPanel();
+        statePanel.setLayout(new GridLayout(1, 2, mpw, mph));
+        final JComboBox typeBox = new JComboBox(new HumanType[]{HumanType.PITCHFORK, HumanType.ROCK_THROWER});
+        final JComboBox stateBox = new JComboBox(new HumanState[]{HumanState.PATROLLING, HumanState.ALERT});
+        typeBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                forObject.setType((HumanType)typeBox.getSelectedItem());
+            }
+        });
+        stateBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                forObject.setState((HumanState)stateBox.getSelectedItem());
+            }
+        });
         
-        physicalPanel.add(new JLabel("Y Position"));
-        final JTextField yPosInput = new JTextField("" + (int)forObject.getY() + "", 3);
-        //yPosInput.addActionListener(new YPositionFieldListener(forObject));
-        physicalPanel.add(yPosInput);
+        statePanel.add(typeBox);
+        statePanel.add(stateBox);
         
-        // 
+        //
         
-        JPanel interactDistancePanel = new JPanel();
-        interactDistancePanel.setLayout(new GridLayout(1, 2, mpw, mph));
-        final JTextField interactInput = new JTextField("" + forObject.getInteractDistance() + "");
-        interactInput.setEditable(false);
-        interactDistancePanel.add(interactInput);
+        final WaypointPanel waypointPanel = new WaypointPanel();
+        
+        //
+        
+        final FaceDirectionPanel directionPanel = new FaceDirectionPanel();
+        
+        //
+        
+        JPanel visionPanel = new JPanel();
+        visionPanel.setLayout(new GridLayout(2, 4, mpw, mph));
+        final JTextField sightRangeInput = new JTextField("0");
+        final JTextField attackRangeInput = new JTextField("0");
+        final JTextField fovInput = new JTextField("0");
+        
+        sightRangeInput.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    forObject.setSightRange(Float.parseFloat( sightRangeInput.getText() ));
+                } catch(NumberFormatException epc) {
+                    sightRangeInput.setText("0");
+                    forObject.setSightRange(0);
+                    sightRangeInput.repaint();
+                }
+            }
+        });
+        attackRangeInput.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    forObject.setAttackDistance(Float.parseFloat( attackRangeInput.getText() ));
+                } catch(NumberFormatException epc) {
+                    attackRangeInput.setText("0");
+                    forObject.setAttackDistance(0);
+                    attackRangeInput.repaint();
+                }
+            }
+        });
+        fovInput.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    forObject.setFieldOfView(Float.parseFloat( fovInput.getText() ));
+                } catch(NumberFormatException epc) {
+                    fovInput.setText("0");
+                    forObject.setFieldOfView(0);
+                    fovInput.repaint();
+                }
+            }
+        });
+        
+        visionPanel.add(new JLabel("Sight Range"));
+        visionPanel.add(sightRangeInput);
+        visionPanel.add(new JLabel("Attack Range"));
+        visionPanel.add(attackRangeInput);
+        visionPanel.add(new JLabel("Field of View"));
+        visionPanel.add(fovInput);
+        visionPanel.add(new JLabel());
+        visionPanel.add(new JLabel());
         
         //
         
@@ -411,108 +486,53 @@ public class PropertyFormatter {
         //
         
         inPanel.add(titlePanel);
-        inPanel.add(physicalPanel);
-        inPanel.add(interactDistancePanel);
-        inPanel.add(texturePanel);
-        
-        if (acceptButton!=null) {
-            acceptButton.addActionListener(new  ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    forObject.setX(Integer.parseInt(xPosInput.getText()));
-                    forObject.setY(Integer.parseInt(yPosInput.getText()));
-                    forObject.setTextureString(texturePanel.getTextureInput());
-                }
-            });
-        }
-        Debugger.print("Made property panel for Grapple Hook Point", Debugger.INFO);
-    }
-    
-    private void makeNormalDoorFormat(GameObject forObject, JPanel inPanel, JButton acceptButton) {
-        
-        Debugger.print("Made property panel for Normal Door", Debugger.INFO);
-    }
-    
-    private void makeTeleportDoorFormat(GameObject forObject, JPanel inPanel, JButton acceptButton) {
-        
-        Debugger.print("Made property panel for Teleport Door", Debugger.INFO);
-    }
-    
-    private void makeHumanFormat(final Human forObject, JPanel inPanel, JButton acceptButton) {
-        inPanel.setLayout(new GridLayout(8, 1, pw, ph));
-        
-        JPanel titlePanel = new JPanel();
-        titlePanel.add(new JLabel("Human:"));
-        
-        //
-        
-        JPanel physicalPanel = new JPanel();
-        physicalPanel.setLayout(new GridLayout(2, 4, mpw, mph));
-        
-        physicalPanel.add(new JLabel("X Position"));
-        final JTextField xPosInput = new JTextField("" + (int)forObject.getX() + "", 3);
-        physicalPanel.add(xPosInput);
-        
-        physicalPanel.add(new JLabel("Y Position"));
-        final JTextField yPosInput = new JTextField("" + (int)forObject.getY() + "", 3);
-        physicalPanel.add(yPosInput);
-        
-        physicalPanel.add(new JLabel("Width"));
-        final JTextField widthInput = new JTextField("" + (int)forObject.getWidth() + "", 3);
-        physicalPanel.add(widthInput);
-        
-        physicalPanel.add(new JLabel("Height"));
-        final JTextField heightInput = new JTextField("" + (int)forObject.getHeight() + "", 3);
-        physicalPanel.add(heightInput);
-        
-        //
-        
-        JPanel statePanel = new JPanel();
-        statePanel.setLayout(new GridLayout(1, 2, mpw, mph));
-        final JComboBox typeBox = new JComboBox(new HumanType[]{HumanType.PITCHFORK, HumanType.ROCK_THROWER});
-        final JComboBox stateBox = new JComboBox(new HumanState[]{HumanState.PATROLLING, HumanState.ALERT});
-        statePanel.add(typeBox);
-        statePanel.add(stateBox);
-        
-        //
-        
-        WaypointPanel waypointPanel = new WaypointPanel();
-        
-        //
-        
-        FaceDirectionPanel directionPanel = new FaceDirectionPanel();
-        
-        //
-        
-        JPanel visionPanel = new JPanel();
-        visionPanel.setLayout(new GridLayout(2, 4, mpw, mph));
-        final JTextField sightRangeInput = new JTextField("0");
-        final JTextField attackRangeInput = new JTextField("0");
-        final JTextField faceRangeInput = new JTextField("0");
-        
-        visionPanel.add(new JLabel("Sight Range"));
-        visionPanel.add(sightRangeInput);
-        visionPanel.add(new JLabel("Attack Range"));
-        visionPanel.add(attackRangeInput);
-        visionPanel.add(new JLabel("Face Angle"));
-        visionPanel.add(faceRangeInput);
-        visionPanel.add(new JLabel());
-        visionPanel.add(new JLabel());
-        
-        //
-        
-        TexturePanel texturePanel = new TexturePanel(forObject);
-        
-        //
-        
-        inPanel.add(titlePanel);
-        inPanel.add(physicalPanel);
+        inPanel.add(xyPanel);
+        inPanel.add(whPanel);
         inPanel.add(statePanel);
         inPanel.add(waypointPanel);
         inPanel.add(directionPanel);
         inPanel.add(visionPanel);
         inPanel.add(texturePanel);
         
+        if (acceptButton!=null) {
+            acceptButton.addActionListener(new  ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    forObject.setX(xyPanel.getInputX());
+                    forObject.setY(xyPanel.getInputY());
+                    forObject.setWidth(whPanel.getInputWidth());
+                    forObject.setHeight(whPanel.getInputHeight());
+                    
+                    forObject.setType((HumanType)typeBox.getSelectedItem());
+                    forObject.setState((HumanState)stateBox.getSelectedItem());
+                    
+                    //Vision panel
+                    try {
+                        forObject.setSightRange(Float.parseFloat( sightRangeInput.getText() ));
+                    } catch(NumberFormatException epc) {
+                        sightRangeInput.setText("0");
+                        forObject.setSightRange(0);
+                    }
+                    try {
+                        forObject.setAttackDistance(Float.parseFloat( attackRangeInput.getText() ));
+                    } catch(NumberFormatException epc) {
+                        attackRangeInput.setText("0");
+                        forObject.setAttackDistance(0);
+                    }
+                    try {
+                        forObject.setFieldOfView(Float.parseFloat( fovInput.getText() ));
+                    } catch(NumberFormatException epc) {
+                        fovInput.setText("0");
+                        forObject.setFieldOfView(0);                    
+                    }
+                    //End of vision panel
+                    
+                    forObject.setFaceDirection(directionPanel.getFaceDirectionInput());
+                    
+                    forObject.setTextureString(texturePanel.getTextureInput());
+                }
+            });
+        }
         Debugger.print("Made property panel for Human", Debugger.INFO);
     }
     
@@ -657,10 +677,15 @@ public class PropertyFormatter {
                     xPos.setText("" + fdg.getFaceDir().getX() + "");
                     yPos.setText("" + fdg.getFaceDir().getY() + "");
                     fdg.repaint();
+                    caldm.tellRepaint();
                 }
             };
             fdg.addMouseListener(mouseListener);
             
+        }
+        
+        public Vector2 getFaceDirectionInput() {
+            return fdg.getFaceDir();
         }
         
         class FancyDirectionGraphic extends Canvas {
@@ -726,6 +751,8 @@ public class PropertyFormatter {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     object.setTextureString(textureInput.getText());
+                    textureInput.repaint();
+                    caldm.tellRepaint();
                 }
             });
             //textureInput.addActionListener(new TextureFieldListener(forObject));
@@ -734,6 +761,267 @@ public class PropertyFormatter {
         
         public String getTextureInput() {
             return textureInput.getText();
+        }
+
+        private void setEditable(boolean b) {
+            textureInput.setEditable(b);
+        }
+    }
+    
+    class XYPositionPanel extends JPanel {
+        
+        private final GameObject obje;
+        private final JTextField xPos, yPos;
+        
+        public XYPositionPanel(GameObject obj) {
+            this.obje = obj;
+            this.setLayout(new GridLayout(1, 4, mpw, mph));
+            xPos = new JTextField("" + obj.getX() + "");
+            yPos = new JTextField("" + obj.getY() + "");
+            
+            xPos.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        obje.setX(Float.parseFloat(xPos.getText()));
+                    } catch(NumberFormatException oe) {
+                        xPos.setText("0");
+                        obje.setX(0);
+                        xPos.repaint();
+                    }
+                    caldm.tellRepaint();
+                }
+            });
+            
+            yPos.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        obje.setY(Float.parseFloat(yPos.getText()));
+                    } catch(NumberFormatException oe) {
+                        yPos.setText("0");
+                        obje.setY(0);
+                        yPos.repaint();
+                    }
+                    caldm.tellRepaint();
+                }
+            });
+            
+            //Format
+            this.add(new JLabel("X Position"));
+            this.add(xPos);
+            this.add(new JLabel("Y Position"));
+            this.add(yPos);
+        }
+        
+        public float getInputX() {
+            try {
+                return Float.parseFloat( xPos.getText() );
+            } catch(NumberFormatException nfe) {
+                return 0;
+            }
+        }
+            
+            public float getInputY() {
+            try {
+                return Float.parseFloat( yPos.getText() );
+            } catch(NumberFormatException nfe) {
+                return 0;
+            }
+        }
+    }
+    
+    class WidthHeightPanel extends JPanel {
+            
+            private final Block b;
+            private final JTextField wInput, hInput;
+                    
+            public WidthHeightPanel(Block bl) {
+                this.b = bl;
+                this.setLayout(new GridLayout(1, 4, mpw, mph));
+                wInput = new JTextField("" + b.getWidth() + "");
+                hInput = new JTextField("" + b.getHeight() + "");
+                
+                wInput.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            float w = Float.parseFloat( wInput.getText() );
+                            if (w<10) { w = 10; }
+                            wInput.setText("" + w + "");
+                            b.setWidth(w);  
+                            wInput.repaint();
+                        } catch(NumberFormatException oe) {
+                            wInput.setText("10");
+                            b.setWidth(10);
+                            wInput.repaint();
+                        }
+                        caldm.tellRepaint();
+                    }
+                });
+                
+                hInput.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            float h = Float.parseFloat( hInput.getText() );
+                            if (h<10) { h = 10; }
+                            hInput.setText("" + h + "");
+                            b.setHeight(h);
+                            hInput.repaint();
+                        } catch(NumberFormatException oe) {
+                            hInput.setText("10");
+                            b.setHeight(10);
+                            hInput.repaint();
+                        }
+                        caldm.tellRepaint();
+                    }
+                });
+                
+                this.add(new JLabel("Width"));
+                this.add(wInput);
+                this.add(new JLabel("Height"));
+                this.add(hInput);
+            }
+            
+            public float getInputWidth() {
+                try {
+                    float w = Float.parseFloat( wInput.getText() );
+                    if (w<10) { w = 10; }
+                    return w;
+                } catch(NumberFormatException nfe) {
+                    return 10;
+                }
+            }
+            
+            public float getInputHeight() {
+                try {
+                    float h = Float.parseFloat( hInput.getText() );
+                    if (h<10) { h = 10; }
+                    return h;
+                } catch(NumberFormatException nfe) {
+                    return 10;
+                }
+            }
+
+            private void setEditable(boolean b) {
+                hInput.setEditable(b);
+                wInput.setEditable(b);
+            }
+        }
+    
+    class WidthHeightPanel2 extends JPanel {
+            
+            private final Human b;
+            private final JTextField wInput, hInput;
+                    
+            public WidthHeightPanel2(Human bl) {
+                this.b = bl;
+                this.setLayout(new GridLayout(1, 4, mpw, mph));
+                wInput = new JTextField("" + b.getWidth() + "");
+                hInput = new JTextField("" + b.getHeight() + "");
+                
+                wInput.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            float w = Float.parseFloat( wInput.getText() );
+                            if (w<10) { w = 10; }
+                            wInput.setText("" + w + "");
+                            b.setWidth(w);   
+                            wInput.repaint();
+                        } catch(NumberFormatException oe) {
+                            wInput.setText("10");
+                            b.setWidth(10);
+                            wInput.repaint();
+                        }
+                        caldm.tellRepaint();
+                    }
+                });
+                
+                hInput.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            float h = Float.parseFloat( hInput.getText() );
+                            if (h<10) { h = 10; }
+                            hInput.setText("" + h + "");
+                            b.setHeight(h);
+                            hInput.repaint();
+                        } catch(NumberFormatException oe) {
+                            hInput.setText("10");
+                            b.setHeight(10);
+                            hInput.repaint();
+                        }
+                        caldm.tellRepaint();
+                    }
+                });
+                
+                this.add(new JLabel("Width"));
+                this.add(wInput);
+                this.add(new JLabel("Height"));
+                this.add(hInput);
+            }
+            
+            public float getInputWidth() {
+                try {
+                    float w = Float.parseFloat( wInput.getText() );
+                    if (w<10) { w = 10; }
+                    return w;
+                } catch(NumberFormatException nfe) {
+                    return 10;
+                }
+            }
+            
+            public float getInputHeight() {
+                try {
+                    float h = Float.parseFloat( hInput.getText() );
+                    if (h<10) { h = 10; }
+                    return h;
+                } catch(NumberFormatException nfe) {
+                    return 10;
+                }
+            }
+
+            private void setEditable(boolean b) {
+                hInput.setEditable(b);
+                wInput.setEditable(b);
+            }
+        }
+    
+    class InteractablePanel extends JPanel {
+        private final Interactable interactable;
+        private final JTextField interactInput;
+        public InteractablePanel(Interactable i) {
+            this.interactable = i;
+            this.setLayout(new GridLayout(1, 2, mpw, mph));
+            
+            interactInput = new JTextField("" + interactable.getInteractDistance() + "");
+            interactInput.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        interactable.setInteractDistance(Float.parseFloat( interactInput.getText() ));
+                    } catch(NumberFormatException nfe) {
+                        interactInput.setText("100");
+                        interactable.setInteractDistance(100);
+                        interactInput.repaint();
+                    }
+                }
+            });
+            this.add(new JLabel("Interact Distance"));
+            this.add(interactInput);
+        }
+        
+        public float getInteractInput() {
+            try {
+                return (Float.parseFloat( interactInput.getText() ));
+            } catch(NumberFormatException nfe) {
+                interactInput.setText("0");
+                interactable.setInteractDistance(0);
+                interactInput.repaint();
+                return 0;
+            }
         }
     }
 }
