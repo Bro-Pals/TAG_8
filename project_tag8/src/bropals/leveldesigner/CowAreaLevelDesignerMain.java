@@ -76,14 +76,33 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
     
     public static final int SIZELESS_RADIUS = 30;
     
-    public static void main(String args[]) {
-        //Load images here
+    private void loadImagesFromDirectories() {
         ImageLoader loader = ImageLoader.getLoader();
+        loadFrameIconImage(loader);
+        loadAreaBackgrounds(loader);
+        loadSprites(loader);
+    }
+    
+    private void loadAreaBackgrounds(ImageLoader loader) {
         loader.loadSingleImage("placeholder_background", "backgrounds/placeholder.png");
+    }
+    
+    private void loadFrameIconImage(ImageLoader loader) {
         loader.loadSingleImage("GameIcon", "GameIcon.png");
+    }
+    
+    private void loadSprites(ImageLoader loader) {
         loader.loadSingleImage("testCreature", "sprites/testCreature.png");
         loader.loadSingleImage("Avacado", "sprites/avacado.png");
         loader.loadSpriteSheet("ActionIcons", "actionIcons.png", 80, 80);
+        loader.loadSpriteSheet("Blocks", "blocks.png", 50, 50);
+        loader.loadSpriteSheet("RobinCow", "sprites/robinCow.png", 34, 50);
+        loader.loadSingleImage("HeartImage", "sprites/heartImage.png");
+        loader.loadSingleImage("WinScreen", "WinScreen.png");
+        loader.loadSpriteSheet("Human", "sprites/humans.png", 40, 40);
+    }
+    public static void main(String args[]) {
+       
         
         //Then start the program
         CowAreaLevelDesignerMain cldm = new CowAreaLevelDesignerMain();
@@ -113,6 +132,7 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
     private final JFileChooser fc;
     
     public CowAreaLevelDesignerMain() {
+        loadImagesFromDirectories();
         initializeIconForWindows();
         initializeMainFrame();
         initializeLayoutOfPanels();
