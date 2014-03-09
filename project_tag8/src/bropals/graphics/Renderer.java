@@ -123,7 +123,7 @@ public class Renderer {
 
                 // Drawing the rotated image at the required drawing locations
                 g2d.drawImage(op.filter(((Creature)drawing).getTexture(), null), (int)((Creature)drawing).getX(), (int)((Creature)drawing).getY(), null);
-                System.out.println("This creatures is at an angle of " + (((Creature)drawing).getAngleFacing()) + " radians");
+                //System.out.println("This creatures is at an angle of " + (((Creature)drawing).getAngleFacing()) + " radians");
                 if (drawing instanceof Player && ((Player)drawing).getHookUsing() != null && ((Player)drawing).isGrappling()) {
                     Player p = (Player)drawing;
                     g2d.setColor(new Color(160, 60, 0));

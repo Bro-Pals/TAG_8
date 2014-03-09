@@ -27,14 +27,18 @@ public class Human extends Creature {
     private HumanState state;
     private Waypoint currentGoalWaypoint;
     private Waypoint[] patrolPath;
-    private Waypoint storedWaypoint;
     private int waypointOn;
     
     private Player playerRef;
     private ArrayList<Waypoint> backTrackWaypoints;
+    private int recordTime;
+    private int RECORD_RATE = 4;
+    
     private int alertTimer;
+    private int ALERT_TIME = 15;
     private boolean alerted;
     private float sightRange;
+    private float fieldOfView;
     private float attackDistance;
     private float turnSpeed;
     
@@ -43,11 +47,16 @@ public class Human extends Creature {
         waypointOn = 0;
         alerted = false;
         sightRange = 300;
+        fieldOfView = (float)(Math.PI); // radians
         setSpeed(10);
     }
 
     public void alerted() {
-        
+        alerted = true;
+        alertTimer = ALERT_TIME;
+        backTrackWaypoints = new ArrayList<>();
+        backTrackWaypoints.add(new Waypoint(getX(), getY())); // waypoint to return to
+        recordTime = RECORD_RATE; // recrod a new point every 4 frames
     }
     
     /**
@@ -76,7 +85,20 @@ public class Human extends Creature {
     @Override
     public void update() {
         if (alerted) {
-            //chase player
+            //chase player            
+            if (playerRef.getHealth() <= 0 || !canSeePlayer() && alertTimer == ALERT_TIME) {
+                backTrackWaypoints.add(currentGoalWaypoint);
+            } else if (playerRef.getHealth() > 0 && canSeePlayer()) {
+                if (type == HumanType.PITCHFORK) {
+                    if (recordTime < 0) {
+                        recordTime = RECORD_RATE;
+                        backTrackWaypoints.add(new Waypoint(getX(), getY()));
+                    }
+                    recordTime--;
+                    alertTimer = ALERT_TIME;
+                    this.moveTowardsPoint(playerRef.getCenterX(), playerRef.getCenterY());
+                }
+            }
         } else if (!alerted && patrolPath.length > 0) {
             //Debugger.print("I have a path :D", Debugger.INFO);
             if (currentGoalWaypoint == null) currentGoalWaypoint = patrolPath[waypointOn];
@@ -92,14 +114,33 @@ public class Human extends Creature {
             currentGoalWaypoint = patrolPath[waypointOn];
             moveTowardsPoint(currentGoalWaypoint);
             
-            if (playerRef != null) {
-                float playerXDiff = playerRef.getCenterX() - getCenterX();
-                float playerYDiff = playerRef.getCenterY() - getCenterY();
-                Vector2 playerPositionVector = (new Vector2(playerXDiff, playerYDiff)).getUnitVector();
-                
+            if (canSeePlayer()) {
+                Debugger.print("The human can see the player", Debugger.INFO);
+                alerted();
             }
         }
         super.update();
+    }
+    
+    public boolean canSeePlayer() {
+        if (playerRef != null) {
+            float playerXDiff = playerRef.getCenterX() - getCenterX();
+            float playerYDiff = playerRef.getCenterY() - getCenterY();
+            Vector2 playerPositionVector = (new Vector2(playerXDiff, playerYDiff)).getUnitVector();
+            Debugger.print("There is a player", Debugger.INFO);
+            Debugger.print("Angle: " + Vector2.dot(playerPositionVector, getFaceDirection()), Debugger.INFO);
+            if (Vector2.dot(playerPositionVector, getFaceDirection()) > Math.cos(fieldOfView/2)) {
+                Debugger.print("Player in the FOV", Debugger.INFO);
+                // in their field of view!
+                if ((playerXDiff*playerXDiff)+(playerYDiff*playerYDiff) < sightRange*sightRange) {
+                    Debugger.print("Player is close enough", Debugger.INFO);
+                    if (canSee(playerRef.getCenterX(), playerRef.getCenterY())) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
     
     @Override

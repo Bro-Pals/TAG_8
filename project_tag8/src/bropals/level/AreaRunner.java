@@ -49,8 +49,9 @@ public class AreaRunner {
     }
 
     public void setCurrentArea(int areaId) {
-        areaFactory.setArea(areaId);
+        if (player == null) Debugger.print("PLAYER IS NULL HERE TOO?!!", Debugger.ERROR);
         areaFactory.getArea().givePlayer(player);
+        areaFactory.setArea(areaId);
         player.setParent(areaFactory.getArea());
     }
     

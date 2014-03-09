@@ -219,6 +219,10 @@ public abstract class Creature extends GameObject {
         return speed;
     }
 
+    public void facePoint(float x, float y) {
+        faceDirection = (new Vector2(x - getX(), y - getY())).getUnitVector();
+    }
+    
     public Vector2 getFaceDirection() {
         return faceDirection;
     }

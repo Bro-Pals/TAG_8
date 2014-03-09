@@ -55,6 +55,8 @@ public class AreaFactory {
             h.setPatrolPath(new Waypoint[]{
                 new Waypoint(300, 50), new Waypoint(150, 150)});
             h.setParent(theArea);
+            if (theArea.getPlayer() == null) Debugger.print("PLAYER IS NULL!", Debugger.ERROR);
+            h.givePlayerRef(theArea.getPlayer());
             
             HayBale hb = new HayBale(500, 300, 50, 50);
             hb.setParent(theArea);
