@@ -56,7 +56,11 @@ public class LevelDesignerCanvas extends Canvas {
                         if (objects.get(j).hashCode()==caldm.getSelectedGameObject().hashCode()) {
                             //Blue outline to say this is being selected
                             g.setColor(Color.BLUE);
-                            g.fillRect((int)(objects.get(j).getX())-5, (int)(objects.get(j).getY())-5, objects.get(j).getTexture().getWidth()+10, objects.get(j).getTexture().getHeight()+10);
+                            if (caldm.getSelectedGameObject() instanceof Block) {
+                                g.fillRect((int)(caldm.getSelectedGameObject().getX())-5, (int)(caldm.getSelectedGameObject().getY())-5, (int)((Block)caldm.getSelectedGameObject()).getWidth()+10, (int)((Block)caldm.getSelectedGameObject()).getHeight()+10);
+                            } else {
+                                g.fillOval((int)(objects.get(j).getX())-(sizelessRadius/2)-5, (int)(objects.get(j).getY())-(sizelessRadius/2)-5, sizelessRadius+10, sizelessRadius+10);
+                            }
                         }
                     }
                     BufferedImage texture = null;
@@ -68,7 +72,6 @@ public class LevelDesignerCanvas extends Canvas {
                             g.fillRect((int)objects.get(j).getX(), (int)objects.get(j).getY(), (int)(((Block)objects.get(j)).getWidth()), (int)(((Block)objects.get(j)).getHeight()));
                         } else {
                             g.fillOval((int)(objects.get(j).getX())-(sizelessRadius/2), (int)(objects.get(j).getY())-(sizelessRadius/2), sizelessRadius, sizelessRadius);
-                            Debugger.print("Drew an Oval (maybe?)", Debugger.INFO);
                         }
                         g.setColor(Color.BLACK);
                         g.setFont(littleFont);

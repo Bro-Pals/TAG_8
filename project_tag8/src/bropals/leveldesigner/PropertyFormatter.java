@@ -20,10 +20,18 @@ import bropals.gameobject.block.HayBale;
 import bropals.gameobject.block.NormalDoor;
 import bropals.gameobject.block.TeleportDoor;
 import bropals.gameobject.block.Wall;
+import bropals.util.Vector2;
 import java.awt.BorderLayout;
+import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
@@ -123,17 +131,12 @@ public class PropertyFormatter {
         
         // 
         
-        JPanel renderPanel = new JPanel();
-        renderPanel.setLayout(new GridLayout(1, 2, mpw, mph));
-        renderPanel.add(new JLabel("Texture"));
-        final JTextField textureInput = new JTextField(forObject.getTextureString(), 10);
-       // textureInput.addActionListener(new TextureFieldListener(forObject));
-        renderPanel.add(textureInput);
+        final TexturePanel texturePanel = new TexturePanel(forObject);
         
         //
         inPanel.add(titlePanel);
         inPanel.add(physicalPanel);
-        inPanel.add(renderPanel);
+        inPanel.add(texturePanel);
         
         if (acceptButton!=null) {
             acceptButton.addActionListener(new  ActionListener() {
@@ -143,7 +146,7 @@ public class PropertyFormatter {
                     forObject.setY(Integer.parseInt(yPosInput.getText()));
                     forObject.setWidth(Integer.parseInt(widthInput.getText()));
                     forObject.setHeight(Integer.parseInt(heightInput.getText()));
-                    forObject.setTextureString(textureInput.getText());
+                    forObject.setTextureString(texturePanel.getTextureInput());
                 }
             });
         }
@@ -183,17 +186,12 @@ public class PropertyFormatter {
         
         // 
         
-        JPanel renderPanel = new JPanel();
-        renderPanel.setLayout(new GridLayout(1, 2, mpw, mph));
-        renderPanel.add(new JLabel("Texture"));
-        final JTextField textureInput = new JTextField(forObject.getTextureString(), 10);
-       // textureInput.addActionListener(new TextureFieldListener(forObject));
-        renderPanel.add(textureInput);
+        final TexturePanel texturePanel = new TexturePanel(forObject);
         
         //
         inPanel.add(titlePanel);
         inPanel.add(physicalPanel);
-        inPanel.add(renderPanel);
+        inPanel.add(texturePanel);
         
         if (acceptButton!=null) {
             acceptButton.addActionListener(new  ActionListener() {
@@ -203,7 +201,7 @@ public class PropertyFormatter {
                     forObject.setY(Integer.parseInt(yPosInput.getText()));
                     forObject.setWidth(Integer.parseInt(widthInput.getText()));
                     forObject.setHeight(Integer.parseInt(heightInput.getText()));
-                    forObject.setTextureString(textureInput.getText());
+                    forObject.setTextureString(texturePanel.getTextureInput());
                 }
             });
         }
@@ -245,18 +243,12 @@ public class PropertyFormatter {
         
         // 
         
-        JPanel renderPanel = new JPanel();
-        renderPanel.setLayout(new GridLayout(1, 2, mpw, mph));
-        renderPanel.add(new JLabel("Texture"));
-        final JTextField textureInput = new JTextField("Avacado");
-        textureInput.setEditable(false);
-       // textureInput.addActionListener(new TextureFieldListener(forObject));
-        renderPanel.add(textureInput);
+        final TexturePanel texturePanel = new TexturePanel(forObject);
         
         //
         inPanel.add(titlePanel);
         inPanel.add(physicalPanel);
-        inPanel.add(renderPanel);
+        inPanel.add(texturePanel);
         
         if (acceptButton!=null) {
             acceptButton.addActionListener(new  ActionListener() {
@@ -266,7 +258,7 @@ public class PropertyFormatter {
                     forObject.setY(Integer.parseInt(yPosInput.getText()));
                     forObject.setWidth(Integer.parseInt(widthInput.getText()));
                     forObject.setHeight(Integer.parseInt(heightInput.getText()));
-                    forObject.setTextureString(textureInput.getText());
+                    forObject.setTextureString(texturePanel.getTextureInput());
                 }
             });
         }
@@ -306,17 +298,12 @@ public class PropertyFormatter {
         
         // 
         
-        JPanel renderPanel = new JPanel();
-        renderPanel.setLayout(new GridLayout(1, 2, mpw, mph));
-        renderPanel.add(new JLabel("Texture"));
-        final JTextField textureInput = new JTextField(forObject.getTextureString(), 10);
-        //textureInput.addActionListener(new TextureFieldListener(forObject));
-        renderPanel.add(textureInput);
+        final TexturePanel texturePanel = new TexturePanel(forObject);
         
         //
         inPanel.add(titlePanel);
         inPanel.add(physicalPanel);
-        inPanel.add(renderPanel);
+        inPanel.add(texturePanel);
         
         if (acceptButton!=null) {
             acceptButton.addActionListener(new  ActionListener() {
@@ -326,7 +313,7 @@ public class PropertyFormatter {
                     forObject.setY(Integer.parseInt(yPosInput.getText()));
                     forObject.setWidth(Integer.parseInt(widthInput.getText()));
                     forObject.setHeight(Integer.parseInt(heightInput.getText()));
-                    forObject.setTextureString(textureInput.getText());
+                    forObject.setTextureString(texturePanel.getTextureInput());
                 }
             });
         }
@@ -366,17 +353,12 @@ public class PropertyFormatter {
         
         // 
         
-        JPanel renderPanel = new JPanel();
-        renderPanel.setLayout(new GridLayout(1, 2, mpw, mph));
-        renderPanel.add(new JLabel("Texture"));
-        final JTextField textureInput = new JTextField(forObject.getTextureString(), 10);
-        //textureInput.addActionListener(new TextureFieldListener(forObject));
-        renderPanel.add(textureInput);
+        final TexturePanel texturePanel = new TexturePanel(forObject);
         
         //
         inPanel.add(titlePanel);
         inPanel.add(physicalPanel);
-        inPanel.add(renderPanel);
+        inPanel.add(texturePanel);
         
         if (acceptButton!=null) {
             acceptButton.addActionListener(new  ActionListener() {
@@ -386,7 +368,7 @@ public class PropertyFormatter {
                     forObject.setY(Integer.parseInt(yPosInput.getText()));
                     forObject.setWidth(Integer.parseInt(widthInput.getText()));
                     forObject.setHeight(Integer.parseInt(heightInput.getText()));
-                    forObject.setTextureString(textureInput.getText());
+                    forObject.setTextureString(texturePanel.getTextureInput());
                 }
             });
         }
@@ -424,19 +406,14 @@ public class PropertyFormatter {
         
         //
         
-        JPanel renderPanel = new JPanel();
-        renderPanel.setLayout(new GridLayout(1, 2, mpw, mph));
-        renderPanel.add(new JLabel("Texture"));
-        final JTextField textureInput = new JTextField(forObject.getTextureString(), 10);
-        //textureInput.addActionListener(new TextureFieldListener(forObject));
-        renderPanel.add(textureInput);
+        final TexturePanel texturePanel = new TexturePanel(forObject);
         
         //
         
         inPanel.add(titlePanel);
         inPanel.add(physicalPanel);
         inPanel.add(interactDistancePanel);
-        inPanel.add(renderPanel);
+        inPanel.add(texturePanel);
         
         if (acceptButton!=null) {
             acceptButton.addActionListener(new  ActionListener() {
@@ -444,7 +421,7 @@ public class PropertyFormatter {
                 public void actionPerformed(ActionEvent e) {
                     forObject.setX(Integer.parseInt(xPosInput.getText()));
                     forObject.setY(Integer.parseInt(yPosInput.getText()));
-                    forObject.setTextureString(textureInput.getText());
+                    forObject.setTextureString(texturePanel.getTextureInput());
                 }
             });
         }
@@ -503,10 +480,38 @@ public class PropertyFormatter {
         
         //
         
+        FaceDirectionPanel directionPanel = new FaceDirectionPanel();
+        
+        //
+        
+        JPanel visionPanel = new JPanel();
+        visionPanel.setLayout(new GridLayout(2, 4, mpw, mph));
+        final JTextField sightRangeInput = new JTextField("0");
+        final JTextField attackRangeInput = new JTextField("0");
+        final JTextField faceRangeInput = new JTextField("0");
+        
+        visionPanel.add(new JLabel("Sight Range"));
+        visionPanel.add(sightRangeInput);
+        visionPanel.add(new JLabel("Attack Range"));
+        visionPanel.add(attackRangeInput);
+        visionPanel.add(new JLabel("Face Angle"));
+        visionPanel.add(faceRangeInput);
+        visionPanel.add(new JLabel());
+        visionPanel.add(new JLabel());
+        
+        //
+        
+        TexturePanel texturePanel = new TexturePanel(forObject);
+        
+        //
+        
         inPanel.add(titlePanel);
         inPanel.add(physicalPanel);
         inPanel.add(statePanel);
         inPanel.add(waypointPanel);
+        inPanel.add(directionPanel);
+        inPanel.add(visionPanel);
+        inPanel.add(texturePanel);
         
         Debugger.print("Made property panel for Human", Debugger.INFO);
     }
@@ -612,6 +617,123 @@ public class PropertyFormatter {
         
         class WayPointListModel extends DefaultListModel<Waypoint> {
             
+        }
+    }
+    
+    class FaceDirectionPanel extends JPanel  {
+        
+        private final MouseAdapter mouseListener;
+        private final FancyDirectionGraphic fdg;
+        private final JTextField xPos, yPos;
+        
+        public FaceDirectionPanel() {
+            this.setLayout(new BorderLayout(mpw, mph));
+            fdg = new FancyDirectionGraphic();
+            
+            JPanel left = new JPanel();
+            left.setLayout(new BorderLayout(mpw, mph));
+            JPanel right = new JPanel();
+            right.setLayout(new GridLayout(2, 2, mpw, mph));
+            
+            xPos = new JTextField();
+            yPos = new JTextField();
+            
+            left.add(fdg, BorderLayout.CENTER);
+            
+            right.add(new JLabel("X Component"));
+            right.add(xPos);
+            right.add(new JLabel("Y Component"));
+            right.add(yPos);
+            
+            this.add(left, BorderLayout.WEST);
+            this.add(right, BorderLayout.EAST);
+            this.add(new JLabel("Face direction"), BorderLayout.NORTH);
+            
+            //Fancy graphic input coding
+            mouseListener = new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    fdg.setTo(e.getX(), e.getY());
+                    xPos.setText("" + fdg.getFaceDir().getX() + "");
+                    yPos.setText("" + fdg.getFaceDir().getY() + "");
+                    fdg.repaint();
+                }
+            };
+            fdg.addMouseListener(mouseListener);
+            
+        }
+        
+        class FancyDirectionGraphic extends Canvas {
+            
+            private Vector2 to, center, faceDir;
+            private final int pointerLength = 60;
+            
+            public FancyDirectionGraphic() {
+                setPreferredSize(new Dimension(200, 150));
+                to = new Vector2(0, 1);
+                center = new Vector2(100, 75);
+                faceDir = new Vector2(0, 1);
+            }
+            
+            private void clear(Graphics g) {
+                g.setColor(Color.WHITE);
+                g.fillRect(0, 0, this.getPreferredSize().width, this.getPreferredSize().height);
+            }
+            
+            @Override
+            public void paint(Graphics g) {
+                clear(g);
+                drawCompass(g);
+                drawPointer(g);
+                g.dispose();
+            }
+            
+            private float square(float n) { return n*n; }
+            
+            private void drawCompass(Graphics g) {
+                g.setColor(Color.BLUE);
+                g.drawOval((int)(center.getX())-70, (int)(center.getY())-70, 140, 140);
+            }
+            
+            private void drawPointer(Graphics g) {
+                g.setColor(Color.BLUE);
+                g.drawLine((int)center.getX(), (int)center.getY(), (int)to.getX(), (int)to.getY());
+            }
+
+            public Vector2 getTo() {return to;}
+            public Vector2 getFaceDir() { return faceDir; }
+            public void setTo(int x, int y) {
+                Vector2 v = new Vector2(x-(float)center.getX(), y-(float)center.getY());
+                float mag = (float)Math.sqrt(square((float)v.getX())+square((float)v.getY()));
+                faceDir.setX((1/mag)*v.getX());
+                faceDir.setY((1/mag)*v.getY());
+                to.setX((faceDir.getX()*pointerLength)+center.getX());
+                to.setY((faceDir.getY()*pointerLength)+center.getY());
+            }
+        }
+    }
+    
+    class TexturePanel extends JPanel {
+        
+        private GameObject object;
+        private JTextField textureInput;
+        public TexturePanel(GameObject obj) {
+            this.object = obj;
+            this.setLayout(new GridLayout(1, 2, mpw, mph));
+            this.add(new JLabel("Texture"));
+            textureInput = new JTextField(obj.getTextureString());
+            textureInput.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    object.setTextureString(textureInput.getText());
+                }
+            });
+            //textureInput.addActionListener(new TextureFieldListener(forObject));
+            this.add(textureInput);
+        }
+        
+        public String getTextureInput() {
+            return textureInput.getText();
         }
     }
 }
