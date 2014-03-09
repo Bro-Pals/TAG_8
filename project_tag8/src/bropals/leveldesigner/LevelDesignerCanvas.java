@@ -31,6 +31,7 @@ public class LevelDesignerCanvas extends Canvas {
         this.caldm = caldm;
         bigFont = new Font(Font.SERIF, Font.BOLD, 40);
         littleFont = new Font(Font.SERIF, Font.BOLD, 12);
+        setFocusable(true);
     }
     
     public void setDrawing(Area area) {
@@ -46,7 +47,7 @@ public class LevelDesignerCanvas extends Canvas {
     }
     
     private void drawArea(Graphics g) {
-        int sizelessRadius = 30;
+        int sizelessRadius = CowAreaLevelDesignerMain.SIZELESS_RADIUS;
         if (drawing!=null) {
             ArrayList<GameObject> objects = drawing.getObjects();
             for (int j=0; j<objects.size(); j++) {

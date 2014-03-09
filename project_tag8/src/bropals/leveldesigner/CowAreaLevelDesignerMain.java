@@ -11,6 +11,7 @@ import bropals.debug.Debugger;
 import bropals.gameobject.GameObject;
 import bropals.gameobject.GrappleHookPoint;
 import bropals.gameobject.Human;
+import bropals.gameobject.Waypoint;
 import bropals.gameobject.block.Avacado;
 import bropals.gameobject.block.AvacadoBin;
 import bropals.gameobject.block.Block;
@@ -33,7 +34,13 @@ import java.awt.PopupMenu;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.JButton;
@@ -59,7 +66,9 @@ import javax.swing.event.ChangeListener;
  *
  * @author Jonathon
  */
-public class CowAreaLevelDesignerMain {
+public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
+    
+    public static final int SIZELESS_RADIUS = 30;
     
     public static void main(String args[]) {
         //Load images here
@@ -90,6 +99,7 @@ public class CowAreaLevelDesignerMain {
     //Data based things
     private Area editingArea;
     private GameObject selectedGameObject;
+    private Waypoint selectedWaypoint;
     private final AreaFactory theFactory;
     private Grid grid;
     private final String mainTitle = "Cow Area Level Designer";
@@ -194,6 +204,8 @@ public class CowAreaLevelDesignerMain {
         canvas.setMinimumSize(canvas.getPreferredSize());
         canvas.setSize(canvas.getPreferredSize());
         mainFrame.add(canvas, BorderLayout.CENTER);
+        canvas.addMouseListener(this);
+        canvas.addKeyListener(this);
     }
 
     private void centerFrame() {
@@ -202,7 +214,7 @@ public class CowAreaLevelDesignerMain {
     }
 
     private void initializeFormatter() {
-        propertyFormatter = new PropertyFormatter();
+        propertyFormatter = new PropertyFormatter(this);
     }
 
     private void initializeObjectCreationPanel() {
@@ -455,6 +467,7 @@ public class CowAreaLevelDesignerMain {
     
     public void setSelectedGameObject(GameObject object) {
         this.selectedGameObject = object;
+        setSelectedWaypoint(null);
         propertyFormatter.format(this.selectedGameObject, objectProperties, null);
     }
     
@@ -468,6 +481,63 @@ public class CowAreaLevelDesignerMain {
     
     public GameObject getSelectedGameObject() {
         return this.selectedGameObject;
+    }
+
+    void setSelectedWaypoint(Waypoint waypoint) {
+        this.selectedWaypoint = waypoint;
+    }
+
+    Area getArea() {
+        return editingArea;
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        //Check to see if it was near a game object to select it
+        if (editingArea!=null) {
+            ArrayList<GameObject> os = editingArea.getObjects();
+            for (int i=0; i<os.size(); i++) {
+                if (os.get(i) instanceof Block) {
+                    //Use width for distance testing
+                    Rectangle2D rect = (Rectangle2D)((Block)os.get(i)).getRectangle2D();
+                    if (rect.contains(e.getPoint())) {
+                        //Select this!
+                        setSelectedGameObject(os.get(i));
+                    }
+                } else {
+                    //Use set value for distance testing
+                    
+                }
+            }
+        }
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
     }
     
     class AcceptCreationButtonListener implements ActionListener {
