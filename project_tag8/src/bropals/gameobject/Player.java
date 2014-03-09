@@ -19,8 +19,8 @@ public class Player extends Creature {
     private int health;
     private final int maxHealth = 5;
     
-    public Player(Area parent, float x, float y) {
-        super(parent, x, y, 50, 50, 10, Direction.getUnitVector(Direction.NORTH));
+    public Player(float x, float y) {
+        super(x, y, 50, 50, 10, Direction.getUnitVector(Direction.NORTH));
         health = 5;
     }
     

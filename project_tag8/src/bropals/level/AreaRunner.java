@@ -35,7 +35,7 @@ public class AreaRunner {
             
     public AreaRunner() {
         areaFactory = new AreaFactory();
-        player = new Player(areaFactory.getArea(), 40, 100);
+        player = new Player(40, 100);
         //Initial area
         setCurrentArea(-2);
     }

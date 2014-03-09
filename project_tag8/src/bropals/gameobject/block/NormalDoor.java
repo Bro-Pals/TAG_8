@@ -17,8 +17,8 @@ public class NormalDoor extends Block implements Interactable {
     
     private boolean collidable;
     
-    public NormalDoor(Area parent, float x, float y, float width, float height) {
-        super(parent, x, y, width, height);
+    public NormalDoor(float x, float y, float width, float height) {
+        super( x, y, width, height);
     }
 
     @Override

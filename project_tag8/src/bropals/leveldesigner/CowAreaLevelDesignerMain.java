@@ -90,6 +90,7 @@ public class CowAreaLevelDesignerMain {
     private GameObject selectedGameObject;
     private final AreaFactory theFactory;
     private Grid grid;
+    private final String mainTitle = "Cow Area Level Designer";
     
     public CowAreaLevelDesignerMain() {
         initializeIconForWindows();
@@ -108,7 +109,7 @@ public class CowAreaLevelDesignerMain {
     }
     
     private void initializeMainFrame() {
-        mainFrame = new JFrame("Cow Area Level Designer");
+        mainFrame = new JFrame(mainTitle);
         mainFrame.setIconImage(iconImage);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setSize(1200, 720);
@@ -242,7 +243,7 @@ public class CowAreaLevelDesignerMain {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editingArea!=null) {
-                    Block block = new Block(null, 0, 0, 0, 0);
+                    Block block = new Block(0, 0, 0, 0);
                     makeCreateDialog(block, "Create Block");
                 }
             }
@@ -251,7 +252,7 @@ public class CowAreaLevelDesignerMain {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editingArea!=null) {
-                    Wall wall = new Wall(null, 0, 0, 0, 0);
+                    Wall wall = new Wall(0, 0, 0, 0);
                     makeCreateDialog(wall, "Create Wall");
                 }
             }
@@ -260,7 +261,7 @@ public class CowAreaLevelDesignerMain {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editingArea!=null) {
-                    GrappleHookPoint grapple = new GrappleHookPoint(null, 0, 0);
+                    GrappleHookPoint grapple = new GrappleHookPoint(0, 0);
                     makeCreateDialog(grapple, "Create Grapple Hook Point");
                 }
             }
@@ -269,7 +270,7 @@ public class CowAreaLevelDesignerMain {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editingArea!=null) {
-                    TeleportDoor teleDoor = new TeleportDoor(null, 0, 0, 0, 0, -1, 0, 0);
+                    TeleportDoor teleDoor = new TeleportDoor(0, 0, 0, 0, -1, 0, 0);
                     makeCreateDialog(teleDoor, "Create Teleport Door");
                 }
             }
@@ -278,7 +279,7 @@ public class CowAreaLevelDesignerMain {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editingArea!=null) {
-                    NormalDoor door = new NormalDoor(null, 0, 0, 0, 0);
+                    NormalDoor door = new NormalDoor(0, 0, 0, 0);
                     makeCreateDialog(door, "Create Normal Door");
                 }
             }
@@ -287,7 +288,7 @@ public class CowAreaLevelDesignerMain {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editingArea!=null) {
-                    Avacado avacado = new Avacado(null, 0, 0, 0, 0, editingArea.getAreaId());
+                    Avacado avacado = new Avacado(0, 0, 0, 0, editingArea.getAreaId());
                     makeCreateDialog(avacado, "Create Avacado");
                 }
             }
@@ -296,7 +297,7 @@ public class CowAreaLevelDesignerMain {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editingArea!=null) {
-                    AvacadoBin bin = new AvacadoBin(null, 0, 0, 0, 0);
+                    AvacadoBin bin = new AvacadoBin(0, 0, 0, 0);
                     makeCreateDialog(bin, "Create Avacado Bin");
                 }
             }
@@ -305,7 +306,7 @@ public class CowAreaLevelDesignerMain {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editingArea!=null) {
-                    Human human = new Human(null, 0, 0, 0, 0, Vector2.UNIT_Y);
+                    Human human = new Human(0, 0, 0, 0, Vector2.UNIT_Y);
                     makeCreateDialog(human, "Create Human");
                 }
             }
@@ -327,6 +328,7 @@ public class CowAreaLevelDesignerMain {
                     setArea(null);
                     Area area = new Area(theFactory);
                     setArea(area);
+                    mainFrame.setTitle(mainTitle + " (Untitled.cowarea)");
                 }
             }
         });
@@ -438,6 +440,9 @@ public class CowAreaLevelDesignerMain {
     public void setArea(Area area) {
         this.editingArea = area;
         canvas.setDrawing(this.editingArea);
+        if (this.editingArea==null) {
+            mainFrame.setTitle(mainTitle);
+        }
         canvas.repaint();
     }
     
@@ -470,6 +475,7 @@ public class CowAreaLevelDesignerMain {
             ///Places block into area
             editingArea.addObject(object);
             dialog.dispose();
+            canvas.repaint();
         }
     }
     

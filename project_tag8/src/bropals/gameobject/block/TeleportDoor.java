@@ -18,9 +18,9 @@ public class TeleportDoor extends Block implements Interactable {
     private int targetAreaID;
     private float xPlayerPos, yPlayerPos;
     
-    public TeleportDoor(Area parent, float x, float y, float width, float height, 
-            int targetAreaID, float xPlayerPos, float yPlayerPos) {
-        super(parent, x, y, width, height);
+    public TeleportDoor(float x, float y, float width, float height, 
+        int targetAreaID, float xPlayerPos, float yPlayerPos) {
+        super(x, y, width, height);
         this.targetAreaID = targetAreaID;
         this.xPlayerPos = xPlayerPos;
         this.yPlayerPos = yPlayerPos;

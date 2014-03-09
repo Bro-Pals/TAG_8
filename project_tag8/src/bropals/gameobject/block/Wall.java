@@ -11,7 +11,7 @@ import bropals.level.Area;
  * @author Owner
  */
 public class Wall extends Block {
-    public Wall(Area parent, float x, float y, float width, float height) {
-        super(parent, x, y, width, height);
+    public Wall(float x, float y, float width, float height) {
+        super(x, y, width, height);
     }
 }
