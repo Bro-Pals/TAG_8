@@ -172,8 +172,6 @@ public class Engine {
      * "getMillisecondsPerFrame"
      */
     public void doGameCycle() {
-        runner.iterateThroughObjectsInCurrentArea();
-        
         b = System.currentTimeMillis();
         runGameFrame();
         a = System.currentTimeMillis();
@@ -194,6 +192,7 @@ public class Engine {
      * method handling the actually calling of the parts of the game.
      */
     private void runGameFrame() {
+        runner.iterateThroughObjectsInCurrentArea(canvas.getMousePosition());
         renderGame();
     }
     

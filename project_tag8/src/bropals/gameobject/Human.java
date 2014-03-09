@@ -8,6 +8,7 @@ package bropals.gameobject;
 
 import bropals.debug.Debugger;
 import bropals.gameobject.block.Block;
+import bropals.gameobject.block.NormalDoor;
 import bropals.graphics.ImageLoader;
 import bropals.level.Area;
 import bropals.util.Vector2;
@@ -29,8 +30,10 @@ public class Human extends Creature {
     private Waypoint storedWaypoint;
     private int waypointOn;
     
+    private Player playerRef;
     private ArrayList<Waypoint> backTrackWaypoints;
     private int alertTimer;
+    private boolean alerted;
     private float sightRange;
     private float attackDistance;
     private float turnSpeed;
@@ -38,9 +41,15 @@ public class Human extends Creature {
     public Human(float x, float y, float size, float speed, Vector2 faceDirection) {
         super(x, y, size, size, speed, faceDirection);
         waypointOn = 0;
+        alerted = false;
+        sightRange = 300;
         setSpeed(10);
     }
 
+    public void alerted() {
+        
+    }
+    
     /**
      * See if this human can see the given point, as in there are no blocks
      *      blocking its view of it.
@@ -53,6 +62,9 @@ public class Human extends Creature {
         Line2D.Float sightLine = new Line2D.Float(getX(), getY(), x, y);
         for (GameObject obj : getParent().getObjects()) {
             if (obj instanceof Block) {
+                // skip checking if there is an open door
+                if (obj instanceof NormalDoor && !((NormalDoor)obj).isOpen()) continue;
+                
                 if (((Block)obj).getRectangle2D().intersectsLine(sightLine)) {
                     return false; // there is something blocking the line of sight!
                 }
@@ -63,7 +75,9 @@ public class Human extends Creature {
     
     @Override
     public void update() {
-        if (patrolPath.length > 0) {
+        if (alerted) {
+            //chase player
+        } else if (!alerted && patrolPath.length > 0) {
             //Debugger.print("I have a path :D", Debugger.INFO);
             if (currentGoalWaypoint == null) currentGoalWaypoint = patrolPath[waypointOn];
             float nearEnough = 20;
@@ -77,6 +91,12 @@ public class Human extends Creature {
             //Debugger.print("Currently on point "+waypointOn, Debugger.INFO);
             currentGoalWaypoint = patrolPath[waypointOn];
             moveTowardsPoint(currentGoalWaypoint);
+            
+            if (playerRef != null) {
+                float playerXDiff = playerRef.getCenterX() - getCenterX();
+                float playerYDiff = playerRef.getCenterY() - getCenterY();
+                
+            }
         }
         super.update();
     }
@@ -164,6 +184,10 @@ public class Human extends Creature {
 
     public void setTurnSpeed(float turnSpeed) {
         this.turnSpeed = turnSpeed;
+    }
+    
+    public void givePlayerRef(Player player) {
+        this.playerRef = player;
     }
     
 }

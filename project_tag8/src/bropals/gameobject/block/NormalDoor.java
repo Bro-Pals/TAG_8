@@ -24,14 +24,13 @@ public class NormalDoor extends Block implements Interactable {
     public NormalDoor(float x, float y, float width, float height) {
         super( x, y, width, height);
         interactDistance = 150;
+        collidable = true;
     }
 
     @Override
     public void interact(GameObject instance) {
-        System.out.println("Attemepted to toggle the normal door");
-        if (GameObject instanceof Creature) {
+        if (instance instanceof Creature) {
             if (!((Creature)instance).intersects(this)) {
-                System.out.println("Toggled the door");
                 collidable = !collidable; // toggle the door open or close
             }
         }

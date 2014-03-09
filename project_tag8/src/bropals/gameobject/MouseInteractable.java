@@ -9,5 +9,5 @@ package bropals.gameobject;
  * @author Owner
  */
 public interface MouseInteractable extends Interactable {
-    
+    float getCreatureInteractDistance();
 }

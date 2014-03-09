@@ -4,6 +4,7 @@
  */
 package bropals.gameobject;
 
+import bropals.graphics.ImageLoader;
 import bropals.level.Area;
 import bropals.level.AvacadoManager;
 import bropals.util.Direction;
@@ -20,8 +21,13 @@ public class Player extends Creature {
     private final int maxHealth = 5;
     
     public Player(float x, float y) {
-        super(x, y, 50, 50, 10, Direction.getUnitVector(Direction.NORTH));
+        super(x, y, 34, 50, 10, Direction.getUnitVector(Direction.NORTH));
         health = 5;
+    }
+    
+    @Override
+    public BufferedImage getTexture() {
+        return ImageLoader.getLoader().getImage("RobinCow", 0);
     }
     
     public void die() {

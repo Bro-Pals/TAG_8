@@ -6,11 +6,15 @@
 
 package bropals.level;
 
+import bropals.debug.Debugger;
 import bropals.gameobject.Creature;
 import bropals.gameobject.GameObject;
+import bropals.gameobject.GrappleHookPoint;
+import bropals.gameobject.MouseInteractable;
 import bropals.gameobject.Player;
 import bropals.util.Direction;
 import bropals.util.Vector2;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
@@ -50,7 +54,8 @@ public class AreaRunner {
         player.setParent(areaFactory.getArea());
     }
     
-    public void iterateThroughObjectsInCurrentArea() {
+    public void iterateThroughObjectsInCurrentArea(Point mousePoint) {
+        //if (mousePoint!= null) Debugger.print("The mouse Point is at "+mousePoint.toString(), Debugger.INFO);
         if (player != null) {
             Vector2 playerFaceDir = player.getFaceDirection();
             if (movement[Direction.NORTH.getDirectionId()]) {
@@ -85,6 +90,22 @@ public class AreaRunner {
         for (int i=0; i<objects.size(); i++) {
             if (objects.get(i) instanceof Creature) {
                 ((Creature)objects.get(i)).update();
+            }
+        }
+        // look for other interactables
+        for (int i=0; i<objects.size(); i++) {
+            if (mousePoint!=null && objects.get(i) instanceof GrappleHookPoint) {
+                GrappleHookPoint ghp = (GrappleHookPoint)objects.get(i);
+                float interactDist = ((MouseInteractable)objects.get(i)).getInteractDistance();
+                float xDiff = (float)(ghp.getCenterX()-mousePoint.getX());
+                float yDiff = (float)(ghp.getCenterY()-mousePoint.getY());
+                float creatureDist = ((MouseInteractable)objects.get(i)).getCreatureInteractDistance();
+                float cXDiff = (float)(ghp.getCenterX() - player.getCenterX());
+                float cYDiff = (float)(ghp.getCenterY() - player.getCenterY());
+                if (interactDist*interactDist > (xDiff*xDiff)+(yDiff*yDiff)
+                        && creatureDist*creatureDist > (cXDiff*cXDiff)+(cYDiff*cYDiff)) {
+                    player.setSelectedInteractable((MouseInteractable)objects.get(i));
+                }
             }
         }
     }
