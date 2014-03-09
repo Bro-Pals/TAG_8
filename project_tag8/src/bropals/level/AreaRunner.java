@@ -13,6 +13,7 @@ import bropals.gameobject.GameObject;
 import bropals.gameobject.GrappleHookPoint;
 import bropals.gameobject.MouseInteractable;
 import bropals.gameobject.Player;
+import bropals.gameobject.Stone;
 import bropals.util.Direction;
 import bropals.util.Vector2;
 import java.awt.Point;
@@ -42,7 +43,7 @@ public class AreaRunner {
         areaFactory = new AreaFactory();
         player = new Player(150, 150);
         //Initial area
-        setCurrentArea(-2);
+        setCurrentArea(1);
     }
     
     public Area getCurrentArea() {
@@ -121,6 +122,9 @@ public class AreaRunner {
         for (int i=0; i<objects.size(); i++) {
             if (objects.get(i) instanceof Creature) {
                 ((Creature)objects.get(i)).update();
+            }
+            if (objects.get(i) instanceof Stone) {
+                ((Stone)objects.get(i)).update();
             }
         }
         // look for other interactables

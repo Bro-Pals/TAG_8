@@ -22,6 +22,7 @@ import bropals.gameobject.block.TeleportDoor;
 import bropals.gameobject.block.Wall;
 import bropals.util.Direction;
 import bropals.util.Direction;
+import bropals.util.Vector2;
 
 /**
  *
@@ -68,6 +69,15 @@ public class AreaFactory {
                 
                 NormalDoor door = new NormalDoor(220, 403, 100, 15);
                 door.setParent(theArea);
+                
+                Human snarker = new Human(550, 450, 40, 10, Vector2.UNIT_Y);
+                snarker.setPatrolPath(new Waypoint[]{
+                    new Waypoint(550, 450, 10), new Waypoint(500, 150, 10)
+                });
+                snarker.setType(HumanType.ROCK_THROWER);
+                snarker.setParent(theArea);
+                snarker.givePlayerRef(theArea.getPlayer());
+                        
                 break;
             case -2:
             //Debugger.print("I am running setArea!", Debugger.INFO);

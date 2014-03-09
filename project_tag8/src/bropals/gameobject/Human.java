@@ -44,7 +44,7 @@ public class Human extends Creature {
     private float fieldOfView;
     private float attackDistance;
     private int attackTimer;
-    private final int ATTACK_SPEED = 20; // frames
+    private final int ATTACK_SPEED = 35; // frames
     private float turnSpeed;
     
     public Human(float x, float y, float size, float speed, Vector2 faceDirection) {
@@ -155,8 +155,7 @@ public class Human extends Creature {
                     facePoint(playerRef.getCenterX(), playerRef.getCenterY());
                     
                     if (attackTimer > ATTACK_SPEED && attackDistance*attackDistance > (xDiff*xDiff)+(yDiff*yDiff)) {
-                        setStandingStill(true);
-                        playerRef.damage();
+                        shootAtPlayer();
                         attackTimer = 0;
                     }
                 }
@@ -192,6 +191,15 @@ public class Human extends Creature {
         }
         attackTimer++;
         super.update();
+    }
+    
+    public void shootAtPlayer() {
+        float diffX = playerRef.getCenterX() - getCenterX();
+        float diffY = playerRef.getCenterY() - getCenterY();
+        Vector2 bulletVector = (new Vector2(diffX, diffY)).getUnitVector();
+        Stone stone = new Stone(getCenterX() + (float)(20*bulletVector.getX()), 
+                getCenterY() + (float)(20*bulletVector.getY()), bulletVector);
+        stone.setParent(getParent());
     }
     
     public boolean canSeePlayer() {
