@@ -11,8 +11,11 @@ import static bropals.debug.Debugger.INFO;
 import bropals.engine.Engine;
 import bropals.gameobject.Creature;
 import bropals.gameobject.GameObject;
+import bropals.gameobject.Human;
+import bropals.gameobject.Waypoint;
 import bropals.gameobject.block.Block;
 import bropals.level.Area;
+import bropals.util.Vector2;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Font;
@@ -29,11 +32,13 @@ public class LevelDesignerCanvas extends Canvas {
     private Area drawing;
     private final CowAreaLevelDesignerMain caldm;
     private final Font bigFont, littleFont;
+    private final Color waypointColor;
     
     public LevelDesignerCanvas(CowAreaLevelDesignerMain caldm) {
         this.caldm = caldm;
         bigFont = new Font(Font.SERIF, Font.BOLD, 40);
         littleFont = new Font(Font.SERIF, Font.BOLD, 12);
+        waypointColor = new Color(24, 170, 0);
         setFocusable(true);
     }
     
@@ -55,6 +60,9 @@ public class LevelDesignerCanvas extends Canvas {
             ArrayList<GameObject> objects = drawing.getObjects();
             for (int j=0; j<objects.size(); j++) {
                 if (objects.get(j)!=null) {
+                    if (objects.get(j) instanceof Human) {
+                        drawHumansWaypoints(g, (Human)objects.get(j));
+                    }
                     if (caldm.getSelectedGameObject()!=null) {
                         if (objects.get(j).hashCode()==caldm.getSelectedGameObject().hashCode()) {
                             //Blue outline to say this is being selected
@@ -105,6 +113,62 @@ public class LevelDesignerCanvas extends Canvas {
             g.drawString("Create a new Area with File->Create", 50, 300);
             g.drawString("Open an existing area with File->Open", 50, 400);
         }
+    }
+        
+    private void drawHumansWaypoints(Graphics g, Human human) {
+        Waypoint[] path = human.getPatrolPath();
+        int x1, x2, y1, y2;
+        for (int i=0; i<path.length; i++) {
+            g.setColor(waypointColor);
+            g.fillOval((int)(path[i].getX()-(CowAreaLevelDesignerMain.SIZELESS_RADIUS/4)), (int)(path[i].getY()-(CowAreaLevelDesignerMain.SIZELESS_RADIUS/4)), CowAreaLevelDesignerMain.SIZELESS_RADIUS/2, CowAreaLevelDesignerMain.SIZELESS_RADIUS/2);
+            x1 = (int)path[i].getX();
+            y1 = (int)path[i].getY();
+            if (i==(path.length-1)) { //Last?
+                x2 = (int)path[0].getX();
+                y2 = (int)path[0].getY();
+            } else {
+                x2 = (int)path[i+1].getX();
+                y2 = (int)path[i+1].getY();
+            }
+            drawConnectingLineWithHalfwayDirectionalArrow(x1, y1, x2, y2, g, 20);
+            g.setColor(Color.YELLOW);
+            g.setFont(littleFont);
+            g.drawString("" + path[i].getDelay() + "", (int)path[i].getX()+10, (int)path[i].getY()+10);
+        }
+    }
+    
+    private void drawConnectingLineWithHalfwayDirectionalArrow(int xi, int yi, int xf, int yf, Graphics g, float arrowSize) {
+        float deltaX= (float)(xf-xi), deltaY= (float)(yf-yi);
+        //Normalizeers
+        float mag = (float)(Math.sqrt( (deltaX*deltaX) + (deltaY*deltaY) ));
+        //Normalizerereeers
+        float normalizedDeltaX = (1/mag)*deltaX;
+        float normalizedDeltaY = (1/mag)*deltaY;
+        
+        float perpendicularX = normalizedDeltaY;
+        float perpendicularY = -normalizedDeltaX;
+        //Jetzt wir sind normalizieren
+        float halfX, halfY, minorX, minorY;
+        halfX = normalizedDeltaX*(mag/2);
+        halfY = normalizedDeltaY*(mag/2);
+        minorX = normalizedDeltaX*((mag/2)-(arrowSize*1.5f));
+        minorY = normalizedDeltaY*((mag/2)-(arrowSize*1.5f));
+        float[] addVector = new float[] {
+            (arrowSize)*(perpendicularX),(arrowSize)*(perpendicularY)
+        };
+        int[] leftWingPoint = new int[] {
+            (int)(addVector[0]+minorX+xi),
+            (int)(addVector[1]+minorY+yi),
+        };
+        int[] rightWingPoint = new int[] {
+            (int)((-addVector[0])+minorX+xi),
+            (int)((-addVector[1])+minorY+yi),
+        };
+        //Now draw the lines!
+        g.setColor(waypointColor);
+        g.drawLine(xi, yi, xf, yf);
+        g.drawLine((int)(halfX+xi), (int)(halfY+yi), leftWingPoint[0], leftWingPoint[1]);
+        g.drawLine((int)(halfX+xi), (int)(halfY+yi), rightWingPoint[0], rightWingPoint[1]);
     }
     
     private void drawGrid(Graphics g) {

@@ -741,6 +741,7 @@ public class PropertyFormatter {
                 public void actionPerformed(ActionEvent e) {
                     wayPointDataModel.shiftUp(waypointList.getSelectedIndex(), waypointList);
                     waypointList.repaint();
+                    caldm.tellRepaint();
                 }
             });
             
@@ -749,6 +750,7 @@ public class PropertyFormatter {
                 public void actionPerformed(ActionEvent e) {
                     wayPointDataModel.shiftDown(waypointList.getSelectedIndex(), waypointList);
                     waypointList.repaint();
+                    caldm.tellRepaint();
                 }
             });
             
@@ -769,9 +771,11 @@ public class PropertyFormatter {
             this.add(leftSide, BorderLayout.CENTER);
             this.add(rightSide, BorderLayout.EAST);
             this.add(new JLabel("Waypoints"), BorderLayout.NORTH);
-
-            //Put waypoint data into list to start editing it
-            
+        }
+                   
+        private void putWaypointDataIntoHuman() {
+            Waypoint[] newPatrolPath = (Waypoint[])wayPointDataModel.data.toArray(new Waypoint[wayPointDataModel.getSize()]);
+            human.setPatrolPath(newPatrolPath);
         }
         
         class WaypointWaitListener implements ActionListener {
@@ -787,6 +791,7 @@ public class PropertyFormatter {
                         waypointWait.setText("0");
                         waypointWait.repaint();
                     }
+                    putWaypointDataIntoHuman();
                     waypointList.repaint();
                     caldm.tellRepaint();
                 }
@@ -806,6 +811,7 @@ public class PropertyFormatter {
                         waypointXPosition.setText("0");
                         waypointXPosition.repaint();
                     }
+                    putWaypointDataIntoHuman();
                     waypointList.repaint();
                     caldm.tellRepaint();
                 }
@@ -825,6 +831,7 @@ public class PropertyFormatter {
                         waypointYPosition.setText("0");
                         waypointYPosition.repaint();
                     }
+                    putWaypointDataIntoHuman();
                     waypointList.repaint();
                     caldm.tellRepaint();
                 }
@@ -842,6 +849,8 @@ public class PropertyFormatter {
                     m.add(m.getSize(), new Waypoint(0, 0));
                 }
                 m.trimToSize();
+                putWaypointDataIntoHuman();
+                caldm.tellRepaint();
             }
         }
         
@@ -853,7 +862,9 @@ public class PropertyFormatter {
                     ((WayPointListModel)waypointList.getModel()).remove(waypointList.getSelectedIndex());
                     caldm.getArea().removeObject(p);
                 }
+                putWaypointDataIntoHuman();
                 ((WayPointListModel)waypointList.getModel()).trimToSize();
+                caldm.tellRepaint();
             }
         }
         
@@ -871,6 +882,8 @@ public class PropertyFormatter {
                 waypointXPosition.repaint();
                 waypointYPosition.repaint();
                 waypointWait.repaint();
+                putWaypointDataIntoHuman();
+                caldm.tellRepaint();
             }
             
         } 
@@ -890,39 +903,49 @@ public class PropertyFormatter {
             
             public void shiftUp(int shiftingIndex, JList toRepaint) {
                 if (shiftingIndex>0) {
-                    Waypoint[] wpArray = (Waypoint[])data.toArray(new Waypoint[data.size()]);
-                    Waypoint shifting = wpArray[shiftingIndex];
-                    Waypoint replacing = wpArray[shiftingIndex-1];
-                    //Swap places
-                    wpArray[shiftingIndex-1] = shifting;
-                    wpArray[shiftingIndex] = replacing;
-                    //Back to ArrayList form
-                    data = new ArrayList<Waypoint>(wpArray.length);
-                    for (int i=0; i<wpArray.length; i++) {
-                        data.add(wpArray[i]);
+                    try {
+                        Waypoint[] wpArray = (Waypoint[])data.toArray(new Waypoint[data.size()]);
+                        Waypoint shifting = wpArray[shiftingIndex];
+                        Waypoint replacing = wpArray[shiftingIndex-1];
+                        //Swap places
+                        wpArray[shiftingIndex-1] = shifting;
+                        wpArray[shiftingIndex] = replacing;
+                        //Back to ArrayList form
+                        data = new ArrayList<Waypoint>(wpArray.length);
+                        for (int i=0; i<wpArray.length; i++) {
+                            data.add(wpArray[i]);
+                        }
+                        notifyDataListenersOfContentsChanged(shiftingIndex);
+                        toRepaint.setSelectedIndex(shiftingIndex-1);
+                    } catch(Exception e) {
+                        
                     }
-                    toRepaint.setSelectedIndex(shiftingIndex-1);
                 }
             }
             
             public void shiftDown(int shiftingIndex, JList toRepaint) {
                 if (shiftingIndex<(getSize()-1)) {
-                    Waypoint[] wpArray = (Waypoint[])data.toArray(new Waypoint[data.size()]);
-                    Waypoint shifting = wpArray[shiftingIndex];
-                    Waypoint replacing = wpArray[shiftingIndex+1];
-                    //Swap places
-                    wpArray[shiftingIndex+1] = shifting;
-                    wpArray[shiftingIndex] = replacing;
-                    //Back to ArrayList form
-                    data = new ArrayList<Waypoint>(wpArray.length);
-                    for (int i=0; i<wpArray.length; i++) {
-                        data.add(wpArray[i]);
+                    try {
+                        Waypoint[] wpArray = (Waypoint[])data.toArray(new Waypoint[data.size()]);
+                        Waypoint shifting = wpArray[shiftingIndex];
+                        Waypoint replacing = wpArray[shiftingIndex+1];
+                        //Swap places
+                        wpArray[shiftingIndex+1] = shifting;
+                        wpArray[shiftingIndex] = replacing;
+                        //Back to ArrayList form
+                        data = new ArrayList<Waypoint>(wpArray.length);
+                        for (int i=0; i<wpArray.length; i++) {
+                            data.add(wpArray[i]);
+                        }
+                        notifyDataListenersOfContentsChanged(shiftingIndex);
+                        toRepaint.setSelectedIndex(shiftingIndex+1);
+                    } catch(Exception e) {
+                        
                     }
-                    toRepaint.setSelectedIndex(shiftingIndex+1);
                 }
             }
             
-            private void notifyDataListenersOfContentsChanged(int element) {
+            public void notifyDataListenersOfContentsChanged(int element) {
                 for (int j=0; j<dataListeners.size(); j++) {
                     dataListeners.get(j).contentsChanged(new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, element, element));
                 }
