@@ -5,6 +5,7 @@
 package bropals.gameobject.block;
 
 import bropals.gameobject.GameObject;
+import bropals.graphics.ImageLoader;
 import bropals.level.Area;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -26,7 +27,7 @@ public class Block extends GameObject {
     
     @Override
     public BufferedImage getTexture() {
-        return null; // no image right now :(
+        return ImageLoader.getLoader().getImage(getTextureString()); // no image right now :(
     }
     
     // getters and settesr

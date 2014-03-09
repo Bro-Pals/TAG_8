@@ -66,6 +66,7 @@ public class CowAreaLevelDesignerMain {
         loader.loadSingleImage("placeholder_background", "backgrounds/placeholder.png");
         loader.loadSingleImage("GameIcon", "GameIcon.png");
         loader.loadSingleImage("testCreature", "sprites/testCreature.png");
+        loader.loadSingleImage("Avacado", "sprites/avacado.png");
         loader.loadSpriteSheet("ActionIcons", "actionIcons.png", 80, 80);
         
         //Then start the program

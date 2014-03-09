@@ -45,6 +45,7 @@ public class Main {
     
     private void loadSprites(ImageLoader loader) {
         loader.loadSingleImage("testCreature", "sprites/testCreature.png");
+        loader.loadSingleImage("Avacado", "sprites/avacado.png");
         loader.loadSpriteSheet("ActionIcons", "actionIcons.png", 80, 80);
     }
     
