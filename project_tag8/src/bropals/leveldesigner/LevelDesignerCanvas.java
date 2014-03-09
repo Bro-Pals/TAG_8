@@ -7,6 +7,8 @@
 package bropals.leveldesigner;
 
 import bropals.debug.Debugger;
+import static bropals.debug.Debugger.INFO;
+import bropals.engine.Engine;
 import bropals.gameobject.Creature;
 import bropals.gameobject.GameObject;
 import bropals.gameobject.block.Block;
@@ -70,7 +72,11 @@ public class LevelDesignerCanvas extends Canvas {
                         }
                     }
                     BufferedImage texture = null;
-                    texture = objects.get(j).getTexture();
+                    try {
+                        texture = objects.get(j).getTexture();
+                    } catch(NullPointerException npe) {
+                        Debugger.print("No texture for " + objects.get(j).getTextureString(), INFO);
+                    }
                     if (texture==null) {
                         //Error graphic
                         g.setColor(Color.RED);

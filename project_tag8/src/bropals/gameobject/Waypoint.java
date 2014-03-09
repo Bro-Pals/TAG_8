@@ -56,6 +56,6 @@ public class Waypoint extends GameObject {
         return "Waypoint:\n" +
         "   X: " + getX() + "\n"+
         "   Y: " + getY() + "\n"+
-        "   Hashcode: " + hashCode() + "";
+        "   Wait time: " + getDelay() + "";
     }
 }
