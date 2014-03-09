@@ -285,7 +285,7 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editingArea!=null) {
-                    Block block = new Block(0, 0, 0, 0);
+                    Block block = new Block(0, 0, 10, 10);
                     makeCreateDialog(block, "Create Block");
                 }
             }
@@ -294,7 +294,7 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editingArea!=null) {
-                    Wall wall = new Wall(0, 0, 0, 0);
+                    Wall wall = new Wall(0, 0, 10, 10);
                     makeCreateDialog(wall, "Create Wall");
                 }
             }
@@ -312,7 +312,7 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editingArea!=null) {
-                    TeleportDoor teleDoor = new TeleportDoor(0, 0, 0, 0, -1, 0, 0);
+                    TeleportDoor teleDoor = new TeleportDoor(0, 0, 10, 10, -1, 0, 0);
                     makeCreateDialog(teleDoor, "Create Teleport Door");
                 }
             }
@@ -321,7 +321,7 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editingArea!=null) {
-                    NormalDoor door = new NormalDoor(0, 0, 0, 0);
+                    NormalDoor door = new NormalDoor(0, 0, 10, 10);
                     makeCreateDialog(door, "Create Normal Door");
                 }
             }
@@ -330,7 +330,7 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editingArea!=null) {
-                    Avacado avacado = new Avacado(0, 0, 0, 0, editingArea.getAreaId());
+                    Avacado avacado = new Avacado(0, 0, 40, 40, editingArea.getAreaId());
                     makeCreateDialog(avacado, "Create Avacado");
                 }
             }
@@ -339,7 +339,7 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editingArea!=null) {
-                    AvacadoBin bin = new AvacadoBin(0, 0, 0, 0);
+                    AvacadoBin bin = new AvacadoBin(0, 0, 50,50);
                     makeCreateDialog(bin, "Create Avacado Bin");
                 }
             }
@@ -348,7 +348,7 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editingArea!=null) {
-                    Human human = new Human(0, 0, 0, 0, Vector2.UNIT_Y);
+                    Human human = new Human(0, 0, 10, 10, Vector2.UNIT_Y);
                     makeCreateDialog(human, "Create Human");
                 }
             }
@@ -357,7 +357,7 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editingArea!=null) {
-                    HayBale bale = new HayBale(0, 0, 0, 0);
+                    HayBale bale = new HayBale(0, 0, 50, 50);
                     makeCreateDialog(bale, "Create Hay Bale");
                 }
             }
@@ -505,7 +505,7 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
                         //Save the area!
                         String name = fc.getSelectedFile().getName();
                         theFactory.getFileManager().loadArea(theFactory, fc.getSelectedFile());
-                        editingArea = theFactory.getArea();
+                        setArea(theFactory.getArea());
                         mainFrame.setTitle(mainTitle + "(" + name + ")");
                         mainFrame.repaint();
                     }

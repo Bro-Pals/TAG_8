@@ -222,6 +222,7 @@ public class PropertyFormatter {
         // 
         final TexturePanel texturePanel = new TexturePanel(forObject);
         final WidthHeightPanel whPanel = new WidthHeightPanel(forObject, texturePanel);
+        whPanel.setEditable(false);
         // 
         final InteractablePanel interactablePanel = new InteractablePanel(forObject);
                 
@@ -259,7 +260,8 @@ public class PropertyFormatter {
         //  
         final TexturePanel texturePanel = new TexturePanel(forObject);
         final WidthHeightPanel whPanel = new WidthHeightPanel(forObject, texturePanel);
-        // 
+        whPanel.setEditable(false);
+// 
         final InteractablePanel interactablePanel = new InteractablePanel(forObject);
                 
         //
