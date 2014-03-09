@@ -11,6 +11,7 @@ import bropals.engine.Engine;
 import bropals.gameobject.Creature;
 import bropals.gameobject.GameObject;
 import bropals.gameobject.GrappleHookPoint;
+import bropals.gameobject.Human;
 import bropals.gameobject.Interactable;
 import bropals.gameobject.Player;
 import bropals.gameobject.block.Avacado;
@@ -131,6 +132,10 @@ public class Renderer {
                     Debugger.print(e.toString(), Debugger.ERROR);
                     e.printStackTrace();
                     g2d.drawImage(((Creature)drawing).getTexture(), (int)((Creature)drawing).getX(), (int)((Creature)drawing).getY(), null);
+                }
+                
+                if (drawing instanceof Human && ((Human)drawing).isAlert()) {
+                    g2d.drawImage(ImageLoader.getLoader().getImage("Blocks", 8), (int)drawing.getX(), (int)drawing.getY() - 60, null);
                 }
                 //System.out.println("This creatures is at an angle of " + (((Creature)drawing).getAngleFacing()) + " radians");
                 if (drawing instanceof Player && ((Player)drawing).getHookUsing() != null && ((Player)drawing).isGrappling()) {

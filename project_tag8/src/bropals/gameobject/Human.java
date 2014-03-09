@@ -301,4 +301,7 @@ public class Human extends Creature {
         this.playerRef = player;
     }
     
+    public boolean isAlert() {
+        return alerted;
+    }
 }

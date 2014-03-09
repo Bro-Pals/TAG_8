@@ -42,7 +42,7 @@ public class AreaRunner {
         areaFactory = new AreaFactory();
         player = new Player(150, 150);
         //Initial area
-        setCurrentArea(1);
+        setCurrentArea(-2);
     }
     
     public Area getCurrentArea() {
