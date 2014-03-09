@@ -29,4 +29,16 @@ public class AvacadoBin extends Block implements Interactable {
     public float getInteractDistance() {
         return 100; // some random number
     }
+    
+    @Override
+    public String toString() {
+        String str = "Avacado Bin:\n" + 
+        "   X: " + getX() + "\n"+
+        "   Y: " + getY() + "\n"+
+        "   Texture String: " + getTextureString()+ "\n"+
+        "   Width: " + getWidth()+ "\n"+
+        "   Height: " + getHeight()+ "\n"+
+        "";
+        return str;
+    }
 }

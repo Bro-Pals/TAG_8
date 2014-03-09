@@ -7,6 +7,7 @@
 package bropals.leveldesigner;
 
 import bropals.datafiles.CowAreaFileManager;
+import bropals.debug.Debugger;
 import bropals.gameobject.GameObject;
 import bropals.gameobject.GrappleHookPoint;
 import bropals.gameobject.Human;
@@ -86,7 +87,6 @@ public class CowAreaLevelDesignerMain {
             
     //Data based things
     private Area editingArea;
-    private CowAreaFileManager fileManager;
     private GameObject selectedGameObject;
     private final AreaFactory theFactory;
     private Grid grid;
@@ -100,10 +100,10 @@ public class CowAreaLevelDesignerMain {
         initializeCanvas();
         initializeFormatter();
         initializeObjectCreationPanel();
-        initializeFileManager();
         initializeGrid();
         centerFrame();
         initializeWhatButtonsDo();
+        selectedGameObject = null;
         theFactory = new AreaFactory();
         mainFrame.setVisible(true);
     }
@@ -228,10 +228,6 @@ public class CowAreaLevelDesignerMain {
         objectCreation.add(createHuman);
         objectCreation.add(deleteSelected);
     }
-
-    private void initializeFileManager() {
-        fileManager = new CowAreaFileManager();
-    }
     
     private void initializeGrid() {
         grid = new Grid();
@@ -326,8 +322,8 @@ public class CowAreaLevelDesignerMain {
                 if (canGoThrough) {
                     //Overwrite current area
                     setArea(null);
-                    Area area = new Area(theFactory);
-                    setArea(area);
+                    theFactory.makeNewAreaOverOldArea();
+                    setArea(theFactory.getArea());
                     mainFrame.setTitle(mainTitle + " (Untitled.cowarea)");
                 }
             }
@@ -411,8 +407,6 @@ public class CowAreaLevelDesignerMain {
         JButton cancelCreate = new JButton("Cancel");
         accept.add(cancelCreate);
         accept.add(acceptButton);
-        //Format for properties of block
-        propertyFormatter.format(forObject, core);
         //Put "core" into a scrolly pane
         JScrollPane scrolly = new JScrollPane(core);
         scrolly.createVerticalScrollBar();
@@ -423,6 +417,8 @@ public class CowAreaLevelDesignerMain {
         //Make accept/cancel buttons do things
         acceptButton.addActionListener(new AcceptCreationButtonListener(l, forObject));
         cancelCreate.addActionListener(new CancelCreationButtonListener(l));
+        //Format for properties of block
+        propertyFormatter.format(forObject, core, acceptButton);
         l.setSize(mainFrame.getWidth()/3, mainFrame.getHeight()/2);
         l.setLocationRelativeTo(mainFrame);
         l.setVisible(true);
@@ -448,7 +444,7 @@ public class CowAreaLevelDesignerMain {
     
     public void setSelectedGameObject(GameObject object) {
         this.selectedGameObject = object;
-        propertyFormatter.format(this.selectedGameObject, objectProperties);
+        propertyFormatter.format(this.selectedGameObject, objectProperties, null);
     }
     
     Grid getGrid() {
@@ -473,6 +469,7 @@ public class CowAreaLevelDesignerMain {
         @Override
         public void actionPerformed(ActionEvent e) {
             ///Places block into area
+            Debugger.print(object.toString(), Debugger.INFO);
             editingArea.addObject(object);
             dialog.dispose();
             canvas.repaint();

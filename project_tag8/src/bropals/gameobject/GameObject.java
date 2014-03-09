@@ -74,5 +74,13 @@ public abstract class GameObject {
         this.texture = texture;
     }
     
-    
+    @Override
+    public String toString() {
+        String str = "GameObject:\n" + 
+        "   X: " + getX() + "\n"+
+        "   Y: " + getY() + "\n"+
+        "   Texture String: " + getTextureString()+ "\n"+
+        "";
+        return str;
+    }
 }

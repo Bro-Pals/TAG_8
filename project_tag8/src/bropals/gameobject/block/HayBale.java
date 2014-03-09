@@ -29,4 +29,15 @@ public class HayBale extends Block implements Interactable {
         return 100; // some random number
     }
     
+    @Override
+    public String toString() {
+        String str = "Hay Bale:\n" + 
+        "   X: " + getX() + "\n"+
+        "   Y: " + getY() + "\n"+
+        "   Texture String: " + getTextureString()+ "\n"+
+        "   Width: " + getWidth()+ "\n"+
+        "   Height: " + getHeight()+ "\n"+
+        "";
+        return str;
+    }
 }

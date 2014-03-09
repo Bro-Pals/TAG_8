@@ -49,4 +49,16 @@ public class TeleportDoor extends Block implements Interactable {
     public float getyPlayerPos() {
         return yPlayerPos;
     }
+    
+    @Override
+    public String toString() {
+        String str = "Teleport Door:\n" + 
+        "   X: " + getX() + "\n"+
+        "   Y: " + getY() + "\n"+
+        "   Texture String: " + getTextureString()+ "\n"+
+        "   Width: " + getWidth()+ "\n"+
+        "   Height: " + getHeight()+ "\n"+
+        "";
+        return str;
+    }
 }
