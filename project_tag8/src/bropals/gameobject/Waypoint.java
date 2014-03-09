@@ -36,4 +36,10 @@ public class Waypoint extends GameObject {
         this.faceDirection = faceDirection;
     }
     
+    @Override
+    public String toString() {
+        return "Waypoint:\n" +
+        "   X: " + getX() + "\n"+
+        "   Y: " + getY() + "\n";
+    }
 }

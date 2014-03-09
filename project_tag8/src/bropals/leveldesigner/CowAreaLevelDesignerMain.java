@@ -118,6 +118,7 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
         selectedGameObject = null;
         theFactory = new AreaFactory();
         mainFrame.setVisible(true);
+        mainFrame.revalidate();
     }
     
     private void initializeMainFrame() {
@@ -125,7 +126,7 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
         mainFrame.setIconImage(iconImage);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setSize(1200, 720);
-        mainFrame.setMinimumSize(new Dimension(950, 720));
+        mainFrame.setMinimumSize(new Dimension(1150, 720));
     }
     
     private void initializeIconForWindows() {
@@ -139,16 +140,16 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
     private void setupPropertyTabs() {
         globalProperties = new JPanel();
         objectProperties = new JPanel();
-        globalProperties.setMinimumSize(new Dimension(250, 600));
-        objectProperties.setMinimumSize(new Dimension(250, 600));
         JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+        tabbedPane.setPreferredSize(new Dimension(325, 2000));
         //Put each panel into a scrolly pane and that into a tab
         propertyExplorer.add(tabbedPane, BorderLayout.CENTER);
         //Put things in tabs
         JScrollPane objectScrollyPane = new JScrollPane(objectProperties);
         objectScrollyPane.createVerticalScrollBar();
+        objectScrollyPane.createHorizontalScrollBar();
         objectScrollyPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        objectScrollyPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        objectScrollyPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         JScrollPane globalScrollyPane = new JScrollPane(globalProperties);
         globalScrollyPane.createVerticalScrollBar();
         globalScrollyPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); 
@@ -433,8 +434,9 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
         //Put "core" into a scrolly pane
         JScrollPane scrolly = new JScrollPane(core);
         scrolly.createVerticalScrollBar();
+        scrolly.createHorizontalScrollBar();
         scrolly.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrolly.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrolly.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         l.add(scrolly, BorderLayout.CENTER);
         l.add(accept, BorderLayout.SOUTH);
         //Make accept/cancel buttons do things
@@ -468,7 +470,11 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
     public void setSelectedGameObject(GameObject object) {
         this.selectedGameObject = object;
         setSelectedWaypoint(null);
-        propertyFormatter.format(this.selectedGameObject, objectProperties, null);
+        if (selectedGameObject!=null) {
+            propertyFormatter.format(this.selectedGameObject, objectProperties, null);
+        }
+        mainFrame.revalidate();
+        canvas.repaint();
     }
     
     Grid getGrid() {
@@ -519,12 +525,19 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
                     if (rect.contains(e.getPoint())) {
                         //Select this!
                         setSelectedGameObject(os.get(i));
+                        return;
                     }
                 } else {
                     //Use set value for distance testing
-                    
+                    if ( (((os.get(i).getX()-e.getX())*(os.get(i).getX()-e.getX()))+((os.get(i).getY()-e.getY())*(os.get(i).getY()-e.getY()))) < (SIZELESS_RADIUS*SIZELESS_RADIUS) ) {
+                        //Close enough according to our friend pythagoreous
+                        setSelectedGameObject(os.get(i));
+                        return;
+                    }
                 }
             }
+            //If it made it here, then it didn't select anything
+            setSelectedGameObject(null);
         }
     }
 
