@@ -95,6 +95,7 @@ public class Human extends Creature {
             if (playerRef != null) {
                 float playerXDiff = playerRef.getCenterX() - getCenterX();
                 float playerYDiff = playerRef.getCenterY() - getCenterY();
+                Vector2 playerPositionVector = (new Vector2(playerXDiff, playerYDiff)).getUnitVector();
                 
             }
         }
