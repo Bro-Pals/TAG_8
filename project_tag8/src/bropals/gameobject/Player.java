@@ -24,6 +24,7 @@ public class Player extends Creature {
     public Player(float x, float y) {
         super(x, y, 34, 50, 10, Direction.getUnitVector(Direction.NORTH));
         health = 5;
+        this.setTextureString("RobinCow");
     }
     
     @Override

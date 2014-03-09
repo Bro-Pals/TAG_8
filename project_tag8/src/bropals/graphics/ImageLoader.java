@@ -7,6 +7,7 @@
 package bropals.graphics;
 
 import bropals.Main;
+import bropals.debug.Debugger;
 import static bropals.debug.Debugger.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -64,6 +65,12 @@ public class ImageLoader {
      * @return the image (if it is loaded)
      */
     public BufferedImage getImage(String name, int index) {
+        BufferedImage img = null;
+        try {
+            img = images.get(name)[index];
+        } catch(Exception e) {
+            Debugger.print(e.toString(), Debugger.ERROR);
+        }
         return images.get(name)[index];
     }
     

@@ -56,6 +56,7 @@ public class Human extends Creature {
         fieldOfView = (float)(Math.PI*5.0/6.0); // radians
         attackTimer = 0;
         setSpeed(10);
+        this.setTextureString("Human");
     }
 
     public void alerted() {

@@ -24,6 +24,7 @@ public class Block extends GameObject {
         super(x, y);
         this.width = width;
         this.height = height;
+        this.setTextureString("Blocks");
         updateDrawImage();
     }
     
