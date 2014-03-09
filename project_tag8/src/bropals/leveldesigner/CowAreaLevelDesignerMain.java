@@ -358,6 +358,18 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
             }
         });
         
+        deleteSelected.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int picked = JOptionPane.showConfirmDialog(mainFrame, "Are you sure you want to delete this GameObject?", "Delete confirmation", JOptionPane.YES_NO_OPTION);
+                if (picked==JOptionPane.YES_OPTION) {
+                    editingArea.removeObject(getSelectedGameObject());
+                    setSelectedGameObject(null);
+                }
+                canvas.repaint();
+            }
+        });
+        
         gridEnabled.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
