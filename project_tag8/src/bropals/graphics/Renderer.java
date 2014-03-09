@@ -165,6 +165,6 @@ public class Renderer {
      */
     public void drawGui(AreaRunner runner) {
         g2d.setColor(Color.WHITE);
-        g2d.drawString("Avacados: "+AvacadoManager.get().getAvacadosCollectedCount(), 400, 50);
+        g2d.drawString("Avacados In Pouch: "+AvacadoManager.get().getAvacadosInPouchNum(), 400, 50);
     }
 }

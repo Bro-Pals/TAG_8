@@ -26,7 +26,6 @@ public class Player extends Creature {
     
     public void die() {
         // be teleported to the barn
-        AvacadoManager.get().loseAvacadosInPouch();
     }
     
     public void damage() {

@@ -4,6 +4,7 @@
  */
 package bropals.level;
 
+import bropals.debug.Debugger;
 import bropals.gameobject.block.Avacado;
 import java.util.ArrayList;
 
@@ -25,74 +26,61 @@ public class AvacadoManager {
         avacadoPouch = new ArrayList<>();
     }
 
-    public ArrayList<Avacado> getAvacadosInWorld() {
-        return avacadosInWorld;
+    public void addAvacadoToWorld(Avacado a) {
+        avacadosInWorld.add(a);
     }
-
-    public ArrayList<Avacado> getAvacadosCollected() {
-        return avacadosCollected;
+    
+    public int getAvacadosInPouchNum() {
+        return avacadoPouch.size();
     }
-
-    /**
-     * Return how many avacados the player has collected. Collected avacados are
-     *        not lost when the player dies
-     * @return The number of collectedAvacados
-     */
-    public int getAvacadosCollectedCount() {
+    
+    public int getAvacadosInWorldNum() {
+        return avacadosInWorld.size();
+    }
+    
+    public int getAvacadosCollectedNum() {
         return avacadosCollected.size();
     }
     
     /**
-     * Return how many avacado objects are being kept track of total
-     * @return The total number of avacados
+     * Moves all the avacados back from the pouch into the world.
      */
-    public int getTotalAvacadoCount() {
-        return (avacadosCollected.size() + avacadosInWorld.size() + avacadoPouch.size());
-    }
-    
-    /**
-     * Add all the avacados in the pouch to the collected pile. Will clear
-     * the avacadoPouch and remove.
-     */
-    public void collectAvacados() {
-        for (Avacado a : avacadoPouch) {
-            for (int i=0; i<avacadosInWorld.size(); i++) {
-                if (a == avacadosInWorld.get(i)) {
-                    avacadosInWorld.remove(i); // remove from the world
-                    avacadosCollected.add(a); // add to the collected pile
-                }
-            }
+    public void losePouch() {
+        if (avacadoPouch.isEmpty()) return;
+        
+        for (Avacado ava : avacadoPouch) {
+            avacadosInWorld.add(ava);
+            ava.setCollected(false);
         }
         avacadoPouch.clear();
     }
-
+    
     /**
-     * Adds an avacado to the avacadoPouch and removes it from the world
-     * @param thisOne The avacado being collected
+     * Empties all the avacaods from the pouch pile to the collected pile
      */
-    public void pickUpAvacado(Avacado thisOne) {
-        for (int i=0; i<avacadosInWorld.size(); i++) {
-            if (avacadosInWorld.get(i) == thisOne) {
-                avacadosInWorld.remove(i);
-                avacadoPouch.add(thisOne);
-                thisOne.setParent(null);
-                break; // added the avacado so you can break
-            }
+    public void depositAvacadoPouch() {
+        if (avacadoPouch.isEmpty()) return;
+        
+        for (Avacado ava : avacadoPouch) {
+            avacadosCollected.add(ava);
         }
+        avacadoPouch.clear();
     }
     
     /**
-     * All avacados in the avacadoPouch is moved to the world and returned to
-     * their locations. clears the avacadoPouch.
+     * Picks up an Avacado, removing it from the world and adding it in the pouch.
+     * @param a The avacado being picked up
      */
-    public void loseAvacadosInPouch() {
-        for (Avacado a : avacadoPouch) {
-            a.returnToSpawn();
-            if (!avacadosInWorld.contains(a)) {
-                avacadosInWorld.add(a);
-            } // add if it does not contain the avacado yet
+    public void pickUpAvacado(Avacado a) {
+        for (Avacado find : avacadosInWorld) {
+            if (find == a) {
+                Debugger.print("We have picked up an avacado", Debugger.INFO);
+                avacadosInWorld.remove(a);
+                avacadoPouch.add(a);
+                a.setParent(null); // remove from world
+                a.setCollected(true);
+            }
         }
-        avacadoPouch.clear();
     }
     
     /**
