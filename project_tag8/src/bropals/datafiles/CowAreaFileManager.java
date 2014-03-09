@@ -83,7 +83,12 @@ public class CowAreaFileManager {
     }
     
     private void readAndSetFirstLine(Area area, String firstLine) {
-        
+        String[] block = firstLine.split(SEPARATOR);
+        area.setRoomID( Integer.parseInt(block[0]) );
+        area.setNorthTargetId( Integer.parseInt(block[1]) );
+        area.setSouthTargetId( Integer.parseInt(block[2]));
+        area.setEastTargetId( Integer.parseInt(block[3]));
+        area.setWestTargetId( Integer.parseInt(block[4]));
     }
     
     public void export(Area area, File asFile) {
