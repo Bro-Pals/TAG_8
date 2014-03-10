@@ -6,6 +6,7 @@
 
 package bropals.level;
 
+import bropals.Main;
 import bropals.datafiles.CowAreaFileManager;
 import bropals.debug.Debugger;
 import bropals.gameobject.GameObject;
@@ -23,6 +24,7 @@ import bropals.gameobject.block.Wall;
 import bropals.util.Direction;
 import bropals.util.Direction;
 import bropals.util.Vector2;
+import java.io.File;
 
 /**
  *
@@ -49,6 +51,10 @@ public class AreaFactory {
 
         theArea.setRoomID(id);
         switch(id) {
+            case 3:
+                cowAreaFileManager.loadArea(this, new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath() + 
+                        "/../../../assets/data/levelArea3.cowarea"));
+                break;
             case 1:
                 Block barn1 = new Wall(100, 100, 20, 300);
                 barn1.setParent(theArea);
@@ -68,6 +74,9 @@ public class AreaFactory {
                 
                 NormalDoor door = new NormalDoor(220, 403, 100, 15);
                 door.setParent(theArea);
+                
+                theArea.setEastTargetId(3);
+                theArea.setNorthTargetId(2);
                         
                 break;
             case -2:
