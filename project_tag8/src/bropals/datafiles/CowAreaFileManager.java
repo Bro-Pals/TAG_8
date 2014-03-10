@@ -100,6 +100,7 @@ public class CowAreaFileManager {
                     }//Don't load if it isn't an avacado
                     line = reader.readLine();
                 }
+                humanMachine.reset();
                 reader.close();
                 Debugger.print("Found a total of " + avacadoCount + " avacadoes from " + allFiles.length + " files", Debugger.INFO);
             } catch(Exception e) {
@@ -137,7 +138,7 @@ public class CowAreaFileManager {
                     writer.newLine();
                 }
             }
-            
+            humanMachine.reset();
             writer.flush();
             writer.close();
             Debugger.print("Successfully saved Area with ID " + area.getAreaId() + " to " + asFile.getAbsolutePath() + "", Debugger.INFO);
@@ -387,6 +388,11 @@ public class CowAreaFileManager {
         
         public void giveReader(BufferedReader reader) {
             this.reader=reader;
+        }
+        
+        private void reset() {
+            reader = null;
+            writer = null;
         }
         
         private BufferedWriter writer;
