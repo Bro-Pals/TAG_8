@@ -144,7 +144,7 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
         initializeGrid();
         centerFrame();
         initializeWhatButtonsDo();
-        fc = new JFileChooser();
+        fc = new JFileChooser(CowAreaLevelDesignerMain.class.getProtectionDomain().getCodeSource().getLocation().getPath() + "../../../assets/data");
         selectedGameObject = null;
         theFactory = new AreaFactory();
         mainFrame.setVisible(true);
