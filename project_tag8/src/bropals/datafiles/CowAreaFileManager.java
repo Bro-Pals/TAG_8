@@ -94,17 +94,18 @@ public class CowAreaFileManager {
                 String line = reader.readLine();
                 String[] tokens = line.split(SEPARATOR);
                 while(line!=null) {
+                    tokens = line.split(SEPARATOR);
                     if (tokens[0].equals(AVACADO)) {
-                        readDataLine(line);
+                        Avacado aThing = (Avacado)readDataLine(line);
                         avacadoCount++;
                     }//Don't load if it isn't an avacado
                     line = reader.readLine();
                 }
-                humanMachine.reset();
                 reader.close();
                 Debugger.print("Found a total of " + avacadoCount + " avacadoes from " + allFiles.length + " files", Debugger.INFO);
             } catch(Exception e) {
                 Debugger.print("Could not load file for avacado checking " + allFiles[f].getName(), Debugger.ERROR);
+                e.printStackTrace();
             }
         }
         ignoringAvacados = true;
@@ -208,7 +209,7 @@ public class CowAreaFileManager {
     }
     
     private GameObject readDataLine(String line) {
-        String[] tokenized = line.split(" ");
+        String[] tokenized = line.split(SEPARATOR);
         if (tokenized[0].equals(WALL)) {
             return wallMachine.readDataLine(line);
         } else
@@ -296,7 +297,7 @@ public class CowAreaFileManager {
         @Override
         public Avacado readDataLine(String line) {
             String[] block = line.split(SEPARATOR);
-            Avacado object = new Avacado(0, 0, 0, 10, 10);
+            Avacado object = new Avacado(0, 0, 10, 10, 0);
             object.setX( Float.parseFloat(block[1]) );
             object.setY( Float.parseFloat(block[2]) );
             object.setWidth( Float.parseFloat(block[3]) );

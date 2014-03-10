@@ -203,7 +203,6 @@ public class Renderer {
         
         if (AvacadoManager.get().getAvacadosInPouchNum() == 0 && AvacadoManager.get().getAvacadosInWorldNum() == 0 &&
                 AvacadoManager.get().getAvacadosCollectedNum() == Avacado.avacadosMade) {
-            System.out.println("YOU WIN!");
             g2d.drawImage(ImageLoader.getLoader().getImage("WinScreen"), 0, 0, null);
         }
     }

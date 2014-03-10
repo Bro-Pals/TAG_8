@@ -67,8 +67,6 @@ public class AreaFactory {
                 Block barn5 = new Block(320, 400, 120, 20);
                 barn5.setParent(theArea);
                 
-                Avacado pah = new Avacado(0, 0, 10, 10, 1);
-                
                 AvacadoBin bin = new AvacadoBin(450, 200, 50, 50);
                 bin.setParent(theArea);
                 
