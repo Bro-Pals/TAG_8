@@ -51,6 +51,10 @@ public class AreaFactory {
 
         theArea.setRoomID(id);
         switch(id) {
+            case 2:
+                cowAreaFileManager.loadArea(this, new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath() + 
+                        "/../../../assets/data/area2.cowarea"));
+                break;
             case 3:
                 cowAreaFileManager.loadArea(this, new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath() + 
                         "/../../../assets/data/levelArea3.cowarea"));
