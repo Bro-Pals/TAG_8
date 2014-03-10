@@ -15,7 +15,7 @@ import bropals.gameobject.GameObject;
 public class Debugger {
     
     public static final int ERROR = 0, INFO = 1;
-    public static final boolean using = true;
+    public static final boolean using = false;
     
     public static void print(String message, int type) {
         if (using) {
