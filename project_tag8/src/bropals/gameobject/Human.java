@@ -177,7 +177,7 @@ public class Human extends Creature {
             if (((xDiff*xDiff) + (yDiff*yDiff)) < nearEnough*nearEnough) {
                 setStandingStill(true);
                 if (waypointWait > currentGoalWaypoint.getDelay()) {
-                    System.out.println("WaypointOn:"+waypointOn + "  waypointTimerWait:"+waypointWait);
+                   // System.out.println("WaypointOn:"+waypointOn + "  waypointTimerWait:"+waypointWait);
                     waypointOn++;
                     waypointWait = 0; // reset wait timer
                     if (waypointOn >= patrolPath.length) waypointOn = 0;

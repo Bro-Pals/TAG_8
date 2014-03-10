@@ -83,7 +83,7 @@ public class Area {
         for (int i=0; i<4; i++ ) {
             if (boundryTargetIds[i]!=0 && boundryWalls[i] != null) { 
                 boundryWalls[i].setParent(null); 
-                System.out.println("Erased the wall in index "+i);
+                //System.out.println("Erased the wall in index "+i);
             }
         }
     }

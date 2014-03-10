@@ -145,7 +145,7 @@ public class AreaRunner {
     }
     
     public void reactToMouseInput(boolean pressed, int button, int screenX, int screenY) {
-        System.out.println("Click");
+        //System.out.println("Click");
     }
     
     public void reactToKeyInput(boolean pressed, int button) {

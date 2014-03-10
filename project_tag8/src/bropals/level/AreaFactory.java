@@ -53,24 +53,19 @@ public class AreaFactory {
         theArea.setRoomID(id);
         switch(id) {
             case 2:
-                cowAreaFileManager.loadArea(this, new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath() + 
-                        dataDir + "/area2.cowarea"));
+                cowAreaFileManager.loadArea(this, new File(dataDir + "/area2.cowarea"));
                 break;
             case 3:
-                cowAreaFileManager.loadArea(this, new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath() + 
-                        dataDir + "/levelArea3.cowarea"));
+                cowAreaFileManager.loadArea(this, new File(dataDir + "/levelArea3.cowarea"));
                 break;
             case 4:
-                cowAreaFileManager.loadArea(this, new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath() + 
-                        dataDir + "/area4.cowarea"));
+                cowAreaFileManager.loadArea(this, new File(dataDir + "/area4.cowarea"));
                 break;
             case 9:
-                cowAreaFileManager.loadArea(this, new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath() + 
-                        dataDir + "/area9.cowarea"));
+                cowAreaFileManager.loadArea(this, new File(dataDir + "/area9.cowarea"));
                 break;
             case 5:
-                cowAreaFileManager.loadArea(this, new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath() + 
-                        dataDir + "/area5.cowarea"));
+                cowAreaFileManager.loadArea(this, new File(dataDir + "/area5.cowarea"));
                 break;
             case 1:
                 Block barn1 = new Wall(100, 100, 20, 300);

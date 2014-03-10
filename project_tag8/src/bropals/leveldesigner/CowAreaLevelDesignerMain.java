@@ -175,7 +175,7 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
         try {
             iconImage = (BufferedImage)ImageIO.read(CowAreaLevelDesignerMain.class.getResource("leveldesignericon.png"));
         } catch(Exception e) {
-            System.out.println("Could not load icon for level designer!");
+           // System.out.println("Could not load icon for level designer!");
         }
     }
 
