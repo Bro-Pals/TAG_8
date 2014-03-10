@@ -30,9 +30,9 @@ public class Stone extends GameObject {
     public void update() {
         if (getParent() == null || getParent().getObjects() == null) return;
         
-        Debugger.print("The stone is getting updated!", Debugger.INFO);
+        //Debugger.print("The stone is getting updated!", Debugger.INFO);
         
-        System.out.println("The stone's velocity: "+stoneMoveVector.toString());
+        //System.out.println("The stone's velocity: "+stoneMoveVector.toString());
         setX((float)(getX() + (stoneMoveVector.getX() * STONE_SPEED)));
         setY((float)(getY() + (stoneMoveVector.getY() * STONE_SPEED)));
         

@@ -154,18 +154,18 @@ public class CowAreaFileManager {
             line = reader.readLine();
             readAndSetFirstLine(area, line);
             
+            GameObject obj = null;
             line = reader.readLine();
             while(line!=null) {
-                area.addObject(
-                        readDataLine(line)
-                );
+                obj = readDataLine(line);
+                if (obj != null) area.addObject(obj);
                 line = reader.readLine();
             }
             
             reader.close();
             Debugger.print("Successfully opened Area with ID " + area.getAreaId() + " from " + file.getAbsolutePath() + "", Debugger.INFO);
         } catch(Exception e) {
-           //e.printStackTrace();
+            e.printStackTrace();
             Debugger.print("Unable to read file " + file.getAbsolutePath(), Debugger.ERROR);
         }
     }
