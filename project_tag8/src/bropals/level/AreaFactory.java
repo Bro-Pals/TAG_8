@@ -46,10 +46,7 @@ public class AreaFactory {
      */
     public void setArea(int id) {
         theArea.defaults();
-        Avacado avacado2 = new Avacado(500, 350, 40, 40, 1);
-        
-        Avacado avacado = new Avacado(550, 350, 40, 40, -2);
-        
+
         theArea.setRoomID(id);
         switch(id) {
             case 1:
@@ -112,6 +109,7 @@ public class AreaFactory {
                 theArea.setSouthTargetId(-2);
                 
                 break;
+            
             default:
                 Debugger.print("Need constructor for ID: " + id + " in AreaFactory", Debugger.ERROR);
         }

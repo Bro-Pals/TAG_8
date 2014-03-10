@@ -47,6 +47,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -472,16 +473,9 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
                     if (returned==JFileChooser.APPROVE_OPTION) {
                         //Save the area!
                         File f = fc.getSelectedFile();
-                        String[] tokenized = f.getName().split(".");
-                        String use;
-                        if (tokenized.length>0) {
-                            use = tokenized[0];
-                        } else {
-                            use = f.getName();
-                        }
-                        f = new File(f.getParentFile().getPath() + "/" + use + ".cowarea");
+                        
                         theFactory.getFileManager().export(editingArea, f);
-                        mainFrame.setTitle(mainTitle + "(" + use + ")");
+                        mainFrame.setTitle(mainTitle + "(" + f.getName() + ")");
                     }
                 }
             }
@@ -590,6 +584,19 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
                 }
             }
         });
+        
+        globalProperties.setLayout(new GridLayout(5, 2, 20, 20));
+        globalProperties.add(new JLabel("Index Area ID"));
+        globalProperties.add(areaIdInput);
+        globalProperties.add(new JLabel("North ID"));
+        globalProperties.add(northId);
+        globalProperties.add(new JLabel("South ID"));
+        globalProperties.add(southId);
+        globalProperties.add(new JLabel("East ID"));
+        globalProperties.add(eastId);
+        globalProperties.add(new JLabel("West ID"));
+        globalProperties.add(westId);
+        
     }
     
     private void makeCreateDialog(GameObject forObject, String title) {
@@ -627,6 +634,20 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
         return l;
     }
     
+    private void updateGlobalTextFields() {
+        northId.setText("" + editingArea.getNorthTargetId() + "");
+        southId.setText("" + editingArea.getSouthTargetId() + "");
+        eastId.setText("" + editingArea.getEastTargetId() + "");
+        westId.setText("" + editingArea.getWestTargetId() + "");
+        areaIdInput.setText("" + editingArea.getAreaId() + "");
+        northId.repaint();
+        southId.repaint();
+        westId.repaint();
+        eastId.repaint();
+        areaIdInput.repaint();
+    }
+
+    
     //Actual methods that do actual things
     
     public void setArea(Area area) {
@@ -635,6 +656,7 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
         if (this.editingArea==null) {
             mainFrame.setTitle(mainTitle);
         }
+        updateGlobalTextFields();
         canvas.repaint();
     }
     
