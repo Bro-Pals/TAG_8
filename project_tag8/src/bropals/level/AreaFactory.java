@@ -50,11 +50,11 @@ public class AreaFactory {
         theArea.setRoomID(id);
         switch(id) {
             case 1:
-                Block barn1 = new Block(100, 100, 20, 300);
+                Block barn1 = new Wall(100, 100, 20, 300);
                 barn1.setParent(theArea);
                 Block barn2 = new Block(120, 100, 300, 20);
                 barn2.setParent(theArea);
-                Block barn3 = new Block(420, 100, 20, 300);
+                Block barn3 = new Wall(420, 100, 20, 300);
                 barn3.setParent(theArea);
                 Block barn4 = new Block(100, 400, 120, 20);
                 barn4.setParent(theArea);
