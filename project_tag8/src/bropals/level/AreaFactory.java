@@ -34,6 +34,7 @@ public class AreaFactory {
     
     private final Area theArea;
     private CowAreaFileManager cowAreaFileManager;
+    private final String dataDir = "assets/data";
     
     public Area getArea() { return theArea; }
     
@@ -53,15 +54,15 @@ public class AreaFactory {
         switch(id) {
             case 2:
                 cowAreaFileManager.loadArea(this, new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath() + 
-                        "/../../../assets/data/area2.cowarea"));
+                        dataDir + "/area2.cowarea"));
                 break;
             case 3:
                 cowAreaFileManager.loadArea(this, new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath() + 
-                        "/../../../assets/data/levelArea3.cowarea"));
+                        dataDir + "/levelArea3.cowarea"));
                 break;
             case 5:
                 cowAreaFileManager.loadArea(this, new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath() + 
-                        "/../../../assets/data/area5.cowarea"));
+                        dataDir + "/area5.cowarea"));
                 break;
             case 1:
                 Block barn1 = new Wall(100, 100, 20, 300);

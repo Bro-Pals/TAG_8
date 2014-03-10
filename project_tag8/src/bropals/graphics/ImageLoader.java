@@ -23,7 +23,7 @@ import javax.imageio.ImageIO;
 public class ImageLoader {
     
     private static final ImageLoader loader = new ImageLoader();
-    private final String imageDirectory = "images";
+    private final String imageDirectory = "assets/images";
     private String jarPath;
     
     public static ImageLoader getLoader() {
@@ -48,13 +48,14 @@ public class ImageLoader {
      * @param pathFromImageDirectory the path of the image file relative to "images" in the assets directory.
      */
     public void loadSingleImage(String nameOfImage, String pathFromImageDirectory) {
-        File f = new File(jarPath + "\\" + imageDirectory + "\\" + pathFromImageDirectory);
+        Debugger.print("user.dir directory is: " + System.getProperty("user.dir"), INFO);
         try {
-            BufferedImage img = (BufferedImage)ImageIO.read(f);
+            BufferedImage img;
+            img = (BufferedImage)ImageIO.read(new File(imageDirectory + "/" + pathFromImageDirectory));
             images.put(nameOfImage, new BufferedImage[]{img});
-            print("Loaded image: " + f.getAbsolutePath() + " as name " + nameOfImage, INFO);
+            print("Loaded image: " + pathFromImageDirectory + " as name " + nameOfImage, INFO);
         } catch(IOException e) {
-            print("Can't load image: " + f.getAbsolutePath(), ERROR);
+            print("Can't load image: " + pathFromImageDirectory, ERROR);
         }
     }
     
@@ -108,12 +109,11 @@ public class ImageLoader {
      */
     public void loadSpriteSheet(String name, String pathFromImageDirectory, int width, int height) {
         BufferedImage img = null;
-        File f = new File(jarPath + "\\" + imageDirectory + "\\" + pathFromImageDirectory);
         try {
-            img = (BufferedImage)ImageIO.read(f);
-            print("Loaded image: " + f.getAbsolutePath() + " as name " + name, INFO);
+            img = (BufferedImage)ImageIO.read(new File(imageDirectory + "/" + pathFromImageDirectory));
+            print("Loaded image: " + pathFromImageDirectory + " as name " + name, INFO);
         } catch(IOException e) {
-            print("Can't load image: " + f.getAbsolutePath(), ERROR);
+            print("Can't load image: " + pathFromImageDirectory, ERROR);
         }
         
         if (img == null) {
