@@ -155,6 +155,7 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
     private void initializeMainFrame() {
         mainFrame = new JFrame(mainTitle);
         mainFrame.setIconImage(iconImage);
+        mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         mainFrame.addWindowListener(new WindowAdapter() {
 
             @Override
