@@ -560,15 +560,17 @@ public class PropertyFormatter {
         
         JPanel visionPanel = new JPanel();
         visionPanel.setLayout(new GridLayout(2, 4, mpw, mph));
-        final JTextField sightRangeInput = new JTextField("0");
-        final JTextField attackRangeInput = new JTextField("0");
-        final JTextField fovInput = new JTextField("0");
+        final JTextField sightRangeInput = new JTextField("" + forObject.getSightRange() + "");
+        final JTextField attackRangeInput = new JTextField("" + forObject.getAttackDistance() + "");
+        final JTextField fovInput = new JTextField("" + forObject.getFieldOfView() + "");
         
         sightRangeInput.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     forObject.setSightRange(Float.parseFloat( sightRangeInput.getText() ));
+                    sightRangeInput.setText( "" + forObject.getSightRange() + "");
+                    sightRangeInput.repaint();
                 } catch(NumberFormatException epc) {
                     sightRangeInput.setText("0");
                     forObject.setSightRange(0);
@@ -581,6 +583,8 @@ public class PropertyFormatter {
             public void actionPerformed(ActionEvent e) {
                 try {
                     forObject.setAttackDistance(Float.parseFloat( attackRangeInput.getText() ));
+                    attackRangeInput.setText( "" + forObject.getAttackDistance() + "");
+                    attackRangeInput.repaint();
                 } catch(NumberFormatException epc) {
                     attackRangeInput.setText("0");
                     forObject.setAttackDistance(0);
@@ -593,6 +597,8 @@ public class PropertyFormatter {
             public void actionPerformed(ActionEvent e) {
                 try {
                     forObject.setFieldOfView(Float.parseFloat( fovInput.getText() ));
+                    fovInput.setText( "" + forObject.getFieldOfView() + "");
+                    fovInput.repaint();
                 } catch(NumberFormatException epc) {
                     fovInput.setText("0");
                     forObject.setFieldOfView(0);

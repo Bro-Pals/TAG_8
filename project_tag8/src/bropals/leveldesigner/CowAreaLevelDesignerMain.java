@@ -42,6 +42,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -154,7 +155,17 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
     private void initializeMainFrame() {
         mainFrame = new JFrame(mainTitle);
         mainFrame.setIconImage(iconImage);
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainFrame.addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                int op = JOptionPane.showConfirmDialog(mainFrame, "Did you save your work?", "Reminder", JOptionPane.YES_NO_OPTION);
+                if (op==JOptionPane.YES_OPTION) {
+                    System.exit(0);
+                }
+            }
+            
+        });
         mainFrame.setSize(1200, 720);
         mainFrame.setMinimumSize(new Dimension(1150, 720));
     }
