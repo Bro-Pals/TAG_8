@@ -639,7 +639,7 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
         southId.setText("" + editingArea.getSouthTargetId() + "");
         eastId.setText("" + editingArea.getEastTargetId() + "");
         westId.setText("" + editingArea.getWestTargetId() + "");
-        areaIdInput.setText("" + editingArea.getSouthTargetId() + "");
+        areaIdInput.setText("" + editingArea.getAreaId() + "");
         northId.repaint();
         southId.repaint();
         westId.repaint();
