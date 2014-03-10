@@ -6,6 +6,7 @@ package bropals.gameobject.block;
 
 import bropals.gameobject.GameObject;
 import bropals.gameobject.Interactable;
+import bropals.gameobject.Player;
 import bropals.level.Area;
 import java.util.ArrayList;
 
@@ -30,7 +31,7 @@ public class TeleportDoor extends Block implements Interactable {
 
     @Override
     public void interact(GameObject instance) {
-        // teleport the player to the given location
+        //
     }
 
     @Override
