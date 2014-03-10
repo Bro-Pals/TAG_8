@@ -26,6 +26,7 @@ import bropals.gameobject.block.TeleportDoor;
 import bropals.gameobject.block.Wall;
 import bropals.level.Area;
 import bropals.level.AreaFactory;
+import bropals.level.AreaRunner;
 import bropals.util.Vector2;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -457,6 +458,7 @@ public class CowAreaFileManager {
             } catch(Exception e) {
                 Debugger.print("Error while reading a Waypoint list!", ERROR);
             }
+            human.givePlayerRef(AreaRunner.player);
             return human;
         }
 

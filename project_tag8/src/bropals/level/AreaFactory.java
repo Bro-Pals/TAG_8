@@ -55,6 +55,10 @@ public class AreaFactory {
                 cowAreaFileManager.loadArea(this, new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath() + 
                         "/../../../assets/data/levelArea3.cowarea"));
                 break;
+            case 5:
+                cowAreaFileManager.loadArea(this, new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath() + 
+                        "/../../../assets/data/area5.cowarea"));
+                break;
             case 1:
                 Block barn1 = new Wall(100, 100, 20, 300);
                 barn1.setParent(theArea);
