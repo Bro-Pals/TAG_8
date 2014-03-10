@@ -26,7 +26,7 @@ import java.util.ArrayList;
  */
 public class AreaRunner {
     
-    private final Player player;
+    public static final Player player = new Player(150, 150);
     private final AreaFactory areaFactory;
 
     private boolean[] movement = {false, false, false, false};
@@ -41,7 +41,6 @@ public class AreaRunner {
             
     public AreaRunner() {
         areaFactory = new AreaFactory();
-        player = new Player(150, 150);
         //Initial area
         setCurrentArea(1);
     }
