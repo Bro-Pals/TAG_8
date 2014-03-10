@@ -4,6 +4,7 @@
  */
 package bropals.gameobject.block;
 
+import bropals.graphics.ImageLoader;
 import bropals.level.Area;
 
 /**
@@ -25,5 +26,11 @@ public class Wall extends Block {
         "   Height: " + getHeight()+ "\n"+
         "";
         return str;
+    }
+    
+    @Override
+    public void updateDrawImage() {
+        setDrawImage(ImageLoader.getLoader().getRepeatingTexture(ImageLoader.getLoader().getImage("Blocks", 10), 
+                (int)getWidth(), (int)getHeight()));
     }
 }
