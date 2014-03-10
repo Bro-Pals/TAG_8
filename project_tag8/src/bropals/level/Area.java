@@ -167,7 +167,7 @@ public class Area {
      * @param object the object to add.
      */
     public void addObject(GameObject object) {
-        objects.add(object);
+        object.setParent(this);
     }
     
     /**

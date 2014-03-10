@@ -64,7 +64,7 @@ public abstract class GameObject {
     public void setParent(Area p) {
         if (parent != null && p==null) parent.getObjects().remove(this);
         parent = p;
-        if (p != null) parent.addObject(this);
+        if (p != null) parent.getObjects().add(this);
     }
 
     public String getTextureString() {

@@ -61,19 +61,13 @@ public class AreaFactory {
                 Block barn5 = new Block(320, 400, 120, 20);
                 barn5.setParent(theArea);
                 
+                Avacado pah = new Avacado(0, 0, 10, 10, 1);
+                
                 AvacadoBin bin = new AvacadoBin(450, 200, 50, 50);
                 bin.setParent(theArea);
                 
                 NormalDoor door = new NormalDoor(220, 403, 100, 15);
                 door.setParent(theArea);
-                
-                Human snarker = new Human(550, 450, 40, 10, Vector2.UNIT_Y);
-                snarker.setPatrolPath(new Waypoint[]{
-                    new Waypoint(550, 450, 10), new Waypoint(500, 150, 10)
-                });
-                snarker.setType(HumanType.ROCK_THROWER);
-                snarker.setParent(theArea);
-                snarker.givePlayerRef(theArea.getPlayer());
                         
                 break;
             case -2:
