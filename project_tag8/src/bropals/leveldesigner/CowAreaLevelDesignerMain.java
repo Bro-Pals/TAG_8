@@ -635,16 +635,18 @@ public class CowAreaLevelDesignerMain implements KeyListener, MouseListener {
     }
     
     private void updateGlobalTextFields() {
-        northId.setText("" + editingArea.getNorthTargetId() + "");
-        southId.setText("" + editingArea.getSouthTargetId() + "");
-        eastId.setText("" + editingArea.getEastTargetId() + "");
-        westId.setText("" + editingArea.getWestTargetId() + "");
-        areaIdInput.setText("" + editingArea.getAreaId() + "");
-        northId.repaint();
-        southId.repaint();
-        westId.repaint();
-        eastId.repaint();
-        areaIdInput.repaint();
+        if (editingArea!=null) {
+            northId.setText("" + editingArea.getNorthTargetId() + "");
+            southId.setText("" + editingArea.getSouthTargetId() + "");
+            eastId.setText("" + editingArea.getEastTargetId() + "");
+            westId.setText("" + editingArea.getWestTargetId() + "");
+            areaIdInput.setText("" + editingArea.getAreaId() + "");
+            northId.repaint();
+            southId.repaint();
+            westId.repaint();
+            eastId.repaint();
+            areaIdInput.repaint();
+        }
     }
 
     
