@@ -60,6 +60,14 @@ public class AreaFactory {
                 cowAreaFileManager.loadArea(this, new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath() + 
                         dataDir + "/levelArea3.cowarea"));
                 break;
+            case 4:
+                cowAreaFileManager.loadArea(this, new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath() + 
+                        dataDir + "/area4.cowarea"));
+                break;
+            case 9:
+                cowAreaFileManager.loadArea(this, new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath() + 
+                        dataDir + "/area9.cowarea"));
+                break;
             case 5:
                 cowAreaFileManager.loadArea(this, new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath() + 
                         dataDir + "/area5.cowarea"));
