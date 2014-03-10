@@ -269,7 +269,7 @@ public class CowAreaFileManager {
 
         @Override
         public String makeDataLine(GrappleHookPoint object) {
-            return AVACADOBIN + SEPARATOR + object.getX() + SEPARATOR + object.getY() + SEPARATOR + object.getInteractDistance() + SEPARATOR + object.getTextureString() + SEPARATOR + object.getTextureIndex();
+            return GRAPPLEHOOKPOINT + SEPARATOR + object.getX() + SEPARATOR + object.getY() + SEPARATOR + object.getInteractDistance() + SEPARATOR + object.getTextureString() + SEPARATOR + object.getTextureIndex();
         }
 
         @Override
