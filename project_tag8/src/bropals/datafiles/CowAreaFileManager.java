@@ -48,8 +48,7 @@ public class CowAreaFileManager {
     private final String WAYPOINTENDER = "ENDWAYPOINTS";
     private final String SEPARATOR = " ";
     
-    private final String dataDirectory = "data";
-    private String jarPath;
+    private final String dataDirectory = "assets/data";
     
     private BlockMachine blockMachine;
     private WallMachine wallMachine;
@@ -63,12 +62,6 @@ public class CowAreaFileManager {
     private boolean ignoringAvacados;
     
     public CowAreaFileManager() {
-        try {
-            jarPath = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getAbsolutePath();
-            print("Jar Root: " + jarPath, INFO);
-        } catch(URISyntaxException e) {
-            print("Can't get jar root!", ERROR);
-        }
         ignoringAvacados = false;
         blockMachine = new BlockMachine();
         wallMachine = new WallMachine();
@@ -84,7 +77,7 @@ public class CowAreaFileManager {
     public void loadAllTheAvacados() {
         // Go through each file and all the lines in each file and see if there is an avacado
         // If there is an avacado, then load it, otherwise ignore it
-        File[] allFiles = new File(jarPath + "\\" + dataDirectory).listFiles();
+        File[] allFiles = new File(dataDirectory).listFiles();
         BufferedReader reader;
         int avacadoCount = 0;
         for (int f=0; f<allFiles.length; f++) {
