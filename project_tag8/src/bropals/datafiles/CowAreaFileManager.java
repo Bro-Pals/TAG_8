@@ -169,6 +169,7 @@ public class CowAreaFileManager {
             reader.close();
             Debugger.print("Successfully opened Area with ID " + area.getAreaId() + " from " + file.getAbsolutePath() + "", Debugger.INFO);
         } catch(Exception e) {
+           //e.printStackTrace();
             Debugger.print("Unable to read file " + file.getAbsolutePath(), Debugger.ERROR);
         }
     }
@@ -251,7 +252,7 @@ public class CowAreaFileManager {
         @Override
         public Block readDataLine(String line) {
             String[] block = line.split(SEPARATOR);
-            Block object = new Block(0, 0, 0, 0);
+            Block object = new Block(0, 0, 10, 10);
             object.setX( Float.parseFloat(block[1]) );
             object.setY( Float.parseFloat(block[2]) );
             object.setWidth( Float.parseFloat(block[3]) );
@@ -294,7 +295,7 @@ public class CowAreaFileManager {
         @Override
         public Avacado readDataLine(String line) {
             String[] block = line.split(SEPARATOR);
-            Avacado object = new Avacado(0, 0, 0, 0, 0);
+            Avacado object = new Avacado(0, 0, 0, 10, 10);
             object.setX( Float.parseFloat(block[1]) );
             object.setY( Float.parseFloat(block[2]) );
             object.setWidth( Float.parseFloat(block[3]) );
@@ -317,7 +318,7 @@ public class CowAreaFileManager {
         @Override
         public AvacadoBin readDataLine(String line) {
             String[] block = line.split(SEPARATOR);
-            AvacadoBin object = new AvacadoBin(0, 0, 0, 0);
+            AvacadoBin object = new AvacadoBin(0, 0, 10, 10);
             object.setX( Float.parseFloat(block[1]) );
             object.setY( Float.parseFloat(block[2]) );
             object.setWidth( Float.parseFloat(block[3]) );
@@ -340,7 +341,7 @@ public class CowAreaFileManager {
         @Override
         public NormalDoor readDataLine(String line) {
             String[] block = line.split(SEPARATOR);
-            NormalDoor object = new NormalDoor(0, 0, 0, 0);
+            NormalDoor object = new NormalDoor(0, 0, 10, 10);
             object.setX( Float.parseFloat(block[1]) );
             object.setY( Float.parseFloat(block[2]) );
             object.setWidth( Float.parseFloat(block[3]) );
@@ -364,7 +365,7 @@ public class CowAreaFileManager {
         @Override
         public TeleportDoor readDataLine(String line) {
             String[] block = line.split(SEPARATOR);
-            TeleportDoor object = new TeleportDoor(0, 0, 0, 0, 0, 0, 0);
+            TeleportDoor object = new TeleportDoor(0, 0, 10, 10, 0, 0, 0);
             object.setX( Float.parseFloat(block[1]) );
             object.setY( Float.parseFloat(block[2]) );
             object.setWidth( Float.parseFloat(block[3]) );
@@ -411,7 +412,7 @@ public class CowAreaFileManager {
         @Override
         public Human readDataLine(String line) {
             String[] block = line.split(SEPARATOR);
-            Human human = new Human(0, 0, 0, 0, Vector2.UNIT_X);
+            Human human = new Human(0, 0, 10, 10, Vector2.UNIT_X);
             
             human.setX( Float.parseFloat(block[1]) );
             human.setY( Float.parseFloat(block[2]) );
@@ -445,6 +446,7 @@ public class CowAreaFileManager {
                 }
                 //When the end of the line is reached, put the path into the human
                 Waypoint[] path = (Waypoint[])patrolPath.toArray(new Waypoint[patrolPath.size()]);
+                human.setPatrolPath(path);
             } catch(Exception e) {
                 Debugger.print("Error while reading a Waypoint list!", ERROR);
             }
@@ -491,7 +493,7 @@ public class CowAreaFileManager {
         @Override
         public HayBale readDataLine(String line) {
             String[] block = line.split(SEPARATOR);
-            HayBale object = new HayBale(0, 0, 0, 0);
+            HayBale object = new HayBale(0, 0,10, 10);
             object.setX( Float.parseFloat(block[1]) );
             object.setY( Float.parseFloat(block[2]) );
             object.setWidth( Float.parseFloat(block[3]) );
@@ -514,7 +516,7 @@ public class CowAreaFileManager {
         @Override
         public Wall readDataLine(String line) {
             String[] block = line.split(SEPARATOR);
-            Wall object = new Wall(0, 0, 0, 0);
+            Wall object = new Wall(0, 0, 10, 10);
             object.setX( Float.parseFloat(block[1]) );
             object.setY( Float.parseFloat(block[2]) );
             object.setWidth( Float.parseFloat(block[3]) );

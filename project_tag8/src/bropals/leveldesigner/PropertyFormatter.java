@@ -1123,12 +1123,15 @@ public class PropertyFormatter {
                         object.setTextureIndex(0);
                         indexInput.repaint();
                     }
+                    indexInput.repaint();
                     textureInput.repaint();
                     caldm.tellRepaint();
                 }
             });
             //textureInput.addActionListener(new TextureFieldListener(forObject));
             this.add(textureInput);
+            this.add(new JLabel("Texture Index"));
+            this.add(indexInput);
         }
         
         public String getTextureInput() {
